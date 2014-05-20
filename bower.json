@@ -1,10 +1,10 @@
 {
   "name": "helmet",
   "version": "0.0.1",
-  "directory": "lib",
   "dependencies": {
     "angular": "1.2.16",
-    "angular-ui-router": "0.2.10"
+    "angular-ui-router": "0.2.10",
+    "angular-bootstrap": "~0.11.0"
   },
   "private": true
 }
