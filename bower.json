@@ -1,0 +1,9 @@
+{
+	"name": "helmet",
+	"version": "0.0.1",
+	"dependencies": {
+		"angular": "1.2.16",
+		"angular-ui-router": "0.2.10"
+	},
+	"private": true
+}
