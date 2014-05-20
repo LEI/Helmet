@@ -1,8 +1,15 @@
+<!-- Titre -->
 <div content-for="title">
   <span>Bienvenue</span>
 </div>
 
-<center>
-	<br><img src="img/logo.png" alt="Cordova"><br>
-	<h2>{{ test }}</h2>
-</center>
+<!-- Navigation -->
+<div content-for="navbarAction">
+	<div class="btn btn-navbar" ng-click="toggle('bluetoothOverlay', 'on')">
+		<i class="fa fa-signal"></i> BT
+	</div>
+</div>
+
+<div bs-panel title="{{ test }}">
+	<img src="img/logo.png" alt="Cordova">
+</div>

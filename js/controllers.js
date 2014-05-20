@@ -19,7 +19,7 @@ angular.module('appHelmet.controllers', [
 
 .controller('RouteController', ['$scope', 'geolocation', function($scope, geolocation) {
 
-	$scope.test = 'Recherche en cours...<br>';
+	$scope.test = '';
 
 	if (navigator.geolocation) {
 
