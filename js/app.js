@@ -1,36 +1,31 @@
 angular.module('appHelmet', [
+	'ngSanitize',
 	'ui.router',
+	'mobile-angular-ui',
 	'appHelmet.controllers'
 ])
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 
 	$stateProvider
 		.state('home', {
 			url: "/",
-			templateUrl: "views/home.html",
-			controller: "HomeController"
+			templateUrl: "views/home.html"
 		})
-		/*.state('state1.list', {
+		.state('route', {
+			url: "/route",
+			templateUrl: "views/route.html",
+			controller: "RouteController"
+		})
+		.state('route.start', {
+			url: "/start",
+			templateUrl: "views/route.start.html"
+		})
+		.state('route.list', {
 			url: "/list",
-			templateUrl: "partials/state1.list.html",
-			controller: function($scope) {
-			$scope.items = ["A", "List", "Of", "Items"];
-			}
-		})
-		.state('state2', {
-			url: "/state2",
-			templateUrl: "partials/state2.html"
-		})
-		.state('state2.list', {
-			url: "/list",
-			templateUrl: "partials/state2.list.html",
-			controller: function($scope) {
-			$scope.things = ["A", "Set", "Of", "Things"];
-			}
-		})*/;
+			templateUrl: "views/route.list.html"
+		});
 
-	// if none of the above states are matched, use this as the fallback
 	$urlRouterProvider.otherwise('/');
 
-});
+}]);

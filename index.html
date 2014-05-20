@@ -1,30 +1,93 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="format-detection" content="telephone=no" />
-        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-        <link rel="stylesheet" type="text/css" href="css/style.css" />
-        <title>Helmet</title>
-    </head>
-    <body>
-    	<h1>Helmet</h1>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="format-detection" content="telephone=no" />
+		<!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
 
-        <div ui-view></div>
+		<link rel="stylesheet" href="bower_components/mobile-angular-ui/dist/css/mobile-angular-ui-base.min.css">
+		<link rel="stylesheet" href="bower_components/mobile-angular-ui/dist/css/mobile-angular-ui-desktop.min.css">
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
 
-        <script type="text/javascript" src="cordova.js"></script>
+		<title>Helmet</title>
+	</head>
+	<body ng-controller="AppController">
 
-        <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
-        <script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+		<div class="sidebar sidebar-left" toggleable parent-active-class="sidebar-left-in" id="mainSidebar">
+			<h1 class="app-name">
+				Visio Helmet HD+
+			</h1>
 
-        <script type="text/javascript" src="js/index.js"></script>
-    	<script type="text/javascript" src="js/app.js"></script>
-    	<script type="text/javascript" src="js/services.js"></script>
-    	<script type="text/javascript" src="js/controllers.js"></script>
+			<div class="scrollable">
+				<div class="scrollable-content">
+					<div class="list-group" toggle="off" bubble target="mainSidebar">
+						<a class="list-group-item" href="#/" ng-sref="home">
+							Tableau de bord <i class="fa fa-chevron-right pull-right"></i>
+						</a>
+						<a class="list-group-item" href="#/route" ng-sref="route">
+							Itinéraire <i class="fa fa-chevron-right pull-right"></i>
+						</a>
+						<a class="list-group-item" href="#/lol" ng-sref="lol">
+							Trajets <i class="fa fa-chevron-right pull-right"></i>
+						</a>
+						<a class="list-group-item" href="#/lel" ng-sref="lel">
+							Paramètres <i class="fa fa-chevron-right pull-right"></i>
+						</a>
+					</div>
 
-        <script type="text/javascript">
-            appCordova.initialize();
-        </script>
-    </body>
+				</div>
+			</div>
+		</div>
+
+		<div class="app">
+
+			<div class="navbar navbar-app navbar-absolute-top">
+
+					<!-- ? --><div class="navbar-brand navbar-brand-center" yield-to="title">
+						<span>Helmet</span>
+					</div>
+
+					<div class="btn-group pull-left">
+						<div ng-click="toggle('mainSidebar')" class="btn btn-navbar sidebar-toggle">
+							<i class="fa fa-bars"></i> Menu
+						</div>
+					</div>
+
+					<!-- ? --><div class="btn-group pull-right" yield-to="navbarAction">
+						<div class="btn btn-navbar">
+							<i class="fa fa-plus"></i> New
+						</div>
+					</div>
+			</div>
+
+			<div class="navbar navbar-app navbar-absolute-bottom">
+				<div class="btn-group justified">
+					<a href="#/" ng-sref="route" class="btn btn-navbar btn-icon-only"><i class="fa fa-home fa-navbar"></i></a>
+					<a href="#/route" ng-sref="route" class="btn btn-navbar btn-icon-only"><i class="fa fa-location-arrow fa-navbar"></i></a>
+				</div>
+			</div>
+
+			<div class="app-body scrollable">
+				<!-- ng-view -->
+				<div ui-view class="app-content scrollable-content"></div>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="cordova.js"></script>
+
+		<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+		<script type="text/javascript" src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+		<script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+		<script type="text/javascript" src="bower_components/mobile-angular-ui/dist/js/mobile-angular-ui.min.js"></script>
+
+		<script type="text/javascript" src="js/index.js"></script>
+		<script type="text/javascript" src="js/app.js"></script>
+		<script type="text/javascript" src="js/controllers.js"></script>
+		<script type="text/javascript" src="js/services.js"></script>
+
+		<script type="text/javascript">
+			appCordova.initialize();
+		</script>
+	</body>
 </html>
