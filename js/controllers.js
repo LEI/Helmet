@@ -73,6 +73,10 @@ angular.module('appHelmet.controllers', [
 			clearInterval(intervalId);
 		});
 
+		$scope.destroyInterval = function () {
+			clearInterval(intervalId);
+		};
+
 	} else {
 		alert('FU');
 	}

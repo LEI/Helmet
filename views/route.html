@@ -5,14 +5,28 @@
 
 <!-- Navigation -->
 <div content-for="navbarAction">
-	<div class="btn btn-navbar" ng-click="toggle('bluetoothOverlay', 'on')">
-		<i class="fa fa-signal"></i> BT
-	</div>
 	<a href="#/start" class="btn btn-navbar">
 		<i class="fa fa-road"></i> GO
 	</a>
+	<div vh-bluetooth class="btn btn-navbar" ng-click="toggle('bluetoothOverlay', 'on')"></div>
 </div>
 
-<div bs-panel title="Recherche en cours...">
-	<div ng-bind-html="test"></div>
+<!-- Contenu -->
+<div class="scrollable">
+	<div class="panel">
+
+		<div class="panel-heading">
+			<h2 class="panel-title">
+				Geolocation API
+			</h2>
+		</div>
+		<div class="panel-body">
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellat, fugit iusto reprehenderit veritatis fugiat!
+		</div>
+
+	</div>
+	<div bs-panel title="Recherche en cours... " class="scrollable-content">
+				<div class="btn btn-danger pull-right" ng-click="destroyInterval()">Stop</div>
+		<div ng-bind-html="test"></div>
+	</div>
 </div>
