@@ -4,9 +4,16 @@ angular.module('appHelmet.controllers', [
 	'appHelmet.services'
 ])
 
-.controller('AppController', ['$scope', function($scope) {
+.controller('AppController', ['$rootScope', '$scope', function($rootScope, $scope) {
 
 	$scope.test = 'Hello World';
+
+	$rootScope.$on("$routeChangeStart", function(){
+		$rootScope.loading = true;
+	});
+	$rootScope.$on("$routeChangeSuccess", function(){
+		$rootScope.loading = false;
+	});
 
 }])
 
