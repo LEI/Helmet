@@ -30,9 +30,18 @@ angular.module('appHelmet.controllers', [
 	});
 }])
 
-.controller('RouteController', ['$scope', 'geolocation', function($scope, geolocation) {
+.controller('RouteController', ['$scope', 'geolocation', 'directionsApi', function($scope, geolocation, directionsApi) {
 
 	$scope.test = '';
+
+	geolocation.getCurrentPosition().then(function(position) {
+		var destination = 'Paris';
+		directionsApi.getDirection(position, destination).then(function(a, b) {
+			console.log(a);
+			console.log(b);
+			$scope.test = a.routes[0].legs[0].distance.text + ' ' + a.routes[0].legs[0].duration.text;
+		});
+	});
 
 	if (navigator.geolocation) {
 
@@ -89,7 +98,7 @@ angular.module('appHelmet.controllers', [
 					'Latitude: ' + position.coords.latitude + '<br>' +
 					'Longitude: ' + position.coords.longitude + '<br>';
 			});
-		}, 5000);
+		}, 1000);
 
 		$scope.$on('$destroy', function () {
 			clearInterval(intervalId);

@@ -63,9 +63,8 @@ angular.module('appHelmet.services', [])
 
 .factory('openWeatherMap', ['$q', '$http', function($q, $http) {
 	var currentWeather = function(position) {
-		var deferred = $q.defer();
-
-		var url = 'http://api.openweathermap.org/data/2.5/weather' +
+		var deferred = $q.defer(),
+			url = 'http://api.openweathermap.org/data/2.5/weather' +
 			'?lang=fr' + '&u=c' + '&units=metric' + '&mode=json' +
 			'&lat=' + position.coords.latitude +
 			'&lon=' + position.coords.longitude;
@@ -83,5 +82,29 @@ angular.module('appHelmet.services', [])
 
 	return {
 		getCurrentWeather: currentWeather
+	};
+}])
+
+
+.factory('directionsApi', ['$q', '$http', function($q, $http) {
+	var direction = function(position, destination) {
+		var deferred = $q.defer(),
+			url = 'https://maps.googleapis.com/maps/api/directions/json?sensor=true' +
+			'&origin=' + position.coords.latitude + ',' + position.coords.longitude +
+			'&destination=' + destination;
+
+		$http.get(url)
+			.success(function(data, status) {
+				deferred.resolve(data);
+			})
+			.error(function(data, status) {
+				deferred.reject(data);
+			});
+
+		return deferred.promise;
+	};
+
+	return {
+		getDirection: direction
 	};
 }]);
