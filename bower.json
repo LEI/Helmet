@@ -5,7 +5,8 @@
     "angular": "1.2.16",
     "angular-sanitize": "~1.2.16",
     "angular-route": "~1.2.16",
-    "mobile-angular-ui": "~1.1.0-beta.21"
+    "mobile-angular-ui": "~1.1.0-beta.21",
+    "angular-phonegap-geolocation": "~0.0.1"
   },
   "private": true
 }

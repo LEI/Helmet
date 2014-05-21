@@ -1,6 +1,7 @@
 <div ng-controller="WeatherController">
-	<p>
-		<strong>Météo</strong>
-		{{ currentWeather.description }}
-	</p>
+	{{ currentWeather.city }}
+	{{ currentWeather.main.temp }}°C
+	<div ng-repeat="w in currentWeather.data">
+		<img ng-src="//openweathermap.org/img/w/{{ w.icon }}.png" alt="">{{ w.description }}
+	</div>
 </div>

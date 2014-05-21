@@ -18,27 +18,16 @@ angular.module('appHelmet.controllers', [
 }])
 
 .controller('WeatherController', ['$scope', 'geolocation', 'openWeatherMap', function($scope, geolocation, openWeatherMap) {
-	$scope.currentWeather = 'aaa';
-
-	geolocation.getCurrentPosition(
-		function(position) {
-			openWeatherMap.getCurrentWeather(position).then(function(res) {
-				$scope.currentWeather = {
-					description: res.weather[0].description
-				};
-			});
-		},
-		function(error) {
-			console.log(error);
+	$scope.currentWeather = { city: 'Météo' };
+	geolocation.getCurrentPosition().then(function(position) {
+		openWeatherMap.getCurrentWeather(position).then(function(data) {
 			$scope.currentWeather = {
-				description: 'error openWeatherMap'
+				city: data.name,
+				main: data.main,
+				data: data.weather
 			};
-		},
-		{
-			timeout: 1000
-		}
-	);
-
+		});
+	});
 }])
 
 .controller('RouteController', ['$scope', 'geolocation', function($scope, geolocation) {
@@ -48,18 +37,16 @@ angular.module('appHelmet.controllers', [
 	if (navigator.geolocation) {
 
 		// Watch position
-		geolocation.watchPosition(
+		/*geolocation.watchPosition(
 			// Success
 			function(position) {
 				$scope.position = position;
-				console.log(position);
 				$scope.test += '<strong>Position changed</strong> (watchPosition)<br>' +
 					'Latitude: ' + position.coords.latitude + '<br>' +
 					'Longitude: ' + position.coords.longitude + '<br>';
 			},
 			// Fail
 			function(error) {
-				console.log(error);
 				$scope.test += '<strong>Error code ' + error.code + '</strong> (watchPosition)<br>' + error.message + '<br>';
 			},
 			{
@@ -71,18 +58,19 @@ angular.module('appHelmet.controllers', [
 
 		var intervalId = setInterval(function () {
 			// Get current position
-			geolocation.getCurrentPosition(
+			geolocation.getCurrentPosition().then(function(position) {
+
+			});
+
 				// Success
 				function(position) {
 					$scope.position = position;
-					console.log(position);
 					$scope.test += '<strong>Current position</strong> (getCurrentPosition)<br>' +
 						'Latitude: ' + position.coords.latitude + '<br>' +
 						'Longitude: ' + position.coords.longitude + '<br>';
 				},
 				// Fail
 				function(error) {
-					console.log(error);
 					$scope.test += '<strong>Error code ' + error.code + '</strong> (getCurrentPosition)<br>' + error.message + '<br>';
 				},
 				{
@@ -91,6 +79,16 @@ angular.module('appHelmet.controllers', [
 					maximumAge: 0
 				}
 			);
+		}, 5000);*/
+
+		var intervalId = setInterval(function () {
+			// Get current position
+			geolocation.getCurrentPosition().then(function(position) {
+				$scope.position = position;
+				$scope.test += '<strong>Current position</strong> (getCurrentPosition)<br>' +
+					'Latitude: ' + position.coords.latitude + '<br>' +
+					'Longitude: ' + position.coords.longitude + '<br>';
+			});
 		}, 5000);
 
 		$scope.$on('$destroy', function () {
