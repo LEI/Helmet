@@ -17,6 +17,30 @@ angular.module('appHelmet.controllers', [
 
 }])
 
+.controller('WeatherController', ['$scope', 'geolocation', 'openWeatherMap', function($scope, geolocation, openWeatherMap) {
+	$scope.currentWeather = 'aaa';
+
+	geolocation.getCurrentPosition(
+		function(position) {
+			openWeatherMap.getCurrentWeather(position).then(function(res) {
+				$scope.currentWeather = {
+					description: res.weather[0].description
+				};
+			});
+		},
+		function(error) {
+			console.log(error);
+			$scope.currentWeather = {
+				description: 'error openWeatherMap'
+			};
+		},
+		{
+			timeout: 1000
+		}
+	);
+
+}])
+
 .controller('RouteController', ['$scope', 'geolocation', function($scope, geolocation) {
 
 	$scope.test = '';
@@ -39,7 +63,7 @@ angular.module('appHelmet.controllers', [
 				$scope.test += '<strong>Error code ' + error.code + '</strong> (watchPosition)<br>' + error.message + '<br>';
 			},
 			{
-				timeout: 1000,
+				timeout: 5000,
 				enableHighAccuracy: true,
 				maximumAge: 0
 			}
@@ -62,12 +86,12 @@ angular.module('appHelmet.controllers', [
 					$scope.test += '<strong>Error code ' + error.code + '</strong> (getCurrentPosition)<br>' + error.message + '<br>';
 				},
 				{
-					timeout: 1000,
+					timeout: 5000,
 					enableHighAccuracy: true,
 					maximumAge: 0
 				}
 			);
-		}, 1000);
+		}, 5000);
 
 		$scope.$on('$destroy', function () {
 			clearInterval(intervalId);

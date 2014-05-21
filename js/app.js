@@ -1,6 +1,6 @@
 angular.module('appHelmet', [
-	'ngSanitize',
 	'ngRoute',
+	'ngSanitize',
 	'mobile-angular-ui',
 	'appHelmet.controllers',
 	'appHelmet.directives'
