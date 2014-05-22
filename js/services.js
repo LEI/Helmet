@@ -105,35 +105,6 @@ function($q, $http) {
 	};
 }])
 
-.factory('directionsApi', [
-	'$q',
-	'$http',
-function($q, $http) {
-	var direction = function(position, destination) {
-		var deferred = $q.defer(),
-			url = 'https://maps.google.fr/maps/api/directions/json',
-			start = position.coords.latitude + ',' + position.coords.longitude;
-
-		$http.get(url, { method: 'GET',
-			params: {
-				origin: start,
-				destination: destination,
-				sensor: true // ...
-			}
-		}).success(function(data, status) {
-			deferred.resolve(data);
-		}).error(function(data, status) {
-			deferred.reject(data);
-		});
-
-		return deferred.promise;
-	};
-
-	return {
-		getDirection: direction
-	};
-}])
-
 .factory('googleApi', [
 	'$rootScope',
 	'$q',
@@ -188,10 +159,10 @@ function($rootScope, $q, $http) {
 				if (status === google.maps.DirectionsStatus.OK) {
 					directionsDisplay.setDirections(response);
 					deferred.resolve(response);
-					//document.getElementById('wrongAddress').style.display = "none";
+					document.getElementById('wrongAddress').style.display = "none";
 				} else {
 					deferred.reject(response);
-					//document.getElementById('wrongAddress').style.display = "block";
+					document.getElementById('wrongAddress').style.display = "block";
 				}
 			});
 
@@ -201,26 +172,26 @@ function($rootScope, $q, $http) {
 			return deferred.promise;
 		},
 		clearDirections: function() {
-			self.init();
+			this.initMap();
 			directionsDisplay.setPanel(null);
 			$rootScope.origin = {
 				lat: $rootScope.position.coords.latitude,
 				lng: $rootScope.position.coords.longitude
 			};
 		},
-		geocode: function(endPoint) {
+		geocode: function(address) {
 			var deferred = $q.defer(),
 				geocoder = new google.maps.Geocoder();
 
 			geocoder.geocode({
-				address: endPoint
+				address: address
 			}, function(results, status) {
 				var location = results[0].geometry.location;
 				if (status === google.maps.GeocoderStatus.OK) {
 					$rootScope.map.setCenter(location);
 					this.addMarker(location);
 				} else {
-					alert('Cannot Geocode');
+					alert('Geocoding impossible');
 				}
 			})
 		}
