@@ -196,4 +196,15 @@ function($rootScope, $q, $http) {
 			})
 		}
 	};
+}])
+
+.factory('bluetooth', [function() {
+    var bluetoothSerial = cordova.require('bluetoothSerial');
+
+    return {
+        sendMessage: function(message) {
+            // interact with bluetoothSerial
+            alert("coucou");
+        }
+    };
 }]);
