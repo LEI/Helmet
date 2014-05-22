@@ -9,8 +9,8 @@
 			<span>Sorry this is not a valid address.</span>
 		</small>
 		<label>Destination:</label>
-		<input ng-model="endPoint" type="text" required>
-		<button class="getDirections" ng-click="getDirections()" ng-disabled="mapContainer.$invalid">Get Directions</button>
+		<input ng-model="destination" type="text" required>
+		<button class="getDirections" ng-click="getDirections(destination)" ng-disabled="mapContainer.$invalid">Get Directions</button>
 		<button class="clearDirections alert" ng-click="clearDirections()" ng-disabled="mapContainer.$invalid">Clear</button>
 		<div id="directionsList"></div>
 	</div>

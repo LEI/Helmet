@@ -42,99 +42,20 @@ function($scope, geolocation, openWeatherApi) {
 	'$rootScope',
 	'$scope',
 	'geolocation',
-function($rootScope, $scope, geolocation) {
+	'googleApi',
+function($rootScope, $scope, geolocation, googleApi) {
 	geolocation.getCurrentPosition().then(function(position) {
 		$rootScope.position = position;
+		googleApi.initMap();
 
-		var currentLatLng = {
-			lat: $rootScope.position.coords.latitude,
-			lng: $rootScope.position.coords.longitude
-		},
-		directionsDisplay = new google.maps.DirectionsRenderer(),
-		directionsService = new google.maps.DirectionsService(),
-		geocoder = new google.maps.Geocoder(),
-		map, marker, infowindow;
-
-		$scope.origin = currentLatLng;
-
-		$scope.init = function () {
-			var mapOptions = {
-				zoom: $scope.zoom !== undefined ? $scope.zoom : 15,
-				mapTypeId: 'roadmap',
-				streetViewControl: false
-			};
-			map = new google.maps.Map(document.getElementById('googleMap'), mapOptions);
-			$scope.endPoint = $scope.destination !== undefined ? $scope.destination : 'Paris';
-
-			//scope.origin = $scope.origin !== undefined ? $scope.origin : 'Gennevilliers';
-
-			map.setCenter($scope.origin);
-			marker = new google.maps.Marker({
-				map: map,
-				position: $scope.origin,
-				animation: google.maps.Animation.DROP
+		$scope.getDirections = function(destination) {
+			$rootScope.destination = destination !== undefined ? destination : 'Paris';
+			googleApi.getDirections().then(function(direction) {
+				console.log(direction);
 			});
-			infowindow = new google.maps.InfoWindow({
-				content: $scope.markerContent !== undefined ? $scope.markerContent : 'Vous êtes ici'
-			});
-			google.maps.event.addListener(marker, 'click', function () {
-				return infowindow.open(map, marker);
-			});
-			/*geocoder.geocode({
-				address: $scope.endPoint
-			}, function (results, status) {
-				var location = results[0].geometry.location;
-				if (status === google.maps.GeocoderStatus.OK)
-					map.setCenter(location);
-					marker = new google.maps.Marker({
-						map: map,
-						position: location,
-						animation: google.maps.Animation.DROP
-					});
-					infowindow = new google.maps.InfoWindow({
-						content: $scope.markerContent !== undefined ? $scope.markerContent : 'Destination'
-					});
-					google.maps.event.addListener(marker, 'click', function () {
-						return infowindow.open(map, marker);
-					});
-				} else {
-					alert('Cannot Geocode');
-				}
-			});*/
-
-
-		};
-		$scope.init();
-		$scope.getDirections = function () {
-			var request = {
-				origin: $rootScope.position.coords.latitude + ',' + $rootScope.position.coords.longitude,
-				destination: $scope.endPoint,
-				travelMode: google.maps.DirectionsTravelMode.DRIVING,
-				unitSystem : google.maps.UnitSystem.METRIC,
-				region: 'UK'
-			};
-			directionsService.route(request, function (response, status) {
-				if (status === google.maps.DirectionsStatus.OK) {
-					directionsDisplay.setDirections(response)
-					document.getElementById('wrongAddress').style.display = "none";
-				} else {
-					document.getElementById('wrongAddress').style.display = "block";
-				}
-			});
-			directionsDisplay.setMap(map);
-
-			directionsDisplay.setPanel(document.getElementById('directionsList'));
-
-		};
-		$scope.clearDirections = function () {
-			$scope.init();
-			directionsDisplay.setPanel(null);
-			$scope.origin = {
-				lat: $rootScope.position.coords.latitude,
-				lng: $rootScope.position.coords.longitude
-			};
-		};
+		}
 	});
+
 }])
 
 .controller('RouteController', [
@@ -146,7 +67,7 @@ function($rootScope, $scope, geolocation, directionsApi) {
 
 	if (navigator.geolocation) {
 
-		$scope.test = {
+		/*$scope.test = {
 			title: 'Recherche en cours...',
 			count: 0,
 			watchPosition: 'Position'
@@ -165,7 +86,7 @@ function($rootScope, $scope, geolocation, directionsApi) {
 
 		geolocation.getCurrentPosition().then(function(position) {
 			$rootScope.position = position;
-		});
+		});*/
 
 		/*
 		$scope.getDirection = function(position, destination) {
