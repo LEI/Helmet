@@ -6,13 +6,14 @@ angular.module('helmetApp.services', [])
 	'$rootScope',
 	'$q',
 function ($rootScope, $q) {
-	// options
-	/*{
-		timeout: 5000,
-		enableHighAccuracy: true,
-		maximumAge: 0
-	}*/
 	var currentPosition = function (onSuccess, onError, options) {
+		if (options == undefined) {
+			options = {
+				timeout: 5000,
+				enableHighAccuracy: true,
+				maximumAge: 0
+			};
+		}
 		var deferred = $q.defer();
 		navigator.geolocation.getCurrentPosition(
 		function (position) {
@@ -39,6 +40,11 @@ function ($rootScope, $q) {
 		return deferred.promise;
 	},
 	watchedPosition = function(onSuccess, onError, options) {
+		if (options == undefined) {
+			options = {
+				frequency: 3000
+			};
+		}
 		var deferred = $q.defer();
 		navigator.geolocation.watchPosition(function (position) {
 			var that = this,
@@ -63,10 +69,6 @@ function ($rootScope, $q) {
 
 		return deferred.promise;
 	};
-
-	// if (!navigator.geolocation) {
-	// 	return false;
-	// }
 
 	return {
 		getCurrentPosition: currentPosition,

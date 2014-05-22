@@ -23,10 +23,15 @@
 		<div ha-weather></div>
 	</div>
 	<div bs-panel title="{{ test.title }}">
+
+	    <!--div ha-map destination="destination" position="position" type="roadmap"></div-->
+	    <div ng-controller="DirectionController">
+			<div ha-map></div>
+	    </div>
+
 		<div class="col-md-6">
-			getCurrentPosition x {{ test.getCurrentPosition || '?' }}<br>
-			Latitude: {{ position.coords.latitude || '?' }}<br>
-			Longitude: {{ position.coords.longitude || '?' }}
+			getCurrentPosition
+			<p ha-position></p>
 		</div>
 		<div ng-bind-html="test.watchPosition" class="col-md-6"></div>
 	</div>

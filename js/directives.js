@@ -12,4 +12,16 @@ angular.module('helmetApp.directives', [])
 	return {
 		templateUrl: 'views/weather.html'
 	};
-}]);
+}])
+
+.directive('haPosition', [function() {
+	return {
+		templateUrl: 'views/position.html'
+	};
+}])
+
+.directive('haMap', function () {
+	return {
+		templateUrl: 'views/map.html'
+	};
+});

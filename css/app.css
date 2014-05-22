@@ -37,3 +37,17 @@
 .white {
   color: #fff;
 }
+#googleMap {
+  height: 300px;
+  background: #ccc;
+  margin: 5px 0;
+}
+.mapContainer {
+  margin: 5px;
+}
+img {
+  max-width: none;
+}
+#wrongAddress {
+  display: none;
+}
