@@ -12,7 +12,7 @@
 </div>
 
 <!-- Contenu -->
-<div class="panel" ng-controller="DirectionController">
+<div class="panel">
 	<div class="panel-heading">
 		<h2 class="panel-title">
 			{{ destinationDistance || 'Géolocalisation' }}
@@ -25,7 +25,9 @@
 	<div bs-panel title="{{ test.title }}">
 
 	    <!--div ha-map destination="destination" position="position" type="roadmap"></div-->
-	    <div ha-map></div>
+	    <div ng-controller="DirectionController">
+			<div ha-map></div>
+	    </div>
 
 		<div class="col-md-6">
 			getCurrentPosition
