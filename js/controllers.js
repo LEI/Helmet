@@ -20,6 +20,21 @@ function($rootScope, $scope) {
 
 }])
 
+.controller('BluetoothController', [
+	'$rootScope',
+	'$scope',
+	'bluetooth',
+function($rootScope, $scope, bluetooth) {
+	echo('a');
+	$rootScope.amac = '00X';
+	bluetooth.sendMessage();
+	$rootScope.amac = '00X';
+	$rootScope.sendM = function(mess) {
+		alert(mess);
+		echo('a');
+	};
+}])
+
 .controller('WeatherController', [
 	'$scope',
 	'geolocation',
