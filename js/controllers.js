@@ -61,6 +61,9 @@ function($rootScope, $scope, geolocation, googleApi) {
 		$scope.clearDirections = function() {
 			googleApi.clearDirections();
 		}
+		$scope.$on('$destroy', function () {
+			$scope.clearDirections();
+		});
 	});
 
 }])
