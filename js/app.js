@@ -1,12 +1,17 @@
-angular.module('appHelmet', [
+angular.module('helmetApp', [
 	'ngRoute',
 	'ngSanitize',
 	'mobile-angular-ui',
-	'appHelmet.controllers',
-	'appHelmet.directives'
+	'helmetApp.controllers',
+	'helmetApp.directives',
+	'helmetApp.services',
+	'helmetApp.arduino'
 ])
 
-.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+.config([
+	'$routeProvider',
+	'$locationProvider',
+function($routeProvider, $locationProvider) {
 
 	$routeProvider
 		.when('/', {

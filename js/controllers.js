@@ -1,10 +1,13 @@
 'use strict';
 
-angular.module('appHelmet.controllers', [
-	'appHelmet.services'
+angular.module('helmetApp.controllers', [
+	'helmetApp.services'
 ])
 
-.controller('AppController', ['$rootScope', '$scope', function($rootScope, $scope) {
+.controller('AppController', [
+	'$rootScope',
+	'$scope',
+function($rootScope, $scope) {
 
 	$scope.test = 'Hello World';
 
@@ -17,10 +20,15 @@ angular.module('appHelmet.controllers', [
 
 }])
 
-.controller('WeatherController', ['$scope', 'geolocation', 'openWeatherMap', function($scope, geolocation, openWeatherMap) {
-	$scope.currentWeather = { city: 'Météo' };
+.controller('WeatherController', [
+	'$scope',
+	'geolocation',
+	'openWeatherApi',
+function($scope, geolocation, openWeatherApi) {
+	// Recherche de la position
 	geolocation.getCurrentPosition().then(function(position) {
-		openWeatherMap.getCurrentWeather(position).then(function(data) {
+		// Récupération de la météo
+		openWeatherApi.getCurrentWeather(position).then(function(data) {
 			$scope.currentWeather = {
 				city: data.name,
 				main: data.main,
@@ -30,83 +38,76 @@ angular.module('appHelmet.controllers', [
 	});
 }])
 
-.controller('RouteController', ['$scope', 'geolocation', 'directionsApi', function($scope, geolocation, directionsApi) {
+.controller('RouteController', [
+	'$rootScope',
+	'$scope',
+	'$interval',
+	'geolocation',
+	'directionsApi',
+function($rootScope, $scope, $interval, geolocation, directionsApi) {
 
-	$scope.test = '';
+	$scope.test = {
+		title: 'Recherche en cours...',
+		getCurrentPosition: 0,
+		watchPosition: ''
+	};
 
-	geolocation.getCurrentPosition().then(function(position) {
-		var destination = 'Paris';
-		directionsApi.getDirection(position, destination).then(function(a, b) {
-			console.log(a);
-			console.log(b);
-			$scope.test = a.routes[0].legs[0].distance.text + ' ' + a.routes[0].legs[0].duration.text;
+	$scope.getDirection = function(destination) {
+		directionsApi.getDirection($rootScope.position, destination).then(function(direction) {
+			if (direction != false) {
+				$scope.destination += ' ' + direction.routes[0].legs[0].distance.text
+									+ ' ' + direction.routes[0].legs[0].duration.text;
+			} else {
+				$scope.destination += 'falsh';
+			}
 		});
-	});
+	};
 
 	if (navigator.geolocation) {
 
-		// Watch position
-		/*geolocation.watchPosition(
-			// Success
-			function(position) {
-				$scope.position = position;
-				$scope.test += '<strong>Position changed</strong> (watchPosition)<br>' +
-					'Latitude: ' + position.coords.latitude + '<br>' +
-					'Longitude: ' + position.coords.longitude + '<br>';
-			},
-			// Fail
-			function(error) {
-				$scope.test += '<strong>Error code ' + error.code + '</strong> (watchPosition)<br>' + error.message + '<br>';
-			},
-			{
-				timeout: 5000,
-				enableHighAccuracy: true,
-				maximumAge: 0
-			}
-		);
+		geolocation.watchPosition().then(function(position) {
+			//$rootScope.position = position;
+			$scope.test.watchPosition += '<strong>watchPosition</strong><br>' +
+				'Latitude: ' + position.coords.latitude + '<br>' +
+				'Longitude: ' + position.coords.longitude + '<br>';
+		});
 
-		var intervalId = setInterval(function () {
+		geolocation.getCurrentPosition().then(function(position) {
+
+			$scope.destination = 'Paris';
+			$rootScope.position = position;
+
+			$scope.getDirection($scope.destination);
+
+		});
+
+		$scope.onTick = function() {
 			// Get current position
 			geolocation.getCurrentPosition().then(function(position) {
-
+				$scope.test.getCurrentPosition++;
+				$rootScope.position = position;
+				console.log(position);
 			});
+		};
 
-				// Success
-				function(position) {
-					$scope.position = position;
-					$scope.test += '<strong>Current position</strong> (getCurrentPosition)<br>' +
-						'Latitude: ' + position.coords.latitude + '<br>' +
-						'Longitude: ' + position.coords.longitude + '<br>';
-				},
-				// Fail
-				function(error) {
-					$scope.test += '<strong>Error code ' + error.code + '</strong> (getCurrentPosition)<br>' + error.message + '<br>';
-				},
-				{
-					timeout: 5000,
-					enableHighAccuracy: true,
-					maximumAge: 0
-				}
-			);
-		}, 5000);*/
-
-		var intervalId = setInterval(function () {
-			// Get current position
-			geolocation.getCurrentPosition().then(function(position) {
-				$scope.position = position;
-				$scope.test += '<strong>Current position</strong> (getCurrentPosition)<br>' +
-					'Latitude: ' + position.coords.latitude + '<br>' +
-					'Longitude: ' + position.coords.longitude + '<br>';
-			});
-		}, 1000);
+		var tick = $interval($scope.onTick, 5000);
 
 		$scope.$on('$destroy', function () {
-			clearInterval(intervalId);
+			$interval.cancel(tick);
 		});
 
 		$scope.destroyInterval = function () {
-			clearInterval(intervalId);
+			$interval.cancel(tick);
 		};
+
+		/*(function tick() {
+			geolocation.getCurrentPosition().then(function(position) {
+				$scope.test.getCurrentPosition++;
+				$rootScope.position = position;
+				console.log(position);
+				$timeout(tick, 1000);
+			});
+		})();*/
 
 	} else {
 		alert('FU');

@@ -8,21 +8,26 @@
 	<a href="#/start" class="btn btn-navbar">
 		<i class="fa fa-road"></i> GO
 	</a>
-	<div vh-bluetooth class="btn btn-navbar" ng-click="toggle('bluetoothOverlay', 'on')"></div>
+	<div ha-bluetooth class="btn btn-navbar" ng-click="toggle('bluetoothOverlay', 'on')"></div>
 </div>
 
 <!-- Contenu -->
 <div class="panel">
 	<div class="panel-heading">
 		<h2 class="panel-title">
-			Geolocation API
+			{{ destination || 'Géolocalisation' }}
 		</h2>
 	</div>
 	<div class="panel-body">
 		<div class="btn btn-danger pull-right" ng-click="destroyInterval()">Stop</div>
-		<div vh-weather="weather"></div>
+		<div ha-weather></div>
 	</div>
-	<div bs-panel title="Recherche en cours... ">
-		<div ng-bind-html="test"></div>
+	<div bs-panel title="{{ test.title }}">
+		<div class="col-md-6">
+			getCurrentPosition x {{ test.getCurrentPosition || '?' }}<br>
+			Latitude: {{ position.coords.latitude || '?' }}<br>
+			Longitude: {{ position.coords.longitude || '?' }}
+		</div>
+		<div ng-bind-html="test.watchPosition" class="col-md-6"></div>
 	</div>
 </div>

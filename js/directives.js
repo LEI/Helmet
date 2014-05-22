@@ -1,14 +1,14 @@
 'use strict';
 
-angular.module('appHelmet.directives', [])
+angular.module('helmetApp.directives', [])
 
-.directive('vhBluetooth', [function() {
+.directive('haBluetooth', [function() {
 	return {
 		template: '<i class="fa fa-signal"></i> Bluetooth'
 	};
 }])
 
-.directive('vhWeather', [function() {
+.directive('haWeather', [function() {
 	return {
 		templateUrl: 'views/weather.html'
 	};

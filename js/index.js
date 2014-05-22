@@ -42,7 +42,7 @@ var appCordova = {
 	// Update DOM on a Received Event
 	receivedEvent: function(id) {
 		if (id === 'deviceready') {
-			angular.bootstrap(document, ['appHelmet']);
+			angular.bootstrap(document, ['helmetApp']);
 		}
 		/*var parentElement = document.getElementById(id);
 		var listeningElement = parentElement.querySelector('.listening');

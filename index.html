@@ -53,13 +53,36 @@
 		</div>
 
 		<!-- Overlay Bluetooth -->
-		<div overlay="bluetoothOverlay">
+		<div ng-controller="BluetoothController" overlay="bluetoothOverlay">
 			<h4 class="overlay-title">Bluetooth</h4>
-			<p>
-				Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem, ex eaque possimus ipsa ab quasi quos corporis consequatur laudantium? Ab assumenda delectus quo velit voluptates doloribus. Earum odit facilis qui.
-			</p>
-			<p toggle="off" bubble target="bluetoothOverlay">
-				<span class="btn btn-primary">Ok</span>
+			<div class="panel-group" id="accordion">
+				<div class="panel panel-default">
+					<div class="panel-heading" toggle target="collapseOne">
+						<h4 class="panel-title">
+								Casque
+						</h4>
+					</div>
+					<div id="collapseOne" toggleable active-class="in" exclusion-group="accordion1" default="active" class="panel-collapse collapse">
+						<div class="panel-body">
+							<!-- ... -->...
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading" toggle target="collapseTwo">
+						<h4 class="panel-title">
+								Intercom
+						</h4>
+					</div>
+					<div id="collapseTwo" toggleable active-class="in" exclusion-group="accordion1" class="panel-collapse collapse">
+						<div class="panel-body">
+							<!-- ... -->...
+						</div>
+					</div>
+				</div>
+			</div>
+			<p bubble toggle="off" target="bluetoothOverlay">
+				<span class="btn btn-primary" ng-click="testBt()">Ok</span>
 				<span class="btn btn-default">Annuler</span>
 			</p>
 		</div>
@@ -118,6 +141,7 @@
 		<script type="text/javascript" src="js/controllers.js"></script>
 		<script type="text/javascript" src="js/directives.js"></script>
 		<script type="text/javascript" src="js/services.js"></script>
+		<script type="text/javascript" src="js/arduino.js"></script>
 
 		<!-- Cordova -->
 		<script type="text/javascript" src="cordova.js"></script>
