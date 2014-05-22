@@ -1,0 +1,17 @@
+<form novalidate name="mapContainer" class="mapContainer panel">
+	<div id="googleMap"></div>
+	<div class="directions" ng-show="directions || directions==undefined">
+		<!---
+		<label>Origin:</label>
+		<input type="text" ng-model="origin" name="origin" required>
+		-->
+		<small class="error" id="wrongAddress">Error:<br>
+			<span>Sorry this is not a valid address.</span>
+		</small>
+		<label>Destination:</label>
+		<input ng-model="endPoint" type="text" required>
+		<button class="getDirections" ng-click="getDirections()" ng-disabled="mapContainer.$invalid">Get Directions</button>
+		<button class="clearDirections alert" ng-click="clearDirections()" ng-disabled="mapContainer.$invalid">Clear</button>
+		<div id="directionsList"></div>
+	</div>
+</form>
