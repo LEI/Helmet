@@ -128,7 +128,7 @@ function($rootScope, $q, $http) {
 					});
 					directionsDisplay.setMap($rootScope.map);
 					// Panel
-					directionsDisplay.setPanel(document.getElementById('directions-list'));
+					//directionsDisplay.setPanel(document.getElementById('directions-list'));
 				}
 
 				if (knownDests[$rootScope.destination] === undefined) {
@@ -146,7 +146,7 @@ function($rootScope, $q, $http) {
 			},
 			clearDirections: function() {
 				this.initMap();
-				directionsDisplay.setPanel(null);
+				//directionsDisplay.setPanel(null);
 			},
 			geocode: function(address) {
 				var deferred = $q.defer();

@@ -9,7 +9,6 @@ angular.module('helmetApp.controllers', [
 	'$scope',
 	function($rootScope, $scope) {
 
-		$scope.test = 'Hello World';
 		$rootScope.loading = {
 			/*route: true,
 			position: true,
@@ -80,12 +79,14 @@ angular.module('helmetApp.controllers', [
 				$rootScope.loading.direction = true;
 				googleApi.initMap();
 				$rootScope.destination = destination !== undefined ? destination : 'Paris';
-				googleApi.getDirections().then(function(direction) {
+				googleApi.getDirections().then(function(directions) {
 					$rootScope.loading.direction = false;
-					$rootScope.destinationTitle = $rootScope.destination + ' '
-						+ direction.routes[0].legs[0].distance.text + ' '
-						+ direction.routes[0].legs[0].duration.text;
+					$scope.directions = directions;
+					console.log(directions);
 					$rootScope.message = '';
+					$rootScope.destinationTitle = $rootScope.destination + ' '
+						+ directions.routes[0].legs[0].distance.text + ' '
+						+ directions.routes[0].legs[0].duration.text;
 				}, function(error) {
 					$rootScope.loading.direction = false;
 					$rootScope.destinationTitle = '';

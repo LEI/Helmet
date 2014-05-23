@@ -2,11 +2,11 @@ angular.module('helmetApp', [
 	'ngRoute',
 	'ngSanitize',
 	'mobile-angular-ui',
-	'bluetooth',
 	'helmetApp.controllers',
 	'helmetApp.directives',
 	'helmetApp.filters',
 	'helmetApp.services',
+	'helmetApp.bluetooth',
 	'helmetApp.arduino'
 ])
 

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('bluetooth', [])
+angular.module('helmetApp.bluetooth', [])
 
 .factory('bluetooth', [function() {
 	if (typeof cordova !== 'undefined') {

@@ -6,7 +6,12 @@
 	<div ng-show="loading.direction" class="loading">
 		<i class="fa fa-refresh fa-spin spinner"></i>
 	</div>
-	<div id="google-map"></div>
+	<div id="google-map" class="col-md-6"></div>
+	<ul class="col-md-6">
+		<li ng-repeat="step in directions.routes[0].legs[0].steps">
+			{{ step }}
+		</li>
+	</ul>
 	<div class="directions" ng-show="directions || directions==undefined">
 		<div id="directions-list"></div>
 	</div>
