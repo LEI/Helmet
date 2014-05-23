@@ -5,14 +5,13 @@ angular.module('bluetooth', [])
 .factory('bluetooth', [function() {
 	if (typeof cordova !== 'undefined') {
 
-	    console.log(bluetoothSerial);
+		console.log(bluetoothSerial);
 
-	    return {
-	        sendMessage: function(message) {
-	            // interact with bluetoothSerial
-	            alert("coucou");
-	        }
-	    };
+		return {
+			connect: function() {
+				// connect salope
+			},
+		};
 	}
 }])
 
@@ -21,6 +20,8 @@ angular.module('bluetooth', [])
 	'$scope',
 	'bluetooth',
 function($rootScope, $scope, bluetooth) {
+
+	$scope.listDevices = [];
 
 	$scope.connectToDevice = function() {
 		alert('lol');

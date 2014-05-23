@@ -67,6 +67,15 @@ angular.module('helmetApp.controllers', [
 			$scope.test.watchPosition += '<strong>watchPosition</strong><br>' +
 				'Latitude: ' + position.coords.latitude + '<br>' +
 				'Longitude: ' + position.coords.longitude + '<br>';
+
+			$scope.findMe = function() {
+				var origin = new google.maps.LatLng(
+					$rootScope.position.coords.latitude,
+					$rootScope.position.coords.longitude
+				);
+				$rootScope.map.setCenter(origin);
+				googleApi.addMarker(origin);
+			}
 			$scope.getDirections = function(destination) {
 				$rootScope.loading.direction = true;
 				googleApi.initMap();

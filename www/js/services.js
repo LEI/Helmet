@@ -65,35 +65,6 @@ function ($rootScope, $q) {
 	};
 }])
 
-.factory('openWeatherApi', [
-	'$q',
-	'$http',
-function($q, $http) {
-	var currentWeather = function(position) {
-		var deferred = $q.defer(),
-			url = 'http://api.openweathermap.org/data/2.5/weather';
-
-		$http.get(url, { method: 'GET',
-			params: {
-				mode: 'json', lang: 'fr',
-				units: 'metric', u: 'c',
-				lat: position.coords.latitude,
-				lon: position.coords.longitude
-			}
-		}).success(function(data, status) {
-			deferred.resolve(data);
-		}).error(function(data, status) {
-			deferred.reject(status);
-		});
-
-		return deferred.promise;
-	};
-
-	return {
-		getCurrentWeather: currentWeather
-	};
-}])
-
 .factory('googleApi', [
 	'$rootScope',
 	'$q',
@@ -177,14 +148,6 @@ function($rootScope, $q, $http) {
 				this.initMap();
 				directionsDisplay.setPanel(null);
 			},
-			findMe: function() {
-				var origin = new google.maps.LatLng(
-					$rootScope.position.coords.latitude,
-					$rootScope.position.coords.longitude
-				);
-				$rootScope.map.setCenter(origin);
-				this.addMarker(origin);
-			},
 			geocode: function(address) {
 				var deferred = $q.defer();
 				geocoder.geocode({
@@ -203,4 +166,33 @@ function($rootScope, $q, $http) {
 	} else {
 		alert('API Google inaccessible');
 	}
+}])
+
+.factory('openWeatherApi', [
+	'$q',
+	'$http',
+function($q, $http) {
+	var currentWeather = function(position) {
+		var deferred = $q.defer(),
+			url = 'http://api.openweathermap.org/data/2.5/weather';
+
+		$http.get(url, { method: 'GET',
+			params: {
+				mode: 'json', lang: 'fr',
+				units: 'metric', u: 'c',
+				lat: position.coords.latitude,
+				lon: position.coords.longitude
+			}
+		}).success(function(data, status) {
+			deferred.resolve(data);
+		}).error(function(data, status) {
+			deferred.reject(status);
+		});
+
+		return deferred.promise;
+	};
+
+	return {
+		getCurrentWeather: currentWeather
+	};
 }]);

@@ -22,8 +22,38 @@
 		</div>
 
 		<div class="app">
-			<!-- Navigation -->
-			<div ng-include="'views/navigation.html'"></div>
+			<!-- Navigation top -->
+			<div class="navbar navbar-app navbar-absolute-top">
+				<!-- center -->
+				<div class="navbar-brand navbar-brand-center" yield-to="title">
+					<span>Helmet</span>
+				</div>
+				<!-- left -->
+				<div class="btn-group pull-left">
+					<div ng-click="toggle('sidebar')" class="btn btn-navbar sidebar-toggle">
+						<i class="fa fa-bars"></i> Helmet
+					</div>
+				</div>
+				<!-- right -->
+				<div class="btn-group pull-right" yield-to="navbarAction"></div>
+			</div>
+			<!-- Navigation bottom -->
+			<div class="navbar navbar-app navbar-absolute-bottom">
+				<div class="btn-group justified">
+					<a href="#/" class="btn btn-navbar btn-icon-only">
+						<i class="fa fa-dashboard fa-navbar"></i>
+					</a>
+					<a href="#/route" class="btn btn-navbar btn-icon-only">
+						<i class="fa fa-location-arrow fa-navbar"></i>
+					</a>
+					<a href="#/trips" class="btn btn-navbar btn-icon-only">
+						<i class="fa fa-road fa-navbar"></i>
+					</a>
+					<a href="#/settings" class="btn btn-navbar btn-icon-only">
+						<i class="fa fa-gear fa-navbar"></i>
+					</a>
+				</div>
+			</div>
 
 			<!-- Bluetooth Overlay -->
 			<div ng-include="'views/bluetooth.html'"></div>
