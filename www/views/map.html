@@ -1,5 +1,5 @@
 <form novalidate name="mapContainer" class="mapContainer panel">
-	<input ng-model="destination" type="text" placeholder="Destination" required>
+	<input bs-form-control type="text" ng-model="destination" label="Destination" label-class="col-xs-3 col-sm-2 col-lg-1" class="col-xs-9 col-sm-10 col-lg-11" placeholder="Destination" required>
 	<button class="btn btn-primary" ng-click="getDirections(destination)" ng-disabled="mapContainer.$invalid">Itinéraire</button>
 	<button class="btn btn-default" ng-click="clearDirections()" ng-disabled="mapContainer.$invalid">Effacer</button>
 	<div ng-show="loading.direction" class="loading">
