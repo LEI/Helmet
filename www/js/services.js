@@ -105,7 +105,7 @@ function($rootScope, $q, $http) {
 			getDirections: function() {
 				var origin, deferred = $q.defer(),
 				directionsService = new google.maps.DirectionsService();
-				angular.element(document.getElementById('google-map')).css('height','400px')
+				//angular.element(document.getElementById('google-map')).css('height','400px')
 				function initDirection(latLng) {
 					origin = $rootScope.position !== undefined ? new google.maps.LatLng(
 						$rootScope.position.coords.latitude,
@@ -128,7 +128,7 @@ function($rootScope, $q, $http) {
 					});
 					directionsDisplay.setMap($rootScope.map);
 					// Panel
-					//directionsDisplay.setPanel(document.getElementById('directions-list'));
+					directionsDisplay.setPanel(document.getElementById('directions-list'));
 				}
 
 				if (knownDests[$rootScope.destination] === undefined) {
@@ -146,7 +146,7 @@ function($rootScope, $q, $http) {
 			},
 			clearDirections: function() {
 				this.initMap();
-				//directionsDisplay.setPanel(null);
+				directionsDisplay.setPanel(null);
 			},
 			geocode: function(address) {
 				var deferred = $q.defer();

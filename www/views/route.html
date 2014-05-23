@@ -16,7 +16,7 @@
 	<i class="fa fa-refresh fa-spin spinner"></i>
 </div>
 <!-- Contenu -->
-<div class="panel" ng-hide="loading.position" ng-controller="DirectionController">
+<div class="panel container" ng-hide="loading.position" ng-controller="DirectionController">
 	<div class="panel-heading">
 		<h2 class="panel-title">
 			{{ message || destinationTitle || 'Géolocalisation' | capitalize }}
@@ -27,18 +27,6 @@
 		<div ha-weather></div>
 	</div>
 	<div bs-panel>
-		<form novalidate name="mapContainer" class="mapContainer panel">
-			<input ng-model="destination" type="text" placeholder="Destination" required>
-			<button class="btn btn-primary" ng-click="getDirections(destination)" ng-disabled="mapContainer.$invalid">Itinéraire</button>
-			<button class="btn btn-default" ng-click="clearDirections()" ng-disabled="mapContainer.$invalid">Effacer</button>
-			<div ng-show="loading.direction" class="loading">
-				<i class="fa fa-refresh fa-spin spinner"></i>
-			</div>
-			<div id="google-map"></div>
-			<div class="directions" ng-show="directions || directions==undefined">
-				<div id="directions-list"></div>
-			</div>
-		</form>
-		<div ng-bind-html="test.watchPosition"></div>
+		<div ng-include="'views/map.html'"></div>
 	</div>
 </div>

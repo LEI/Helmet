@@ -100,6 +100,9 @@ angular.module('helmetApp.controllers', [
 			$scope.$on('$destroy', function () {
 				$scope.clearDirections();
 			});
+
+			$scope.getDirections('Paris');
+
 		}, function(e) {
 			console.log(e);
 			$rootScope.destinationTitle = false;
