@@ -1,2 +1,5 @@
 .DS_Store
-bower_components/
+www/bower_components/
+hooks/
+platforms/
+plugins/

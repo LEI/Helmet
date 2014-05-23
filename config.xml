@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="fr.faclab.helmet" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+	<name>Helmet</name>
+	<description>
+		Helmet Visio HD+
+	</description>
+	<author email="dev@cordova.apache.org" href="http://cordova.io">
+		Apache Cordova Team
+	</author>
+	<content src="index.html" />
+	<access origin="*" />
+	<access origin="*.google.fr" />
+	<access origin="*.google.com" />
+	<access origin="*.googleapis.com" />
+	<access origin="*.gstatic.com" />
+	<access origin="google.fr" subdomains="true"/>
+	<access origin="google.com" subdomains="true"/>
+	<access origin="googleapis.com" subdomains="true"/>
+	<access origin="gstatic.com" subdomains="true"/>
+	<access origin="maps.googleapis.com"/>
+</widget>
