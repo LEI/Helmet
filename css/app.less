@@ -13,20 +13,25 @@
 }*/
 
 .app-content-loading {
-  text-align: center;
-  height: 100%;
-  width: 100%;
-  background: #fff;
-  position: relative;
+	text-align: center;
+	height: 100%;
+	width: 100%;
+	background: #fff;
+	position: relative;
+	.spinner {
+		position: absolute;
+		font-size: 50px;
+		left: 50%;
+		top: 50%;
+		margin-left: -25px;
+		margin-top: -25px;
+	}
 }
-
-.loading-spinner {
-  position: absolute;
-  font-size: 50px;
-  left: 50%;
-  top: 50%;
-  margin-left: -25px;
-  margin-top: -25px;
+.loading {
+	display: inline-block;
+	.spinner {
+		font-size: 1.5em;
+	}
 }
 
 .sidebar {
@@ -42,9 +47,8 @@
 
 // google maps
 #googleMap {
-    height:300px;
-    background:#ccc;
-    margin: 5px 0;
+    height: 0px;
+    background: #ccc;
 }
 .mapContainer {
     margin:5px;

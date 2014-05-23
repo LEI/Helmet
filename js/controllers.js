@@ -10,12 +10,20 @@ angular.module('helmetApp.controllers', [
 function($rootScope, $scope) {
 
 	$scope.test = 'Hello World';
+	$rootScope.loading = {
+		/*route: true,
+		position: true,
+		weather: true,
+		direction: true*/
+	};
 
 	$rootScope.$on("$routeChangeStart", function(){
-		$rootScope.loading = true;
+		$rootScope.loading.route = true;
+		$rootScope.message = '';
 	});
+
 	$rootScope.$on("$routeChangeSuccess", function(){
-		$rootScope.loading = false;
+		$rootScope.loading.route = false;
 	});
 
 }])
@@ -36,15 +44,18 @@ function($rootScope, $scope, bluetooth) {
 }])
 
 .controller('WeatherController', [
-	'$scope',
+	'$rootScope',
 	'geolocation',
 	'openWeatherApi',
-function($scope, geolocation, openWeatherApi) {
+	'$timeout',
+function($rootScope, geolocation, openWeatherApi, $timeout) {
 	// Recherche de la position
 	geolocation.getCurrentPosition().then(function(position) {
 		// Récupération de la météo
+		$rootScope.loading.weather = true;
 		openWeatherApi.getCurrentWeather(position).then(function(data) {
-			$scope.currentWeather = {
+			$rootScope.loading.weather = false;
+			$rootScope.currentWeather = {
 				city: data.name,
 				main: data.main,
 				data: data.weather
@@ -59,28 +70,45 @@ function($scope, geolocation, openWeatherApi) {
 	'geolocation',
 	'googleApi',
 function($rootScope, $scope, geolocation, googleApi) {
-	geolocation.getCurrentPosition().then(function(position) {
+	$rootScope.loading.position = true;
+	$rootScope.watchId = geolocation.watchPosition().then(function(position) {
 		$rootScope.position = position;
-		googleApi.initMap();
-
+		$rootScope.loading.position = false;
+		//debug
+		$scope.test.watchPosition += '<strong>watchPosition</strong><br>' +
+			'Latitude: ' + position.coords.latitude + '<br>' +
+			'Longitude: ' + position.coords.longitude + '<br>';
 		$scope.getDirections = function(destination) {
+			$rootScope.loading.direction = true;
+			googleApi.initMap();
 			$rootScope.destination = destination !== undefined ? destination : 'Paris';
 			googleApi.getDirections().then(function(direction) {
-				$rootScope.destinationDistance = $rootScope.destination;
-				$rootScope.destinationDistance += ' ' + direction.routes[0].legs[0].distance.text
-				+ ' ' + direction.routes[0].legs[0].duration.text;
+				$rootScope.loading.direction = false;
+				$rootScope.destinationTitle = $rootScope.destination + ' '
+					+ direction.routes[0].legs[0].distance.text + ' '
+					+ direction.routes[0].legs[0].duration.text;
+				$rootScope.message = '';
 			}, function(error) {
-				console.log(error);
+				$rootScope.loading.direction = false;
+				$rootScope.destinationTitle = '';
+				$rootScope.message = error === 'ZERO_RESULTS' ? 'Destination introuvable' : error;
 			});
 		}
 		$scope.clearDirections = function() {
 			googleApi.clearDirections();
+			$scope.destination = '';
 		}
 		$scope.$on('$destroy', function () {
 			$scope.clearDirections();
 		});
+	}, function(e) {
+		console.log(e);
+		$rootScope.destinationTitle = false;
+		$rootScope.message = e;
 	});
-
+	$scope.stopWatch = function() {
+		navigator.geolocation.clearWatch($rootScope.watchId);
+	};
 }])
 
 .controller('RouteController', [
@@ -92,32 +120,38 @@ function($rootScope, $scope, geolocation) {
 	if (navigator.geolocation) {
 
 		$scope.test = {
-			title: 'Recherche en cours...',
-			count: 0,
-			watchPosition: 'Position'
+			watchPosition: ''
 		};
 
-		var m, newPoint, watchId = geolocation.watchPosition().then(function(position) {
+		/*var posMarker, latLng, watchId = geolocation.watchPosition().then(function(position) {
+			// Mise à jour de la position
 			$rootScope.position = position;
+			latLng = new google.maps.LatLng(
+				position.coords.latitude,
+				position.coords.longitude
+			);
+			// if (posMarker) {
+			// 	posMarker.setPosition(latLng);
+			// } else {
+			// 	posMarker = new google.maps.Marker({
+			// 		position: latLng,
+			// 		map: $rootScope.map
+			// 	});
+			// }
+			if ($rootScope.map) {
+				$rootScope.map.setCenter(latLng);
+			}
+
 			$scope.test.watchPosition += '<strong>watchPosition</strong><br>' +
 				'Latitude: ' + position.coords.latitude + '<br>' +
 				'Longitude: ' + position.coords.longitude + '<br>';
 
-			newPoint = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-			if (m) {
-				m.setPosition(newPoint);
-			} else {
-				m = new google.maps.Marker({
-					position: newPoint,
-					map: $rootScope.map
-				});
-			}
-			$rootScope.map.setCenter(newPoint);
 		});
 
 		$scope.stop = function() {
 			navigator.geolocation.clearWatch(watchId);
-		};
+		};*/
+
 
 		/*
 		geolocation.getCurrentPosition().then(function(position) {

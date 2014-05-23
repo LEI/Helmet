@@ -20,13 +20,19 @@
   background: #fff;
   position: relative;
 }
-.loading-spinner {
+.app-content-loading .spinner {
   position: absolute;
   font-size: 50px;
   left: 50%;
   top: 50%;
   margin-left: -25px;
   margin-top: -25px;
+}
+.loading {
+  display: inline-block;
+}
+.loading .spinner {
+  font-size: 1.5em;
 }
 .sidebar {
   font-size: 1.1em;
@@ -38,9 +44,8 @@
   color: #fff;
 }
 #googleMap {
-  height: 300px;
+  height: 0px;
   background: #ccc;
-  margin: 5px 0;
 }
 .mapContainer {
   margin: 5px;

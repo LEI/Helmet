@@ -1,17 +1,12 @@
 <form novalidate name="mapContainer" class="mapContainer panel">
-	<div id="googleMap"></div>
+	<input ng-model="destination" type="text" placeholder="Destination" required>
+	<button class="btn btn-primary" ng-click="getDirections(destination)" ng-disabled="mapContainer.$invalid">Itinéraire</button>
+	<button class="btn btn-default" ng-click="clearDirections()" ng-disabled="mapContainer.$invalid">Effacer</button>
+	<div ng-show="loading.direction" class="loading">
+		<i class="fa fa-refresh fa-spin spinner"></i>
+	</div>
+	<div id="google-map"></div>
 	<div class="directions" ng-show="directions || directions==undefined">
-		<!---
-		<label>Origin:</label>
-		<input type="text" ng-model="origin" name="origin" required>
-		-->
-		<small class="error" id="wrongAddress">Error:<br>
-			<span>Sorry this is not a valid address.</span>
-		</small>
-		<label>Destination:</label>
-		<input ng-model="destination" type="text" required>
-		<button class="getDirections" ng-click="getDirections(destination)" ng-disabled="mapContainer.$invalid">Get Directions</button>
-		<button class="clearDirections alert" ng-click="clearDirections()" ng-disabled="mapContainer.$invalid">Clear</button>
-		<div id="directionsList"></div>
+		<div id="directions-list"></div>
 	</div>
 </form>

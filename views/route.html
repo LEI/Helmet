@@ -11,28 +11,34 @@
 	<div ha-bluetooth class="btn btn-navbar" ng-click="toggle('bluetoothOverlay', 'on')"></div>
 </div>
 
+<!-- Chargement -->
+<div ng-show="loading.position" class="app-content-loading">
+	<i class="fa fa-gear fa-spin spinner"></i>
+</div>
 <!-- Contenu -->
-<div class="panel">
+<div class="panel" ng-hide="loading.position" ng-controller="DirectionController">
 	<div class="panel-heading">
 		<h2 class="panel-title">
-			{{ destinationDistance || 'Géolocalisation' }}
+			{{ message || destinationTitle || 'Géolocalisation' | capitalize }}
 		</h2>
 	</div>
 	<div class="panel-body">
-		<div class="btn btn-danger pull-right" ng-click="destroyInterval()">Stop</div>
+		<div class="btn btn-danger pull-right" ng-click="stopWatch()">Stop</div>
 		<div ha-weather></div>
 	</div>
-	<div bs-panel title="{{ test.title }}">
-
-		<!--div ha-map destination="destination" position="position" type="roadmap"></div-->
-		<div ng-controller="DirectionController">
-			<div ha-map></div>
-		</div>
-
-		<div class="col-md-6">
-			getCurrentPosition
-			<p ha-position></p>
-		</div>
-		<div ng-bind-html="test.watchPosition" class="col-md-6"></div>
+	<div bs-panel>
+		<form novalidate name="mapContainer" class="mapContainer panel">
+			<input ng-model="destination" type="text" placeholder="Destination" required>
+			<button class="btn btn-primary" ng-click="getDirections(destination)" ng-disabled="mapContainer.$invalid">Itinéraire</button>
+			<button class="btn btn-default" ng-click="clearDirections()" ng-disabled="mapContainer.$invalid">Effacer</button>
+			<div ng-show="loading.direction" class="loading">
+				<i class="fa fa-refresh fa-spin spinner"></i>
+			</div>
+			<div id="google-map"></div>
+			<div class="directions" ng-show="directions || directions==undefined">
+				<div id="directions-list"></div>
+			</div>
+		</form>
+		<div ng-bind-html="test.watchPosition"></div>
 	</div>
 </div>

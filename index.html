@@ -122,27 +122,31 @@
 				</div>
 			</div>
 
-			<div class="app-body scrollable" ng-class="{loading: loading}">
+			<div class="app-body scrollable">
+				<div class="notification">
+					{{ notification }}
+				</div>
 				<!-- Chargement -->
-				<div ng-show="loading" class="app-content-loading">
+				<div ng-show="loading.route" class="app-content-loading">
 					<i class="fa fa-gear fa-spin loading-spinner"></i>
 				</div>
 				<!-- Contenu -->
-				<div ng-view class="app-content scrollable-content" ng-hide="loading"></div>
+				<div ng-view class="app-content scrollable-content" ng-hide="loading.route"></div>
 			</div>
 		</div>
 
-		<script type="text/javascript" src="//maps.google.fr/maps/api/js?sensor=true"></script>
+		<script src="//maps.google.fr/maps/api/js?key=AIzaSyBvFpbSPCX7TEnXxQ3ztf8zD_zLVGxiLbg&sensor=true"></script>
 		<!-- Bower -->
 		<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
 		<script type="text/javascript" src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
 		<script type="text/javascript" src="bower_components/angular-route/angular-route.min.js"></script>
-		<script type="text/javascript" src="bower_components/mobile-angular-ui/dist/js/mobile-angular-ui.min.js"></script>>
+		<script type="text/javascript" src="bower_components/mobile-angular-ui/dist/js/mobile-angular-ui.min.js"></script>
 
 		<!-- Angular -->
 		<script type="text/javascript" src="js/app.js"></script>
 		<script type="text/javascript" src="js/controllers.js"></script>
 		<script type="text/javascript" src="js/directives.js"></script>
+		<script type="text/javascript" src="js/filters.js"></script>
 		<script type="text/javascript" src="js/services.js"></script>
 		<script type="text/javascript" src="js/arduino.js"></script>
 

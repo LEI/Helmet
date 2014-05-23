@@ -4,6 +4,7 @@ angular.module('helmetApp', [
 	'mobile-angular-ui',
 	'helmetApp.controllers',
 	'helmetApp.directives',
+	'helmetApp.filters',
 	'helmetApp.services',
 	'helmetApp.arduino'
 ])
