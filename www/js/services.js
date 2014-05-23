@@ -99,7 +99,7 @@ function($q, $http) {
 	'$q',
 	'$http',
 function($rootScope, $q, $http) {
-	if (google) {
+	if (typeof google !== 'undefined') {
 		var directionsDisplay = new google.maps.DirectionsRenderer(),
 		geocoder = new google.maps.Geocoder(),
 		marker, infowindow, knownDests = [],
@@ -116,8 +116,6 @@ function($rootScope, $q, $http) {
 				);
 				$rootScope.map = new google.maps.Map(document.getElementById('google-map'), mapOptions);
 				$rootScope.map.setCenter(origin);
-
-				//this.addMarker(origin);
 			},
 			addMarker: function(location, popup) {
 				popup = popup !== undefined ? popup : 'Hello You'
@@ -179,6 +177,14 @@ function($rootScope, $q, $http) {
 				this.initMap();
 				directionsDisplay.setPanel(null);
 			},
+			findMe: function() {
+				var origin = new google.maps.LatLng(
+					$rootScope.position.coords.latitude,
+					$rootScope.position.coords.longitude
+				);
+				$rootScope.map.setCenter(origin);
+				this.addMarker(origin);
+			},
 			geocode: function(address) {
 				var deferred = $q.defer();
 				geocoder.geocode({
@@ -190,21 +196,11 @@ function($rootScope, $q, $http) {
 						deferred.reject(status);
 					}
 				});
+
 				return deferred.promise;
 			}
 		};
 	} else {
 		alert('API Google inaccessible');
 	}
-}])
-
-.factory('bluetooth', [function() {
-    var bluetoothSerial = cordova.require('bluetoothSerial');
-
-    return {
-        sendMessage: function(message) {
-            // interact with bluetoothSerial
-            alert("coucou");
-        }
-    };
 }]);

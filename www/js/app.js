@@ -2,6 +2,7 @@ angular.module('helmetApp', [
 	'ngRoute',
 	'ngSanitize',
 	'mobile-angular-ui',
+	'bluetooth',
 	'helmetApp.controllers',
 	'helmetApp.directives',
 	'helmetApp.filters',
