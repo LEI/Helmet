@@ -5,15 +5,18 @@
 
 <!-- Navigation -->
 <div content-for="navbarAction">
-	<a href="#/start" class="btn btn-navbar">
-		<i class="fa fa-road"></i> GO
-	</a>
+	<!-- Weather -->
+	<div ng-click="toggle('weatherOverlay', 'on')" class="btn btn-navbar">
+		<i class="fa fa-sun-o"></i>
+	</div>
+	<!-- Bluetooth -->
 	<div bt-icon class="btn btn-navbar" ng-click="toggle('bluetoothOverlay', 'on')"></div>
 </div>
 
 <!-- Chargement -->
 <div ng-show="loading.position" class="app-content-loading">
 	<i class="fa fa-map-marker spinner"></i>
+	<div class="spinner-message">{{ message || 'Géolocalisation...' }}</div>
 </div>
 <!-- Contenu -->
 <div class="panel container" ng-hide="loading.position">

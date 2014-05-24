@@ -1,40 +1,33 @@
 <!--h4>
 	{{ destination || 'Destination' | capitalize }}
 </h4-->
-<div ha-weather
-	ng-controller="WeatherController">
-</div>
 
-<p>
-	<br>
-	{{ _directions.routes[0].legs[0].start_address }}
-	<br>
-	<i class="fa fa-arrow-down"></i>
-	{{ _directions.routes[0].legs[0].distance.text }}
-	~ {{ _directions.routes[0].legs[0].duration.text }}
-	<br>
-	{{ _directions.routes[0].legs[0].end_address }}
-</p>
-<p>
-	<div ha-step="step.current" step-count="step.count" step-total="step.all.length" class="right"></div>
-	<div>
-		<button
-			class="btn btn-default"
-			ng-click="getStep(step.count - 1)"
-			ng-disabled="step.count === 0">
-			Précédent
-		</button>
-
-		<button
-			class="btn btn-default"
-			ng-click="getStep(step.count + 1)"
-			ng-disabled="step.count === step.all.length - 1">
-			Suivant
-		</button>
-
+<div class="col-md-12">
+	<!-- <div ha-step="step.current"
+		step-count="step.count"
+		step-total="_steps.length"
+		class="right">
+	</div> -->
+	<div class="right">
+		<i class="fa fa-road"></i> {{ _directions.routes[0].legs[0].distance.text }}<br>
+		<i class="fa fa-clock-o"></i> {{ _directions.routes[0].legs[0].duration.text }}
+	</div>
+	<p>
+		{{ _directions.routes[0].legs[0].start_address }}
+		<br>
+		<i class="fa fa-map-marker"></i>
+		{{ _directions.routes[0].legs[0].end_address }}
+	</p>
+	<div class="step clear-fix">
+		<h3 ng-show="step.current" class="pull-right">
+			{{ step.current.distance.text }}
+			~ {{ step.current.duration.text }}
+		</h3>
 		<p ng-bind-html="step.current.instructions"></p>
 	</div>
-</p>
+</div>
+<div class="col-md-12 ">
+</div>
 
 <!--
 <ul class="direction-steps">

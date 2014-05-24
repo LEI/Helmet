@@ -23,6 +23,9 @@ ul {
   list-style-type: none;
   padding: 0;
 }
+body .app {
+  background-color: #fff;
+}
 .app-content-loading {
   text-align: center;
   height: 100%;
@@ -32,7 +35,7 @@ ul {
 }
 .app-content-loading .spinner {
   position: absolute;
-  top: 40%;
+  top: 50%;
   left: 0;
   right: 0;
   text-align: center;
@@ -44,7 +47,7 @@ ul {
   left: 0;
   right: 0;
   text-align: center;
-  font-size: 2em;
+  font-size: 1.5em;
 }
 .loading {
   display: inline-block;
@@ -71,6 +74,17 @@ ul {
   clear: both;
   text-align: center;
 }
+.clear-fix {
+  clear: both;
+}
+.weather {
+  display: block;
+  min-height: 34px;
+  margin: 10px 0;
+}
+.weather img {
+  height: 34px;
+}
 #google-map {
   clear: both;
   min-height: 150px;
@@ -78,13 +92,18 @@ ul {
   margin-bottom: 10px;
 }
 .item-count {
-  font-size: 1.5em;
+  display: inline-block;
+  font-size: 1.2em;
   font-weight: bold;
 }
-.instruction-sprite {
+.instruction {
+  float: left;
+  margin: 7px;
+}
+.sprite {
+  display: block;
   width: 20px;
   height: 20px;
-  display: inline-block;
 }
 .turn-sharp-left {
   background: url('../img/maneuvers.png') 0px 0px;

@@ -133,8 +133,8 @@ function($rootScope, $q, $http) {
 						}
 					});
 					directionsDisplay.setMap($rootScope.map);
-					// Panel
-					directionsDisplay.setPanel(document.getElementById('directions-steps'));
+					// DirectionsRenderer Panel
+					//directionsDisplay.setPanel(document.getElementById('directions-steps'));
 				}
 
 				if (knownDests[$rootScope.destination] === undefined) {
@@ -170,18 +170,22 @@ function($rootScope, $q, $http) {
 			}
 		};
 	} else {
-		alert('googleapis.com inaccessible');
+		//alert('googleapis.com inaccessible');
 	}
 }])
 
 .factory('openWeatherApi', [
+	'$rootScope',
 	'$q',
 	'$http',
-function($q, $http) {
+function($rootScope, $q, $http) {
 	var currentWeather = function(position) {
 		var deferred = $q.defer(),
 			url = 'http://api.openweathermap.org/data/2.5/weather';
-
+		if (position === undefined) {
+			deferred.reject('Position inconnue');
+			return deferred.promise;
+		}
 		$http.get(url, { method: 'GET',
 			params: {
 				mode: 'json', lang: 'fr',
@@ -189,10 +193,15 @@ function($q, $http) {
 				lat: position.coords.latitude,
 				lon: position.coords.longitude
 			}
-		}).success(function(data, status) {
-			deferred.resolve(data);
-		}).error(function(data, status) {
-			deferred.reject(status);
+		}).success(function(response, status) {
+			if (response.message === undefined) {
+				deferred.resolve(response, status);
+			} else {
+				console.log(response);
+				deferred.reject(response.cod + ' ' + response.message);
+			}
+		}).error(function(response, status) {
+			deferred.reject(response, status);
 		});
 
 		return deferred.promise;
