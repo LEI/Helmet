@@ -1,0 +1,46 @@
+<div class="map-container panel">
+	<div class="btn-group justified nav-tabs col-md-6 form-group">
+		<!-- whereami -->
+		<a class="btn btn-default" ng-click="findMe()"
+			ng-disabled="loading.position || loading.direction">
+			<i class="fa fa-map-marker"></i>
+		</a>
+		<!-- loading -->
+		<a class="btn btn-default"
+			ng-disabled="loading.position || loading.direction"
+			ng-show="loading.position || loading.direction">
+			<div class="loading">
+				<i class="fa fa-refresh fa-spin spinner inherit-size"></i>
+			</div>
+		</a>
+		<!-- reset -->
+		<a class="btn btn-default" ng-click="clearDirections()"
+			ng-disabled="loading.position || loading.direction || !_directions"
+			ng-hide="loading.position || loading.direction">
+			<i class="fa fa-times inherit-size"></i>
+		</a>
+		<!-- search -->
+		<a class="btn btn-primary" ng-click="getDirections(destination)"
+			ng-disabled="directionForm.$invalid || loading.position || loading.direction">
+			<i class="fa fa-search inherit-size"></i>
+		</a>
+	</div>
+
+	<form novalidate ng-submit="getDirection(destination)" name="directionForm" class="directionForm col-md-6">
+		<input
+			bs-form-control
+			type="text"
+			ng-model="destination"
+			label=""
+			label-class="col-xs-12"
+			class="col-xs-12"
+			placeholder="Destination"
+			autofocus
+			required>
+	</form>
+
+	<!-- Directions -->
+	<div ha-directions class="direction-container" ng-show="_directions"></div>
+	<!-- Carte -->
+	<div id="google-map"></div>
+</div>

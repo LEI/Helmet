@@ -19,9 +19,9 @@ function($routeProvider, $locationProvider) {
 		.when('/', {
 			templateUrl: 'views/home.html'
 		})
-		.when('/route', {
+		.when('/direction/:direction?', {
 			templateUrl: 'views/route.html',
-			controller: 'RouteController'
+			controller: 'DirectionController'
 		})
 		.when('/trips', {
 			templateUrl: 'views/trips.html',

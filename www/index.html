@@ -43,7 +43,7 @@
 					<a href="#/" class="btn btn-navbar btn-icon-only">
 						<i class="fa fa-dashboard fa-navbar"></i>
 					</a>
-					<a href="#/route" class="btn btn-navbar btn-icon-only">
+					<a href="#/direction" class="btn btn-navbar btn-icon-only">
 						<i class="fa fa-location-arrow fa-navbar"></i>
 					</a>
 					<a href="#/trips" class="btn btn-navbar btn-icon-only">
@@ -56,15 +56,60 @@
 			</div>
 
 			<!-- Bluetooth Overlay -->
-			<div ng-include="'views/bluetooth.html'"></div>
+			<div ha-bluetooth ng-controller="BluetoothController" overlay="bluetoothOverlay">
+				<!-- Géolocalisation -->
+				<div class="panel-heading">
+					<h2 class="panel-title">
+						{{ message || 'Géolocalisation' | capitalize }}
+					</h2>
+				</div>
+				<div class="panel-body">
+					<div ha-position></div>
+					<!--<div class="btn btn-danger pull-right" ng-click="stopWatch()">Stop</div>-->
+				</div>
+
+				<h4 class="overlay-title">Bluetooth</h4>
+
+				<div class="panel-group" id="accordion">
+					<div class="panel panel-default">
+						<div class="panel-heading" toggle target="collapseOne">
+							<h4 class="panel-title">
+									Casque {{ amac }}
+							</h4>
+						</div>
+						<div id="collapseOne" toggleable active-class="in" exclusion-group="accordion1" default="active" class="panel-collapse collapse">
+							<div class="panel-body">
+								<!-- ... -->
+								<a href="#" ng-click="connectToDevice()">clic salope</a>
+							</div>
+						</div>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading" toggle target="collapseTwo">
+							<h4 class="panel-title">
+									Intercom
+							</h4>
+						</div>
+						<div id="collapseTwo" toggleable active-class="in" exclusion-group="accordion1" class="panel-collapse collapse">
+							<div class="panel-body">
+								<!-- ... -->...
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<p bubble toggle="off" target="bluetoothOverlay">
+					<span class="btn btn-primary" ng-click="testBt()">Ok</span>
+					<span class="btn btn-default">Annuler</span>
+				</p>
+			</div>
 
 			<div class="app-body scrollable">
-				<div class="notification">
-					{{ notification }}
-				</div>
+				<div class="notification" ng-bind="notification"></div>
 				<!-- Chargement -->
 				<div ng-show="loading.route" class="app-content-loading">
-					<i class="fa fa-gear fa-spin spinner"></i>
+					<i class="fa fa-refresh fa-spin spinner"></i>
+					<div class="spinner-message" ng-bind="message"></div>
 				</div>
 				<!-- Contenu -->
 				<div ng-view class="app-content scrollable-content" ng-hide="loading.route"></div>

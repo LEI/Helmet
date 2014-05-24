@@ -102,6 +102,7 @@ angular.module('helmetApp.bluetooth', [])
 			}
 		};*/
 	}
+	return {};
 }])
 
 .controller('BluetoothController', [

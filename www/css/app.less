@@ -3,6 +3,13 @@
 .white {
 	color: #fff;
 }
+.hide {
+	display: none;
+}
+.right {
+	float: right;
+	text-align: right;
+}
 @media (max-width : 480px) {
 	.hidden-phone {
 		display: none;
@@ -10,6 +17,7 @@
 }
 ul {
 	list-style-type: none;
+	padding: 0;
 }
 .app-content-loading {
 	text-align: center;
@@ -19,17 +27,26 @@ ul {
 	position: relative;
 	.spinner {
 		position: absolute;
+		top: 40%;
+		left: 0; right: 0;
+		text-align: center;
 		font-size: 50px;
-		left: 50%;
-		top: 50%;
-		margin-left: -25px;
-		margin-top: -25px;
+	}
+	.spinner-message {
+		position: absolute;
+		top: 70%;
+		left: 0; right: 0;
+		text-align: center;
+		font-size: 2em;
 	}
 }
 .loading {
 	display: inline-block;
 	.spinner {
 		font-size: 1.5em;
+		&.inherit-size {
+			font-size: inherit;
+		}
 	}
 }
 .sidebar {
@@ -38,14 +55,43 @@ ul {
 		min-width: 1.5em;
 	}
 }
+.direction-container {
+	clear: both;
+}
+.direction-steps{
+	clear: both;
+}
 .directions {
-	max-height: 300px;
-	overflow-y: scroll;
+	clear: both;
+	text-align: center;
 }
 #google-map {
-    height: 300px;
-    background: #ccc;
+	clear: both;
+    min-height: 150px;
+    height: 40vh;
+    margin-bottom: 10px;
 }
-img {
-    max-width: none;
+.item-count {
+	font-size: 1.5em;
+	font-weight: bold;
 }
+
+.instruction-sprite{
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+.turn-sharp-left{ background: url('../img/maneuvers.png') 0px 0px ;    }
+.turn-sharp-right{ background: url('../img/maneuvers.png') 0px -20px ; }
+.turn-left{    background: url('../img/maneuvers.png') 0px -40px ;    }
+.turn-right{ background: url('../img/maneuvers.png') 0px -60px ; }
+.turn-slight-left{ background: url('../img/maneuvers.png') 0px -80px ; }
+.turn-slight-right{    background: url('../img/maneuvers.png') 0px -100px ; }
+.ramp-left{    background: url('../img/maneuvers.png') 0px -120px ; }
+.ramp-right{ background: url('../img/maneuvers.png') 0px -140px ; }
+.fork-left{    background: url('../img/maneuvers.png') 0px -160px ; }
+.fork-right{ background: url('../img/maneuvers.png') 0px -180px ; }
+.straight{ background: url('../img/maneuvers.png') 0px -200px ; }
+.merge{ background: url('../img/maneuvers.png') 0px -220px ; }
+.roundabout-left{ background: url('../img/maneuvers.png') 0px -240px ; }
+.roundabout-right{ background: url('../img/maneuvers.png') 0px -260px ; }

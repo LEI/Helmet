@@ -2,7 +2,7 @@
 
 angular.module('helmetApp.services', [])
 
-.factory('geolocation', [
+.factory('geolocationService', [
 	'$rootScope',
 	'$q',
 function ($rootScope, $q) {
@@ -65,7 +65,7 @@ function ($rootScope, $q) {
 	};
 }])
 
-.factory('googleApi', [
+.factory('DirectionFactory', [
 	'$rootScope',
 	'$q',
 	'$http',
@@ -89,7 +89,7 @@ function($rootScope, $q, $http) {
 				$rootScope.map.setCenter(origin);
 			},
 			addMarker: function(location, popup) {
-				popup = popup !== undefined ? popup : 'Hello You'
+				popup = popup !== undefined ? popup : 'Hello You';
 				marker = new google.maps.Marker({
 					map: $rootScope.map,
 					position: location,
@@ -101,6 +101,12 @@ function($rootScope, $q, $http) {
 				google.maps.event.addListener(marker, 'click', function () {
 					return infowindow.open($rootScope.map, marker);
 				});
+			},
+			fitStep: function(step) {
+				var bounds = new google.maps.LatLngBounds();
+				bounds.extend(step.start_point);
+				bounds.extend(step.end_point);
+				$rootScope.map.fitBounds(bounds);
 			},
 			getDirections: function() {
 				var origin, deferred = $q.defer(),
@@ -128,15 +134,15 @@ function($rootScope, $q, $http) {
 					});
 					directionsDisplay.setMap($rootScope.map);
 					// Panel
-					directionsDisplay.setPanel(document.getElementById('directions-list'));
+					directionsDisplay.setPanel(document.getElementById('directions-steps'));
 				}
 
 				if (knownDests[$rootScope.destination] === undefined) {
 					this.geocode($rootScope.destination).then(function(latLng) {
 						knownDests[$rootScope.destination] = latLng;
 						initDirection(latLng);
-					}, function(error) {
-						deferred.reject(error);
+					}, function(response, status) {
+						deferred.reject(status);
 					});
 				} else {
 					initDirection(knownDests[$rootScope.destination]);
@@ -154,9 +160,9 @@ function($rootScope, $q, $http) {
 					address: address
 				}, function(response, status) {
 					if (status === google.maps.GeocoderStatus.OK) {
-						deferred.resolve(response[0].geometry.location);
+						deferred.resolve(response[0].geometry.location, status);
 					} else {
-						deferred.reject(status);
+						deferred.reject(response, status);
 					}
 				});
 
@@ -164,7 +170,7 @@ function($rootScope, $q, $http) {
 			}
 		};
 	} else {
-		alert('API Google inaccessible');
+		alert('googleapis.com inaccessible');
 	}
 }])
 
