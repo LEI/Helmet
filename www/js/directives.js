@@ -45,30 +45,34 @@ angular.module('helmetApp.directives', [])
 
 .directive('loadingMessage', ['$rootScope', '$interval', function($rootScope, $interval) {
 	return {
+		scope: {
+			loadingMessage: '='
+		},
 		link: function(scope, element, attrs) {
-			var re = /(\.\.\.)$/,
-				message = attrs.loadingMessage,
+
+			var message = scope.message = scope.loadingMessage,
+				re = /(\.\.\.)$/,
 				count = 0;
-			if (re.test(message)) {
-				text = message.replace(re,'');
+			element.text(scope.message);
+			if (re.test(scope.message)) {
 				var text, tick = $interval(function() {
-					if (count++ % 4) {
-						text += '.';
-					} else {
-						text = message.replace(re,'');
+					if (message != scope.loadingMessage) {
+						if (!re.test(scope.message)) {
+							$interval.cancel(tick);
+						}
+						message = scope.message = scope.loadingMessage;
 					}
-					element.text(text);
-					if ($rootScope.loading.position !== true) {
-						$interval.cancel(tick);
-					}
+					scope.message = scope.message.replace(re,'');
+					scope.message += '.';
+					element.text(scope.message);
 				}, 500);
 			} else {
-				element.text(message);
+				element.text(scope.loadingMessage);
 			}
 			element.on('$destroy', function(){
-			    if (tick !== undefined) {
-			    	$interval.cancel(tick);
-			    }
+				if (tick !== undefined) {
+					$interval.cancel(tick);
+				}
 			});
 		}
 	}

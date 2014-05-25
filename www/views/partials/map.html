@@ -16,7 +16,7 @@
 		</a>
 		<!-- reset -->
 		<a class="btn btn-default" title="Remise à zéro" ng-click="clearDirections()"
-			ng-disabled="loading.position || loading.direction || !_directions"
+			ng-disabled="loading.position || loading.direction || !_directions && !positionMarker"
 			ng-hide="loading.position || loading.direction">
 			<i class="fa fa-times inherit-size"></i>
 		</a>

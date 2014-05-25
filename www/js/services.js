@@ -97,9 +97,7 @@ function($rootScope, $q, $http) {
 			zoom: 15,
 			mapTypeId: 'roadmap',
 			streetViewControl: false
-		},
-		posMarker,
-		posCircle;
+		};
 		return {
 			initMap: function(position) {
 				var origin = new google.maps.LatLng(
@@ -110,22 +108,25 @@ function($rootScope, $q, $http) {
 				$rootScope.map.setCenter(origin);
 			},
 			locateMe: function(position) {
-				posMarker = new google.maps.Marker({
+				if ($rootScope.positionMarker !== undefined) {
+					$rootScope.positionMarker.marker.setMap(null);
+					$rootScope.positionMarker.circle.setMap(null);
+				}
+				$rootScope.positionMarker = {};
+				$rootScope.positionMarker.marker = new google.maps.Marker({
 					clickable : false,
 					icon: {
 						path: google.maps.SymbolPath.CIRCLE,
 						scale: 5,
+						fillColor : 'blue',
+						fillOpacity : 1,
+						strokeWeight : 0,
 					},
-					/*icon : new google.maps.MarkerImage(
-						'img/marker.png',
-						new google.maps.Size(22, 22),
-						new google.maps.Point(0, 18),
-						new google.maps.Point(11, 11)),*/
 					shadow : null,
 					zIndex : 999,
 					map : $rootScope.map
 				});
-				posCircle = new google.maps.Circle({
+				$rootScope.positionMarker.circle = new google.maps.Circle({
 					fillColor : 'blue',
 					fillOpacity : 0.10,
 					strokeColor : 'blue',
@@ -139,16 +140,14 @@ function($rootScope, $q, $http) {
 					position.coords.longitude),
 				accuracy = position.coords.accuracy;
 
-				posMarker.setPosition(center);
-				posCircle.setCenter(center);
-				posCircle.setRadius(accuracy);
+				$rootScope.positionMarker.marker.setPosition(center);
+				$rootScope.positionMarker.circle.setCenter(center);
+				$rootScope.positionMarker.circle.setRadius(accuracy);
 
 				$rootScope.map.setCenter(center);
-				$rootScope.map.fitBounds(posCircle.getBounds());
+				$rootScope.map.fitBounds($rootScope.positionMarker.circle.getBounds());
 
-				if (accuracy < 50) {
-					console.log(accuracy);
-				} else {
+				if (accuracy > 50) {
 					alert('Précision > 50m');
 				}
 				/*popup = popup !== undefined ? popup : 'Hello You';

@@ -62,10 +62,12 @@ angular.module('helmetApp.controllers', [
 	'DirectionFactory',
 	function($rootScope, $scope, $timeout, $filter, GeolocationService, DirectionFactory) {
 		$rootScope.loading.position = true;
+		$rootScope.message = 'Géolocalisation...';
 		// getCurrentPosition
 		$rootScope.waitPosition = GeolocationService.getCurrentPosition().then(function(position) {
 			$rootScope.position = position;
 			$rootScope.loading.position = false;
+			$rootScope.message = '';
 			DirectionFactory.initMap(position);
 			// watchPosition
 			var startPos = position,
@@ -79,7 +81,7 @@ angular.module('helmetApp.controllers', [
 				//DirectionFactory.locateMe(pos);
 			}, function(error) {
 				console.log(error);
-				$rootScope.message = 'API Google inaccessible !';
+				$rootScope.message = 'API Google inaccessible...';
 			});
 
 		}, function(error) {
@@ -120,11 +122,14 @@ angular.module('helmetApp.controllers', [
 		};
 		// Efface l'itinéraire
 		$scope.clearDirections = function() {
-			DirectionFactory.initMap($rootScope.position);
+			if (DirectionFactory !== undefined) {
+				DirectionFactory.initMap($rootScope.position);
+			}
 			$timeout(function() {
 			    $scope.$apply(function () {
-					$rootScope.message = '';
 					//$scope.destination = '';
+					$rootScope.message = '';
+					$rootScope.positionMarker = undefined;
 					$scope._directions = undefined;
 					$scope.clearSteps();
 				});
