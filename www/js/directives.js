@@ -4,7 +4,7 @@ angular.module('helmetApp.directives', [])
 
 .directive('btIcon', [function() {
 	return {
-		template: '<i class="fa fa-signal"></i> Bluetooth'
+		template: '<i class="fa fa-signal"></i>'
 	};
 }])
 

@@ -75,15 +75,15 @@ function($rootScope, $q, $http) {
 		geocoder = new google.maps.Geocoder(),
 		marker, infowindow, knownDests = [],
 		mapOptions = {
-			zoom: 15,//$scope.zoom !== undefined ? $scope.zoom : 15,
+			zoom: 15,
 			mapTypeId: 'roadmap',
 			streetViewControl: false
 		};
 		return {
-			initMap: function() {
+			initMap: function(position) {
 				var origin = new google.maps.LatLng(
-					$rootScope.position.coords.latitude,
-					$rootScope.position.coords.longitude
+					position.coords.latitude,
+					position.coords.longitude
 				);
 				$rootScope.map = new google.maps.Map(document.getElementById('google-map'), mapOptions);
 				$rootScope.map.setCenter(origin);
@@ -108,51 +108,53 @@ function($rootScope, $q, $http) {
 				bounds.extend(step.end_point);
 				$rootScope.map.fitBounds(bounds);
 			},
-			getDirections: function() {
+			getDirections: function(position, destination) {
 				var origin, deferred = $q.defer(),
 				directionsService = new google.maps.DirectionsService();
-				//angular.element(document.getElementById('google-map')).css('height','400px')
-				function initDirection(latLng) {
-					origin = $rootScope.position !== undefined ? new google.maps.LatLng(
-						$rootScope.position.coords.latitude,
-						$rootScope.position.coords.longitude
-					) : 'Paname';
+				// Recherche de la latitude et longitude
+				if (knownDests[destination] === undefined) {
+					this.geocode(destination).then(function(latLng) {
+						knownDests[destination] = latLng;
+						initDirection(latLng);
+					}, function(response, status) {
+						deferred.reject(status);
+					});
+				} else {
+					initDirection(knownDests[destination]);
+				}
+				// Initialisation de la destination
+				function initDirection(destLatLng) {
+					if (position === undefined) {
+						deferred.reject('Position inconnue');
+						return false;
+					}
+					origin = new google.maps.LatLng(
+						position.coords.latitude,
+						position.coords.longitude
+					);
+					// Recherche de l'itinéraire
 					directionsService.route({
 						origin: origin,
-						destination: latLng,
+						destination: destLatLng,
 						travelMode: google.maps.DirectionsTravelMode.DRIVING,
 						unitSystem : google.maps.UnitSystem.METRIC,
 						region: 'FR',
 						language: 'FR'
 					}, function (response, status) {
 						if (status === google.maps.DirectionsStatus.OK) {
+							// Affichage de l'itinéraire
+							directionsDisplay.setMap($rootScope.map);
 							directionsDisplay.setDirections(response);
+							// DirectionsRenderer Panel
+							//directionsDisplay.setPanel(document.getElementById('directions-steps')); // || null
 							deferred.resolve(response);
 						} else {
 							deferred.reject(status);
 						}
 					});
-					directionsDisplay.setMap($rootScope.map);
-					// DirectionsRenderer Panel
-					//directionsDisplay.setPanel(document.getElementById('directions-steps'));
-				}
-
-				if (knownDests[$rootScope.destination] === undefined) {
-					this.geocode($rootScope.destination).then(function(latLng) {
-						knownDests[$rootScope.destination] = latLng;
-						initDirection(latLng);
-					}, function(response, status) {
-						deferred.reject(status);
-					});
-				} else {
-					initDirection(knownDests[$rootScope.destination]);
 				}
 
 				return deferred.promise;
-			},
-			clearDirections: function() {
-				this.initMap();
-				directionsDisplay.setPanel(null);
 			},
 			geocode: function(address) {
 				var deferred = $q.defer();

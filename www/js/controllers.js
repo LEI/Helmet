@@ -8,13 +8,8 @@ angular.module('helmetApp.controllers', [
 	'$rootScope',
 	'$scope',
 	function($rootScope, $scope) {
-
-		$rootScope.loading = {
-			/*route: true,
-			position: true,
-			weather: true,
-			direction: true*/
-		};
+		// Chargement : route, position, weather, direction
+		$rootScope.loading = {};
 
 		$rootScope.$on("$routeChangeStart", function(){
 			$rootScope.loading.route = true;
@@ -24,19 +19,19 @@ angular.module('helmetApp.controllers', [
 		$rootScope.$on("$routeChangeSuccess", function(){
 			$rootScope.loading.route = false;
 		});
-
 	}
 ])
 
+// Météo
 .controller('WeatherController', [
 	'$rootScope',
 	'geolocationService',
 	'openWeatherApi',
 	function($rootScope, geolocationService, openWeatherApi) {
 		$rootScope.currentWeather = {};
-		// Recherche de la position
-		$rootScope.watchId.then(function() {
-			// Récupération de la météo
+		// Recherche de la position ( $rootScope.watchId.then() ? )
+		geolocationService.getCurrentPosition().then(function(position) {
+			// Recherche de la météo
 			$rootScope.loading.weather = true;
 			openWeatherApi.getCurrentWeather($rootScope.position).then(function(data) {
 				$rootScope.loading.weather = false;
@@ -54,6 +49,7 @@ angular.module('helmetApp.controllers', [
 	}
 ])
 
+// Itinéraire
 .controller('DirectionController', [
 	'$rootScope',
 	'$scope',
@@ -63,21 +59,19 @@ angular.module('helmetApp.controllers', [
 	'DirectionFactory',
 	function($rootScope, $scope, $timeout, $filter, geolocationService, DirectionFactory) {
 		$rootScope.loading.position = true;
+		// watchPosition
 		$rootScope.watchId = geolocationService.watchPosition().then(function(position) {
 			$rootScope.position = position;
 			$rootScope.loading.position = false;
-			DirectionFactory.initMap();
+			DirectionFactory.initMap(position);
 		}, function(error) {
 			console.log(error);
-			if (DirectionFactory === undefined) {
-				$rootScope.message = 'API Google inaccessible';
-			}
+			$rootScope.message = 'API Google inaccessible';
 		});
-		// watchPosition ?
 		$scope.stopWatch = function() {
 			navigator.geolocation.clearWatch($rootScope.watchId);
 		};
-		// Crée un marqueur et centre la carte
+		// Marqueur position
 		$scope.findMe = function() {
 			$rootScope.watchId.then(function() {
 				var origin = new google.maps.LatLng(
@@ -91,14 +85,19 @@ angular.module('helmetApp.controllers', [
 		// Affiche un itinéraire
 		$scope.getDirection = function(destination) {
 			$rootScope.loading.direction = true;
+			// Attente de la position
 			$rootScope.watchId.then(function() {
 				if (destination !== undefined) {
 					$rootScope.destination = destination;
-					DirectionFactory.initMap();
-					DirectionFactory.getDirections().then(function(directions) {
+					// Recherche de l'itinéraire
+					DirectionFactory.getDirections(
+						$rootScope.position,
+						$rootScope.destination
+					).then(function(directions) {
 						$rootScope.loading.direction = false;
-						$scope._directions = directions;
+						// Initialisation de l'itinéraire
 						$scope.clearSteps();
+						$scope._directions = directions;
 						$rootScope.message = $filter('capitalize')(destination);
 					}, function(error) {
 						$rootScope.loading.direction = false;
@@ -110,7 +109,22 @@ angular.module('helmetApp.controllers', [
 				}
 			});
 		};
-		// Affiche une portion d'itinéraire
+		// Efface l'itinéraire
+		$scope.clearDirections = function() {
+			DirectionFactory.initMap($rootScope.position);
+			$timeout(function() {
+			    $scope.$apply(function () {
+					$rootScope.message = '';
+					//$scope.destination = '';
+					$scope._directions = undefined;
+					$scope.clearSteps();
+				});
+			});
+		};
+		$rootScope.$on('$destroy', function () {
+			$scope.clearDirections();
+		});
+		// Affiche une étape de l'itinéraire
 		$scope.getStep = function(key) {
 			if ($scope._directions !== undefined) {
 				$scope._steps = $scope._directions.routes[0].legs[0].steps;
@@ -125,6 +139,7 @@ angular.module('helmetApp.controllers', [
 				}
 			}
 		};
+		// Réinitialise les étapes
 		$scope.clearSteps = function() {
 			$scope._steps = undefined;
 			if ($scope.step === undefined)
@@ -132,28 +147,14 @@ angular.module('helmetApp.controllers', [
 			$scope.step.count = undefined;
 			$scope.step.current = undefined;
 		};
-		// Efface l'itinéraire
-		$scope.clearDirections = function() {
-			DirectionFactory.clearDirections();
-			$timeout(function() {
-			    $scope.$apply(function () {
-					//$scope.destination = '';
-					$scope._directions = undefined;
-					$scope._steps = undefined;
-					$scope.step = undefined;
-					$rootScope.message = '';
-				});
-			});
-		};
-		$rootScope.$on('$destroy', function () {
-			$scope.clearDirections();
-		});
-
 	}
-])
+]);
 
 
-// TESTS
+
+
+
+/* Tests
 .controller('RouteController', [
 	'$rootScope',
 	'$scope',
@@ -168,81 +169,82 @@ angular.module('helmetApp.controllers', [
 			//1. This needs to be enabled for each controller that needs to watch routeParams
 			//2. I believe some encapsulation and reuse through a service might be a better way
 			//3. The reference to routeParams will not change so we need to enable deep dirty checking, hence the third parameter
-			/*$scope.$watch('routeParams', function(newVal, oldVal) {
-			  angular.forEach(newVal, function(v, k) {
-			    location.search(k, v);
-			  });
-			}, true);*/
+			// $scope.$watch('routeParams', function(newVal, oldVal) {
+			//   angular.forEach(newVal, function(v, k) {
+			//     location.search(k, v);
+			//   });
+			// }, true);
 
-			/*var posMarker, latLng, watchId = geolocationService.watchPosition().then(function(position) {
-			$scope.test.watchPosition += '<strong>watchPosition</strong><br>' +
-				'Latitude: ' + position.coords.latitude + '<br>' +
-				'Longitude: ' + position.coords.longitude + '<br>';
-				// Mise à jour de la position
-				$rootScope.position = position;
-				latLng = new google.maps.LatLng(
-					position.coords.latitude,
-					position.coords.longitude
-				);
-				if (posMarker) {
-					posMarker.setPosition(latLng);
-				} else {
-					posMarker = new google.maps.Marker({
-						position: latLng,
-						map: $rootScope.map
-					});
-				}
-				if ($rootScope.map) {
-					//$rootScope.map.setCenter(latLng);
-				}
+			// var posMarker, latLng, watchId = geolocationService.watchPosition().then(function(position) {
+			// $scope.test.watchPosition += '<strong>watchPosition</strong><br>' +
+			// 	'Latitude: ' + position.coords.latitude + '<br>' +
+			// 	'Longitude: ' + position.coords.longitude + '<br>';
+			// 	// Mise à jour de la position
+			// 	$rootScope.position = position;
+			// 	latLng = new google.maps.LatLng(
+			// 		position.coords.latitude,
+			// 		position.coords.longitude
+			// 	);
+			// 	if (posMarker) {
+			// 		posMarker.setPosition(latLng);
+			// 	} else {
+			// 		posMarker = new google.maps.Marker({
+			// 			position: latLng,
+			// 			map: $rootScope.map
+			// 		});
+			// 	}
+			// 	if ($rootScope.map) {
+			// 		//$rootScope.map.setCenter(latLng);
+			// 	}
 
-				$scope.test.watchPosition += '<strong>watchPosition</strong><br>' +
-					'Latitude: ' + position.coords.latitude + '<br>' +
-					'Longitude: ' + position.coords.longitude + '<br>';
+			// 	$scope.test.watchPosition += '<strong>watchPosition</strong><br>' +
+			// 		'Latitude: ' + position.coords.latitude + '<br>' +
+			// 		'Longitude: ' + position.coords.longitude + '<br>';
 
-			});
+			// });
 
-			$scope.stop = function() {
-				navigator.geolocation.clearWatch(watchId);
-			};*/
+			// $scope.stop = function() {
+			// 	navigator.geolocation.clearWatch(watchId);
+			// };
 
 
-			/*
-			geolocationService.getCurrentPosition().then(function(position) {
-				$rootScope.position = position;
-			});
 
-			$scope.onTick = function() {
-				// Get current position
-				geolocation.getCurrentPosition().then(function(position) {
-					$scope.test.count++;
-					$rootScope.position = position;
-					console.log(position);
-				});
-			};
 
-			var tick = $interval($scope.onTick, 5000);
+			// geolocationService.getCurrentPosition().then(function(position) {
+			// 	$rootScope.position = position;
+			// });
 
-			$scope.$on('$destroy', function () {
-				$interval.cancel(tick);
-			});
+			// $scope.onTick = function() {
+			// 	// Get current position
+			// 	geolocation.getCurrentPosition().then(function(position) {
+			// 		$scope.test.count++;
+			// 		$rootScope.position = position;
+			// 		console.log(position);
+			// 	});
+			// };
 
-			$scope.destroyInterval = function () {
-				$interval.cancel(tick);
-			};
+			// var tick = $interval($scope.onTick, 5000);
 
-			(function tick() {
-				geolocationService.getCurrentPosition().then(function(position) {
-					$scope.test.count++;
-					$rootScope.position = position;
-					console.log(position);
-					$timeout(tick, 1000);
-				});
-			})();*/
+			// $scope.$on('$destroy', function () {
+			// 	$interval.cancel(tick);
+			// });
+
+			// $scope.destroyInterval = function () {
+			// 	$interval.cancel(tick);
+			// };
+
+			// (function tick() {
+			// 	geolocationService.getCurrentPosition().then(function(position) {
+			// 		$scope.test.count++;
+			// 		$rootScope.position = position;
+			// 		console.log(position);
+			// 		$timeout(tick, 1000);
+			// 	});
+			// })();
 
 		} else {
 			alert('FU');
 		}
 
 	}
-]);
+])*/

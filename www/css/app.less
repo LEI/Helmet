@@ -34,6 +34,7 @@ body .app {
 		position: absolute;
 		top: 50%;
 		left: 0; right: 0;
+		margin-top: -50px;
 		text-align: center;
 		font-size: 50px;
 	}
@@ -41,6 +42,7 @@ body .app {
 		position: absolute;
 		top: 70%;
 		left: 0; right: 0;
+		margin-top: -50px;
 		text-align: center;
 		font-size: 1.5em;
 	}
@@ -88,21 +90,25 @@ body .app {
     margin-bottom: 10px;
 }
 .item-count {
-	display: inline-block;
+	display: block;
 	font-size: 1.2em;
 	font-weight: bold;
 }
 
-.instruction {
-	float: left;
-	margin: 7px;
+.step-maneuver {
+	margin-right: 10px;
+}
+
+.maneuver {
 }
 
 .sprite{
     display: block;
     width: 20px;
     height: 20px;
+    float: right
 }
+
 .turn-sharp-left{ background: url('../img/maneuvers.png') 0px 0px ;    }
 .turn-sharp-right{ background: url('../img/maneuvers.png') 0px -20px ; }
 .turn-left{    background: url('../img/maneuvers.png') 0px -40px ;    }

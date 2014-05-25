@@ -1,49 +1,11 @@
 <div class="map-container panel">
 
-	<!-- Go / Suivant / Précédent -->
-	<div class="right form-group" ng-show="_directions && !_steps">
-		<button
-			class="btn btn-default"
-			ng-disabled="loading.position || loading.direction"
-			ng-click="getStep(0)">
-			<i class="fa fa-flag-checkered"></i>
-			Démarrer
-		</button>
-	</div>
-	<div class="right form-group" ng-show="_directions && _steps">
-		<div class="instruction">
-			<span class="sprite {{ step.current.maneuver }}"></span>
-		</div>
-		<div class="item-count">
-			{{ step.count + 1 }} / {{ _steps.length }}
-		</div>
-		<button
-			class="btn btn-default"
-			ng-click="getStep(step.count - 1)"
-			ng-disabled="step.count === 0 || loading.position || loading.direction">
-			<i class="fa fa-chevron-left"></i>
-			Précédent
-		</button>
-		<button
-			class="btn btn-default"
-			ng-click="getStep(step.count + 1)"
-			ng-disabled="step.count === _steps.length - 1 || loading.position || loading.direction">
-			Suivant
-			<i class="fa fa-chevron-right"></i>
-		</button>
-	</div>
-
-	<div ha-weather
-		class="weather" ng-show="currentWeather"
-		ng-controller="WeatherController">
-	</div>
-
 	<div class="btn-group justified nav-tabs col-md-6 form-group">
-		<!-- whereami -->
+		<!-- whereami
 		<a class="btn btn-default" title="Où suis-je ?" ng-click="findMe()"
 			ng-disabled="loading.position || loading.direction">
 			<i class="fa fa-map-marker"></i>
-		</a>
+		</a> -->
 		<!-- loading -->
 		<a class="btn btn-default"  title="Chargement"
 			ng-disabled="loading.position || loading.direction"
@@ -57,6 +19,21 @@
 			ng-disabled="loading.position || loading.direction || !_directions"
 			ng-hide="loading.position || loading.direction">
 			<i class="fa fa-times inherit-size"></i>
+		</a>
+		<a class="btn btn-default" title="Démarrer" ng-click="getStep(0)"
+			ng-disabled="loading.position || loading.direction"
+			ng-show="_directions && !_steps">
+			<i class="fa fa-flag-checkered"></i>
+		</a>
+		<a class="btn btn-default" title="Précédent" ng-click="getStep(step.count - 1)"
+			ng-disabled="step.count === 0 || loading.position || loading.direction"
+			ng-show="_directions && _steps">
+			<i class="fa fa-chevron-left"></i>
+		</a>
+		<a class="btn btn-default" title="Suivant" ng-click="getStep(step.count + 1)"
+			ng-disabled="step.count === _steps.length - 1 || loading.position || loading.direction"
+			ng-show="_directions && _steps">
+			<i class="fa fa-chevron-right"></i>
 		</a>
 		<!-- search -->
 		<a class="btn btn-primary" title="Rechercher" ng-click="getDirection(destination)"

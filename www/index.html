@@ -56,7 +56,7 @@
 			</div>
 
 			<!-- Bluetooth Overlay -->
-			<div ha-bluetooth ng-controller="BluetoothController" overlay="bluetoothOverlay">
+			<div ng-controller="BluetoothController" overlay="bluetoothOverlay">
 				<!-- Géolocalisation -->
 				<div class="panel-heading">
 					<h2 class="panel-title">
@@ -100,6 +100,17 @@
 
 				<p bubble toggle="off" target="bluetoothOverlay">
 					<span class="btn btn-primary" ng-click="testBt()">Ok</span>
+					<span class="btn btn-default">Annuler</span>
+				</p>
+			</div>
+
+			<!-- Weather Overlay -->
+			<div overlay="weatherOverlay">
+
+				<div ha-weather class="weather" ng-show="currentWeather"> </div>
+
+				<p bubble toggle="off" target="weatherOverlay">
+					<span class="btn btn-primary">Valider</span>
 					<span class="btn btn-default">Annuler</span>
 				</p>
 			</div>
