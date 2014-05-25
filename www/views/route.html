@@ -16,11 +16,12 @@
 <!-- Chargement -->
 <div ng-show="loading.position" class="app-content-loading">
 	<i class="fa fa-map-marker spinner"></i>
-	<div class="spinner-message">{{ message || 'Géolocalisation...' }}</div>
+	<div class="spinner-message" loading-message="{{ message || 'Géolocalisation...' }}">
+	</div>
 </div>
 <!-- Contenu -->
 <div class="panel container" ng-hide="loading.position">
-	<div bs-panel title="{{ message || 'Destination' }}">
+	<div bs-panel title="{{ message || 'Destination' }} {{ distance }}">
 		<div ha-map></div>
 	</div>
 </div>

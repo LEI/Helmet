@@ -25,12 +25,12 @@ angular.module('helmetApp.controllers', [
 // Météo
 .controller('WeatherController', [
 	'$rootScope',
-	'geolocationService',
+	'GeolocationService',
 	'openWeatherApi',
-	function($rootScope, geolocationService, openWeatherApi) {
+	function($rootScope, GeolocationService, openWeatherApi) {
 		$rootScope.currentWeather = {};
-		// Recherche de la position ( $rootScope.watchId.then() ? )
-		geolocationService.getCurrentPosition().then(function(position) {
+		// Recherche de la position ( $rootScope.waitPosition.then() ? )
+		GeolocationService.getCurrentPosition().then(function(position) {
 			// Recherche de la météo
 			$rootScope.loading.weather = true;
 			openWeatherApi.getCurrentWeather($rootScope.position).then(function(data) {
@@ -45,6 +45,9 @@ angular.module('helmetApp.controllers', [
 				$rootScope.loading.weather = false;
 				$rootScope.currentWeather.errorMessage = error;
 			});
+		},
+		function(error) {
+			$rootScope.currentWeather.errorMessage = error;
 		});
 	}
 ])
@@ -55,38 +58,44 @@ angular.module('helmetApp.controllers', [
 	'$scope',
 	'$timeout',
 	'$filter',
-	'geolocationService',
+	'GeolocationService',
 	'DirectionFactory',
-	function($rootScope, $scope, $timeout, $filter, geolocationService, DirectionFactory) {
+	function($rootScope, $scope, $timeout, $filter, GeolocationService, DirectionFactory) {
 		$rootScope.loading.position = true;
-		// watchPosition
-		$rootScope.watchId = geolocationService.watchPosition().then(function(position) {
+		// getCurrentPosition
+		$rootScope.waitPosition = GeolocationService.getCurrentPosition().then(function(position) {
 			$rootScope.position = position;
 			$rootScope.loading.position = false;
 			DirectionFactory.initMap(position);
+			// watchPosition
+			var startPos = position,
+				distance;
+			$rootScope.watchId = GeolocationService.watchPosition().then(function(pos) {
+				$rootScope.position = pos;
+				distance = GeolocationService.calculateDistance(
+					startPos.coords.latitude, startPos.coords.longitude,
+					pos.coords.latitude, pos.coords.longitude);
+				$rootScope.distance = '(' + (distance * 1000).toFixed(2) + ' m)';
+				//DirectionFactory.locateMe(pos);
+			}, function(error) {
+				console.log(error);
+				$rootScope.message = 'API Google inaccessible !';
+			});
+
 		}, function(error) {
 			console.log(error);
 			$rootScope.message = 'API Google inaccessible';
-		});
-		$scope.stopWatch = function() {
-			navigator.geolocation.clearWatch($rootScope.watchId);
+		});		$scope.stopWatch = function() {
+			navigator.geolocation.clearWatch($rootScope.waitPosition);
 		};
-		// Marqueur position
 		$scope.findMe = function() {
-			$rootScope.watchId.then(function() {
-				var origin = new google.maps.LatLng(
-					$rootScope.position.coords.latitude,
-					$rootScope.position.coords.longitude
-				);
-				$rootScope.map.setCenter(origin);
-				DirectionFactory.addMarker(origin);
-			});
-		};
+			DirectionFactory.locateMe($rootScope.position);
+		}
 		// Affiche un itinéraire
 		$scope.getDirection = function(destination) {
 			$rootScope.loading.direction = true;
 			// Attente de la position
-			$rootScope.watchId.then(function() {
+			$rootScope.waitPosition.then(function() {
 				if (destination !== undefined) {
 					$rootScope.destination = destination;
 					// Recherche de l'itinéraire
@@ -121,7 +130,7 @@ angular.module('helmetApp.controllers', [
 				});
 			});
 		};
-		$rootScope.$on('$destroy', function () {
+		$scope.$on('$destroy', function () {
 			$scope.clearDirections();
 		});
 		// Affiche une étape de l'itinéraire
@@ -158,8 +167,8 @@ angular.module('helmetApp.controllers', [
 .controller('RouteController', [
 	'$rootScope',
 	'$scope',
-	'geolocationService',
-	function($rootScope, $scope, geolocationService) {
+	'GeolocationService',
+	function($rootScope, $scope, GeolocationService) {
 
 		if (navigator.geolocation) {
 
@@ -175,7 +184,7 @@ angular.module('helmetApp.controllers', [
 			//   });
 			// }, true);
 
-			// var posMarker, latLng, watchId = geolocationService.watchPosition().then(function(position) {
+			// var posMarker, latLng, watchId = GeolocationService.watchPosition().then(function(position) {
 			// $scope.test.watchPosition += '<strong>watchPosition</strong><br>' +
 			// 	'Latitude: ' + position.coords.latitude + '<br>' +
 			// 	'Longitude: ' + position.coords.longitude + '<br>';
@@ -210,7 +219,7 @@ angular.module('helmetApp.controllers', [
 
 
 
-			// geolocationService.getCurrentPosition().then(function(position) {
+			// GeolocationService.getCurrentPosition().then(function(position) {
 			// 	$rootScope.position = position;
 			// });
 
@@ -234,7 +243,7 @@ angular.module('helmetApp.controllers', [
 			// };
 
 			// (function tick() {
-			// 	geolocationService.getCurrentPosition().then(function(position) {
+			// 	GeolocationService.getCurrentPosition().then(function(position) {
 			// 		$scope.test.count++;
 			// 		$rootScope.position = position;
 			// 		console.log(position);

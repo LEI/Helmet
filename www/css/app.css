@@ -106,46 +106,48 @@ body .app {
   width: 20px;
   height: 20px;
   float: right;
+  background-image: url('../img/maneuvers.png');
+  background-repeat: no-repeat;
 }
 .turn-sharp-left {
-  background: url('../img/maneuvers.png') 0px 0px;
+  background-position: 0px 0px;
 }
 .turn-sharp-right {
-  background: url('../img/maneuvers.png') 0px -20px;
+  background-position: 0px -20px;
 }
 .turn-left {
-  background: url('../img/maneuvers.png') 0px -40px;
+  background-position: 0px -40px;
 }
 .turn-right {
-  background: url('../img/maneuvers.png') 0px -60px;
+  background-position: 0px -60px;
 }
 .turn-slight-left {
-  background: url('../img/maneuvers.png') 0px -80px;
+  background-position: 0px -80px;
 }
 .turn-slight-right {
-  background: url('../img/maneuvers.png') 0px -100px;
+  background-position: 0px -100px;
 }
 .ramp-left {
-  background: url('../img/maneuvers.png') 0px -120px;
+  background-position: 0px -120px;
 }
 .ramp-right {
-  background: url('../img/maneuvers.png') 0px -140px;
+  background-position: 0px -140px;
 }
 .fork-left {
-  background: url('../img/maneuvers.png') 0px -160px;
+  background-position: 0px -160px;
 }
 .fork-right {
-  background: url('../img/maneuvers.png') 0px -180px;
+  background-position: 0px -180px;
 }
 .straight {
-  background: url('../img/maneuvers.png') 0px -200px;
+  background-position: 0px -200px;
 }
 .merge {
-  background: url('../img/maneuvers.png') 0px -220px;
+  background-position: 0px -220px;
 }
 .roundabout-left {
-  background: url('../img/maneuvers.png') 0px -240px;
+  background-position: 0px -240px;
 }
 .roundabout-right {
-  background: url('../img/maneuvers.png') 0px -260px;
+  background-position: 0px -260px;
 }

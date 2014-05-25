@@ -107,7 +107,11 @@
 			<!-- Weather Overlay -->
 			<div overlay="weatherOverlay">
 
-				<div ha-weather class="weather" ng-show="currentWeather"> </div>
+				<div ha-weather
+					ng-controller="WeatherController"
+					class="weather"
+					ng-show="currentWeather">
+				</div>
 
 				<p bubble toggle="off" target="weatherOverlay">
 					<span class="btn btn-primary">Valider</span>

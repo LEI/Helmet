@@ -20,19 +20,19 @@ angular.module('helmetApp.directives', [])
 	};
 }])
 
-.directive('haMap', function () {
+.directive('haMap', [function () {
 	return {
 		templateUrl: 'views/partials/map.html'
 	};
-})
+}])
 
-.directive('haDirections', function () {
+.directive('haDirections', [function () {
 	return {
 		templateUrl: 'views/partials/directions.html'
 	};
-})
+}])
 
-.directive('haStep', function () {
+.directive('haStep', [function () {
 	return {
 		scope: {
 			item: '=haStep',
@@ -41,4 +41,35 @@ angular.module('helmetApp.directives', [])
 		},
 		templateUrl: 'views/partials/step.html'
 	};
-});
+}])
+
+.directive('loadingMessage', ['$rootScope', '$interval', function($rootScope, $interval) {
+	return {
+		link: function(scope, element, attrs) {
+			var re = /(\.\.\.)$/,
+				message = attrs.loadingMessage,
+				count = 0;
+			if (re.test(message)) {
+				text = message.replace(re,'');
+				var text, tick = $interval(function() {
+					if (count++ % 4) {
+						text += '.';
+					} else {
+						text = message.replace(re,'');
+					}
+					element.text(text);
+					if ($rootScope.loading.position !== true) {
+						$interval.cancel(tick);
+					}
+				}, 500);
+			} else {
+				element.text(message);
+			}
+			element.on('$destroy', function(){
+			    if (tick !== undefined) {
+			    	$interval.cancel(tick);
+			    }
+			});
+		}
+	}
+}]);
