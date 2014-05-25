@@ -22,37 +22,9 @@ angular.module('helmetApp.controllers', [
 	}
 ])
 
-// Météo
-.controller('WeatherController', [
-	'$rootScope',
-	'GeolocationService',
-	'openWeatherApi',
-	function($rootScope, GeolocationService, openWeatherApi) {
-		$rootScope.currentWeather = {};
-		// Recherche de la position ( $rootScope.waitPosition.then() ? )
-		GeolocationService.getCurrentPosition().then(function(position) {
-			// Recherche de la météo
-			$rootScope.loading.weather = true;
-			openWeatherApi.getCurrentWeather($rootScope.position).then(function(data) {
-				$rootScope.loading.weather = false;
-				$rootScope.currentWeather = {
-					city: data.name,
-					main: data.main,
-					data: data.weather
-				};
-			},
-			function(error) {
-				$rootScope.loading.weather = false;
-				$rootScope.currentWeather.errorMessage = error;
-			});
-		},
-		function(error) {
-			$rootScope.currentWeather.errorMessage = error;
-		});
-	}
-])
-
-// Itinéraire
+/*
+*	Itinéraire
+*/
 .controller('DirectionController', [
 	'$rootScope',
 	'$scope',
@@ -61,8 +33,10 @@ angular.module('helmetApp.controllers', [
 	'GeolocationService',
 	'DirectionFactory',
 	function($rootScope, $scope, $timeout, $filter, GeolocationService, DirectionFactory) {
+
 		$rootScope.loading.position = true;
 		$rootScope.message = 'Géolocalisation...';
+
 		// getCurrentPosition
 		$rootScope.waitPosition = GeolocationService.getCurrentPosition().then(function(position) {
 			$rootScope.position = position;
@@ -87,12 +61,16 @@ angular.module('helmetApp.controllers', [
 		}, function(error) {
 			console.log(error);
 			$rootScope.message = 'API Google inaccessible';
-		});		$scope.stopWatch = function() {
+		});
+
+		$scope.stopWatch = function() {
 			navigator.geolocation.clearWatch($rootScope.waitPosition);
 		};
+
 		$scope.findMe = function() {
 			DirectionFactory.locateMe($rootScope.position);
-		}
+		};
+
 		// Affiche un itinéraire
 		$scope.getDirection = function(destination) {
 			$rootScope.loading.direction = true;
@@ -120,9 +98,10 @@ angular.module('helmetApp.controllers', [
 				}
 			});
 		};
+
 		// Efface l'itinéraire
 		$scope.clearDirections = function() {
-			if (DirectionFactory !== undefined) {
+			if (DirectionFactory !== undefined && $rootScope.position !== undefined) {
 				DirectionFactory.initMap($rootScope.position);
 			}
 			$timeout(function() {
@@ -135,9 +114,11 @@ angular.module('helmetApp.controllers', [
 				});
 			});
 		};
+
 		$scope.$on('$destroy', function () {
 			$scope.clearDirections();
 		});
+
 		// Affiche une étape de l'itinéraire
 		$scope.getStep = function(key) {
 			if ($scope._directions !== undefined) {
@@ -153,6 +134,7 @@ angular.module('helmetApp.controllers', [
 				}
 			}
 		};
+
 		// Réinitialise les étapes
 		$scope.clearSteps = function() {
 			$scope._steps = undefined;
@@ -161,6 +143,7 @@ angular.module('helmetApp.controllers', [
 			$scope.step.count = undefined;
 			$scope.step.current = undefined;
 		};
+
 	}
 ]);
 

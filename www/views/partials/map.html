@@ -1,63 +1,55 @@
-<div class="map-container panel">
 
-	<div class="btn-group justified nav-tabs col-md-6 form-group">
-		<!-- whereami -->
-		<a class="btn btn-default" title="Où suis-je ?" ng-click="findMe()"
-			ng-disabled="loading.position || loading.direction">
-			<i class="fa fa-map-marker"></i>
-		</a>
-		<!-- loading -->
-		<a class="btn btn-default"  title="Chargement"
-			ng-disabled="loading.position || loading.direction"
-			ng-show="loading.position || loading.direction">
-			<div class="loading">
-				<i class="fa fa-refresh fa-spin spinner inherit-size"></i>
-			</div>
-		</a>
-		<!-- reset -->
-		<a class="btn btn-default" title="Remise à zéro" ng-click="clearDirections()"
-			ng-disabled="loading.position || loading.direction || !_directions && !positionMarker"
-			ng-hide="loading.position || loading.direction">
-			<i class="fa fa-times inherit-size"></i>
-		</a>
-		<a class="btn btn-default" title="Démarrer" ng-click="getStep(0)"
-			ng-disabled="loading.position || loading.direction"
-			ng-show="_directions && !_steps">
-			<i class="fa fa-flag-checkered"></i>
-		</a>
-		<a class="btn btn-default" title="Précédent" ng-click="getStep(step.count - 1)"
-			ng-disabled="step.count === 0 || loading.position || loading.direction"
-			ng-show="_directions && _steps">
-			<i class="fa fa-chevron-left"></i>
-		</a>
-		<a class="btn btn-default" title="Suivant" ng-click="getStep(step.count + 1)"
-			ng-disabled="step.count === _steps.length - 1 || loading.position || loading.direction"
-			ng-show="_directions && _steps">
-			<i class="fa fa-chevron-right"></i>
-		</a>
-		<!-- search -->
-		<a class="btn btn-primary" title="Rechercher" ng-click="getDirection(destination)"
-			ng-disabled="directionForm.$invalid || loading.position || loading.direction">
-			<i class="fa fa-search inherit-size"></i>
-		</a>
-	</div>
-
-	<form novalidate ng-submit="getDirection(destination)" name="directionForm" class="directionForm col-md-6">
-		<input
-			bs-form-control
-			type="text"
-			ng-model="destination"
-			label=""
-			label-class="col-xs-12"
-			class="col-xs-12"
-			placeholder="Destination"
-			ng-disabled="loading.position || loading.direction";
-			autofocus
-			required>
-	</form>
-
-	<!-- Directions -->
-	<div ha-directions class="direction-container" ng-show="_directions"></div>
-	<!-- Carte -->
-	<div class="google-map" id="google-map"></div>
+<div class="btn-group justified nav-tabs col-md-6 form-group">
+	<!-- reset & loading -->
+	<a class="btn btn-default" ng-click="clearDirections()"
+		ng-disabled="loading.position || loading.direction || !_directions && !positionMarker">
+		<i class="fa fa-times inherit-size" ng-hide="loading.position || loading.direction"></i>
+		<div class="loading" ng-show="loading.position || loading.direction">
+			<i class="fa fa-refresh fa-spin spinner inherit-size"></i>
+		</div>
+	</a>
+	<a class="btn btn-default" title="Démarrer" ng-click="getStep(0)"
+		ng-disabled="loading.position || loading.direction"
+		ng-show="_directions && !_steps">
+		<i class="fa fa-flag-checkered"></i>
+	</a>
+	<a class="btn btn-default" title="Précédent" ng-click="getStep(step.count - 1)"
+		ng-disabled="step.count === 0 || loading.position || loading.direction"
+		ng-show="_directions && _steps">
+		<i class="fa fa-chevron-left"></i>
+	</a>
+	<a class="btn btn-default" title="Suivant" ng-click="getStep(step.count + 1)"
+		ng-disabled="step.count === _steps.length - 1 || loading.position || loading.direction"
+		ng-show="_directions && _steps">
+		<i class="fa fa-chevron-right"></i>
+	</a>
+	<!-- whereami -->
+	<a class="btn btn-default" title="Où suis-je ?" ng-click="findMe()"
+		ng-disabled="loading.position || loading.direction">
+		<i class="fa fa-map-marker"></i>
+	</a>
+	<!-- search -->
+	<a class="btn btn-primary" title="Rechercher" ng-click="getDirection(destination)"
+		ng-disabled="directionForm.$invalid || loading.position || loading.direction">
+		<i class="fa fa-search inherit-size"></i>
+	</a>
 </div>
+
+<form novalidate ng-submit="getDirection(destination)" name="directionForm" class="directionForm col-md-6">
+	<input
+		bs-form-control
+		type="text"
+		ng-model="destination"
+		label=""
+		label-class="col-xs-12"
+		class="col-xs-12"
+		placeholder="Destination"
+		ng-disabled="loading.position || loading.direction";
+		autofocus
+		required>
+</form>
+
+<!-- Directions -->
+<div ha-directions class="direction-container" ng-show="_directions"></div>
+<!-- Carte -->
+<div class="google-map" id="google-map"></div>

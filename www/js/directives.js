@@ -2,18 +2,6 @@
 
 angular.module('helmetApp.directives', [])
 
-.directive('btIcon', [function() {
-	return {
-		template: '<i class="fa fa-signal"></i>'
-	};
-}])
-
-.directive('haWeather', [function() {
-	return {
-		templateUrl: 'views/partials/weather.html'
-	};
-}])
-
 .directive('haPosition', [function() {
 	return {
 		templateUrl: 'views/partials/position.html'
@@ -43,32 +31,79 @@ angular.module('helmetApp.directives', [])
 	};
 }])
 
-.directive('loadingMessage', ['$rootScope', '$interval', function($rootScope, $interval) {
+.directive('btIcon', [function() {
+	return {
+		template: '<i class="fa fa-signal"></i>'
+	};
+}])
+
+.directive('haWeather', [
+	'$rootScope',
+	'openWeatherApi',
+function($rootScope, openWeatherApi) {
+	return {
+		restrict: 'EA',
+		templateUrl: 'views/partials/weather.html',
+		controller: function($scope) {
+			// Attente de la position
+			$rootScope.loading.weather = true;
+			$rootScope.$watch('waitPosition', function(newValue, oldValue, scope){
+				// newValue.coords.accuracy !== oldValue.coords.accuracy ?
+				if (newValue !== undefined) {
+					$rootScope.currentWeather = {};
+					newValue.then(function() {
+						// Recherche de la météo
+						openWeatherApi.getCurrentWeather($rootScope.position).then(function(data) {
+							$rootScope.loading.weather = false;
+							$rootScope.currentWeather = {
+								city: data.name,
+								main: data.main,
+								data: data.weather
+							};
+						},
+						function(error) {
+							$rootScope.loading.weather = false;
+							$rootScope.currentWeather.errorMessage = error;
+						});
+					},
+					function(error) {
+						$rootScope.currentWeather.errorMessage = error;
+					});
+				}
+			});
+		}
+	};
+}])
+
+.directive('loadingMessage', [
+	'$rootScope',
+	'$interval',
+function($rootScope, $interval) {
 	return {
 		scope: {
 			loadingMessage: '='
 		},
 		link: function(scope, element, attrs) {
-
-			var message = scope.message = scope.loadingMessage,
-				re = /(\.\.\.)$/,
-				count = 0;
+			var tick, re = /(\.\.\.)$/,
+				message = scope.message = scope.loadingMessage;
+			// Affichage du texte
 			element.text(scope.message);
-			if (re.test(scope.message)) {
-				var text, tick = $interval(function() {
-					if (message != scope.loadingMessage) {
-						if (!re.test(scope.message)) {
-							$interval.cancel(tick);
-						}
-						message = scope.message = scope.loadingMessage;
-					}
+			tick = $interval(function() {
+				if (message != scope.loadingMessage) {
+					// Message mis à jour
+					message = scope.message = scope.loadingMessage;
+				}
+				// '...'
+				if (re.test(scope.loadingMessage)) {
 					scope.message = scope.message.replace(re,'');
 					scope.message += '.';
-					element.text(scope.message);
-				}, 500);
-			} else {
-				element.text(scope.loadingMessage);
-			}
+				} else {
+					$interval.cancel(tick);
+				}
+				// Mise à jour du texte
+				element.text(scope.message);
+			}, 500);
+			// Stop $interval
 			element.on('$destroy', function(){
 				if (tick !== undefined) {
 					$interval.cancel(tick);

@@ -100,12 +100,14 @@ function($rootScope, $q, $http) {
 		};
 		return {
 			initMap: function(position) {
-				var origin = new google.maps.LatLng(
-					position.coords.latitude,
-					position.coords.longitude);
 				// Cannot read property 'offsetWidth' of null
-				$rootScope.map = new google.maps.Map(document.getElementById('google-map'), mapOptions);
-				$rootScope.map.setCenter(origin);
+				angular.element(document).ready(function () {
+					$rootScope.map = new google.maps.Map(document.getElementById('google-map'), mapOptions);
+					var origin = new google.maps.LatLng(
+						position.coords.latitude,
+						position.coords.longitude);
+					$rootScope.map.setCenter(origin);
+				});
 			},
 			locateMe: function(position) {
 				if ($rootScope.positionMarker !== undefined) {
@@ -144,11 +146,13 @@ function($rootScope, $q, $http) {
 				$rootScope.positionMarker.circle.setCenter(center);
 				$rootScope.positionMarker.circle.setRadius(accuracy);
 
-				$rootScope.map.setCenter(center);
+				if ($rootScope.map === undefined) {
+					this.initMap(position);
+				}
 				$rootScope.map.fitBounds($rootScope.positionMarker.circle.getBounds());
 
 				if (accuracy > 50) {
-					alert('Précision > 50m');
+					alert('Précision ~ ' + accuracy);
 				}
 				/*popup = popup !== undefined ? popup : 'Hello You';
 				infowindow = new google.maps.InfoWindow({
@@ -181,38 +185,44 @@ function($rootScope, $q, $http) {
 				// Initialisation de la destination
 				function initDirection(destLatLng) {
 					if (position === undefined) {
-						deferred.reject('Position inconnue');
-						return false;
+						$rootScope.waitPosition.then(function() {
+							initDirection(destLatLng);
+						},
+						function(error) {
+							deferred.reject('Position inconnue');
+						});
+					} else {
+						origin = new google.maps.LatLng(
+							position.coords.latitude,
+							position.coords.longitude);
+						// Recherche de l'itinéraire
+						directionsService.route({
+							origin: origin,
+							destination: destLatLng,
+							travelMode: google.maps.DirectionsTravelMode.DRIVING,
+							unitSystem : google.maps.UnitSystem.METRIC,
+							region: 'FR',
+							language: 'FR'
+						}, function (response, status) {
+							if (status === google.maps.DirectionsStatus.OK) {
+								// Affichage de l'itinéraire
+								directionsDisplay.setMap($rootScope.map);
+								directionsDisplay.setDirections(response);
+								// DirectionsRenderer Panel
+								//directionsDisplay.setPanel(document.getElementById('directions-steps')); // || null
+								deferred.resolve(response);
+							} else {
+								deferred.reject(status);
+							}
+						});
 					}
-					origin = new google.maps.LatLng(
-						position.coords.latitude,
-						position.coords.longitude);
-					// Recherche de l'itinéraire
-					directionsService.route({
-						origin: origin,
-						destination: destLatLng,
-						travelMode: google.maps.DirectionsTravelMode.DRIVING,
-						unitSystem : google.maps.UnitSystem.METRIC,
-						region: 'FR',
-						language: 'FR'
-					}, function (response, status) {
-						if (status === google.maps.DirectionsStatus.OK) {
-							// Affichage de l'itinéraire
-							directionsDisplay.setMap($rootScope.map);
-							directionsDisplay.setDirections(response);
-							// DirectionsRenderer Panel
-							//directionsDisplay.setPanel(document.getElementById('directions-steps')); // || null
-							deferred.resolve(response);
-						} else {
-							deferred.reject(status);
-						}
-					});
 				}
 
 				return deferred.promise;
 			},
 			geocode: function(address) {
 				var deferred = $q.defer();
+
 				geocoder.geocode({
 					address: address
 				}, function(response, status) {
@@ -239,10 +249,12 @@ function($rootScope, $q, $http) {
 	var currentWeather = function(position) {
 		var deferred = $q.defer(),
 			url = 'http://api.openweathermap.org/data/2.5/weather';
+
 		if (position === undefined) {
 			deferred.reject('Position inconnue');
 			return deferred.promise;
 		}
+
 		$http.get(url, { method: 'GET',
 			params: {
 				mode: 'json', lang: 'fr',

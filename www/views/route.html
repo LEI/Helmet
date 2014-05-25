@@ -19,9 +19,11 @@
 	<div class="spinner-message" loading-message="message">
 	</div>
 </div>
-<!-- Contenu -->
-<div class="panel container" ng-hide="loading.position">
+<div ng-hide="loading.position">
+
+	<!-- Contenu -->
 	<div bs-panel title="{{ message || 'Destination' }} {{ distance }}">
 		<div ha-map></div>
 	</div>
+
 </div>
