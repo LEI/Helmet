@@ -2,7 +2,7 @@
 
 angular.module('helmetApp.services', [])
 
-.factory('GeolocationService', [
+.factory('$geolocation', [
 	'$rootScope',
 	'$q',
 function ($rootScope, $q) {
@@ -11,7 +11,7 @@ function ($rootScope, $q) {
 	}
 
 	return {
-		getCurrentPosition: function (onSuccess, onError, options) {
+		getCurrentPosition: function (options, onSuccess, onError) {
 			var deferred = $q.defer();
 			navigator.geolocation.getCurrentPosition(
 				function (position) {
@@ -33,11 +33,11 @@ function ($rootScope, $q) {
 					}
 					deferred.reject(error.message ? error.message : error);
 				},
-			options || { timeout: 30000, enableHighAccuracy: true, maximumAge: 30000 });
+			options); //  || { timeout: 30000, enableHighAccuracy: true, maximumAge: 30000 }
 
 			return deferred.promise;
 		},
-		watchPosition: function(onSuccess, onError, options) {
+		watchPosition: function(options, onSuccess, onError) {
 			var deferred = $q.defer();
 			navigator.geolocation.watchPosition(
 				function (position) {
@@ -59,7 +59,7 @@ function ($rootScope, $q) {
 					}
 					deferred.reject(error.message ? error.message : error);
 				},
-			options || { frequency: 3000 });
+			options); // || { frequency: 3000 }
 
 			return deferred.promise;
 		},

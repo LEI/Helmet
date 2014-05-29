@@ -30,37 +30,42 @@ angular.module('helmetApp.controllers', [
 	'$scope',
 	'$timeout',
 	'$filter',
-	'GeolocationService',
+	'$geolocation',
 	'DirectionFactory',
-	function($rootScope, $scope, $timeout, $filter, GeolocationService, DirectionFactory) {
+	function($rootScope, $scope, $timeout, $filter, $geolocation, DirectionFactory) {
+		var distance, startPos = position;
 
 		$rootScope.loading.position = true;
 		$rootScope.message = 'Géolocalisation...';
 
 		// getCurrentPosition
-		$rootScope.waitPosition = GeolocationService.getCurrentPosition().then(function(position) {
+		$rootScope.waitPosition = $geolocation.getCurrentPosition({
+			timeout: 30000,
+			enableHighAccuracy: true,
+			maximumAge: 30000
+		}).then(function(position) {
 			$rootScope.position = position;
 			$rootScope.loading.position = false;
 			$rootScope.message = '';
 			DirectionFactory.initMap(position);
-			// watchPosition
-			var startPos = position,
-				distance;
-			$rootScope.watchId = GeolocationService.watchPosition().then(function(pos) {
-				$rootScope.position = pos;
-				distance = GeolocationService.calculateDistance(
-					startPos.coords.latitude, startPos.coords.longitude,
-					pos.coords.latitude, pos.coords.longitude);
-				$rootScope.distance = '(' + (distance * 1000).toFixed(2) + ' m)';
-				//DirectionFactory.locateMe(pos);
-			}, function(error) {
-				console.log(error);
-				$rootScope.message = 'API Google inaccessible...';
-			});
-
 		}, function(error) {
 			console.log(error);
 			$rootScope.message = 'API Google inaccessible';
+		});
+
+		// watchPosition
+		$rootScope.watchId = $geolocation.watchPosition({
+			frequency: 3000
+		}).then(function(position) {
+			$rootScope.position = position;
+			distance = $geolocation.calculateDistance(
+				startPos.coords.latitude, startPos.coords.longitude,
+				position.coords.latitude, position.coords.longitude);
+			$rootScope.distance = '(' + (distance * 1000).toFixed(2) + ' m)';
+			//DirectionFactory.locateMe(position);
+		}, function(error) {
+			console.log(error);
+			$rootScope.message = 'API Google inaccessible...';
 		});
 
 		$scope.stopWatch = function() {
@@ -149,14 +154,12 @@ angular.module('helmetApp.controllers', [
 
 
 
-
-
 /* Tests
 .controller('RouteController', [
 	'$rootScope',
 	'$scope',
-	'GeolocationService',
-	function($rootScope, $scope, GeolocationService) {
+	'$geolocation',
+	function($rootScope, $scope, $geolocation) {
 
 		if (navigator.geolocation) {
 
@@ -172,7 +175,7 @@ angular.module('helmetApp.controllers', [
 			//   });
 			// }, true);
 
-			// var posMarker, latLng, watchId = GeolocationService.watchPosition().then(function(position) {
+			// var posMarker, latLng, watchId = $geolocation.watchPosition().then(function(position) {
 			// $scope.test.watchPosition += '<strong>watchPosition</strong><br>' +
 			// 	'Latitude: ' + position.coords.latitude + '<br>' +
 			// 	'Longitude: ' + position.coords.longitude + '<br>';
@@ -207,7 +210,7 @@ angular.module('helmetApp.controllers', [
 
 
 
-			// GeolocationService.getCurrentPosition().then(function(position) {
+			// $geolocation.getCurrentPosition().then(function(position) {
 			// 	$rootScope.position = position;
 			// });
 
@@ -231,7 +234,7 @@ angular.module('helmetApp.controllers', [
 			// };
 
 			// (function tick() {
-			// 	GeolocationService.getCurrentPosition().then(function(position) {
+			// 	$geolocation.getCurrentPosition().then(function(position) {
 			// 		$scope.test.count++;
 			// 		$rootScope.position = position;
 			// 		console.log(position);

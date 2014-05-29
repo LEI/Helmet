@@ -2,7 +2,7 @@
 
 angular.module('helmetApp.bluetooth', [])
 
-.factory('bluetooth', [function() {
+.factory('$bluetooth', [function() {
 	if (typeof cordova !== 'undefined') {
 		/*var deviceList = [],
 		status = '';
@@ -108,8 +108,8 @@ angular.module('helmetApp.bluetooth', [])
 .controller('BluetoothController', [
 	'$rootScope',
 	'$scope',
-	'bluetooth',
-	function($rootScope, $scope, bluetooth) {
+	'$bluetooth',
+	function($rootScope, $scope, $bluetooth) {
 
 		//$scope.listDevices = bluetooth.list();
 

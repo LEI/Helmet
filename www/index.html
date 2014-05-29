@@ -14,11 +14,10 @@
 	<body ng-controller="AppController">
 
 		<!-- Sidebar -->
-		<div
+		<div id="sidebar"
 			ng-include="'views/sidebar.html'"
 			class="sidebar sidebar-left"
-			toggleable parent-active-class="sidebar-left-in"
-			id="sidebar">
+			toggleable parent-active-class="sidebar-left-in">
 		</div>
 
 		<div class="app">
@@ -37,7 +36,7 @@
 				<!-- right -->
 				<div class="btn-group pull-right" yield-to="navbarAction"></div>
 			</div>
-			<!-- Navigation bottom -->
+			<!-- Navigation bottom
 			<div class="navbar navbar-app navbar-absolute-bottom">
 				<div class="btn-group justified">
 					<a href="#/" class="btn btn-navbar btn-icon-only">
@@ -53,7 +52,7 @@
 						<i class="fa fa-gear fa-navbar"></i>
 					</a>
 				</div>
-			</div>
+			</div> -->
 
 			<!-- Bluetooth Overlay -->
 			<div ng-controller="BluetoothController" overlay="bluetoothOverlay">
