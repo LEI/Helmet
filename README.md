@@ -35,3 +35,5 @@ Ajouter ces lignes si l'application ne fonctionne pas correctement
 http://github.com/poiuytrez/SpeechRecognizer
 
 http://blog.safaribooksonline.com/2013/10/30/html5-web-speech-angularjs-directive/
+
+https://github.com/TalAter/annyang

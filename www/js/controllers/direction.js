@@ -141,7 +141,7 @@ angular.module('helmetApp')
 					});
 				}
 				if (key+1 == $scope._steps.length) {
-					console.log('Well played');
+					TextToSpeech.say('Bien joué !');
 				}
 			}
 		};
