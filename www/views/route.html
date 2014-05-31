@@ -1,6 +1,6 @@
 <!-- Titre -->
 <div content-for="title">
-  <span class="hidden-phone">Itinéraire</span>
+  <span class="hidden-phone">{{ destination || 'Itinéraire' | capitalize}}</span>
 </div>
 
 <!-- Navigation -->
@@ -22,7 +22,7 @@
 <div ng-hide="loading.position">
 
 	<!-- Contenu -->
-	<div bs-panel title="{{ message || 'Destination' }} {{ distance }}">
+	<div bs-panel title="{{ message || 'Destination' }} {{ distance }} {{ speed }} {{ direction.routes[0].summary }}">
 		<div ha-map></div>
 	</div>
 

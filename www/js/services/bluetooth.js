@@ -1,9 +1,10 @@
 'use strict';
 
-angular.module('helmetApp.bluetooth', [])
+angular.module('helmetApp')
 
 .factory('$bluetooth', [function() {
-	if (typeof cordova !== 'undefined') {
+	if ('cordova' in window) {
+		alert('bluetoothSerial ', 'bluetoothSerial' in window);
 		/*var deviceList = [],
 		status = '';
 		return {
@@ -103,23 +104,4 @@ angular.module('helmetApp.bluetooth', [])
 		};*/
 	}
 	return {};
-}])
-
-.controller('BluetoothController', [
-	'$rootScope',
-	'$scope',
-	'$bluetooth',
-	function($rootScope, $scope, $bluetooth) {
-
-		//$scope.listDevices = bluetooth.list();
-
-		$scope.connectToDevice = function(device) {
-			//bluetooth.connect(device);
-		};
-		$scope.disconnect = function() {
-			//bluetooth.disconnect();
-		};
-
-
-	}
-]);
+}]);

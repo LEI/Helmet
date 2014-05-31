@@ -5,8 +5,8 @@
 		<meta name="format-detection" content="telephone=no" />
 		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
 
-		<link rel="stylesheet" href="bower_components/mobile-angular-ui/dist/css/mobile-angular-ui-base.min.css">
-		<link rel="stylesheet" href="bower_components/mobile-angular-ui/dist/css/mobile-angular-ui-desktop.min.css">
+		<link rel="stylesheet" href="lib/mobile-angular-ui/dist/css/mobile-angular-ui-base.min.css">
+		<link rel="stylesheet" href="lib/mobile-angular-ui/dist/css/mobile-angular-ui-desktop.min.css">
 		<link rel="stylesheet" type="text/css" href="css/app.css">
 
 		<title>Helmet</title>
@@ -130,22 +130,28 @@
 		</div>
 
 		<!-- browser: AIzaSyBvFpbSPCX7TEnXxQ3ztf8zD_zLVGxiLbg -->
-		<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBeWwtoeeOeLsLI1LqOiwERKcm00fq6Vbg&sensor=true"></script>
+		<script src="http://maps.googleapis.com/maps/api/js?language=fr-FR&amp;sensor=true&amp;key=AIzaSyBeWwtoeeOeLsLI1LqOiwERKcm00fq6Vbg"></script>
 
 		<!-- Bower -->
-		<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
-		<script type="text/javascript" src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
-		<script type="text/javascript" src="bower_components/angular-route/angular-route.min.js"></script>
-		<script type="text/javascript" src="bower_components/mobile-angular-ui/dist/js/mobile-angular-ui.min.js"></script>
+		<script type="text/javascript" src="lib/angular/angular.min.js"></script>
+		<script type="text/javascript" src="lib/angular-sanitize/angular-sanitize.min.js"></script>
+		<script type="text/javascript" src="lib/angular-route/angular-route.min.js"></script>
+		<script type="text/javascript" src="lib/mobile-angular-ui/dist/js/mobile-angular-ui.min.js"></script>
 
 		<!-- Angular -->
 		<script type="text/javascript" src="js/app.js"></script>
-		<script type="text/javascript" src="js/controllers.js"></script>
 		<script type="text/javascript" src="js/directives.js"></script>
 		<script type="text/javascript" src="js/filters.js"></script>
-		<script type="text/javascript" src="js/services.js"></script>
-		<script type="text/javascript" src="js/bluetooth.js"></script>
-		<script type="text/javascript" src="js/arduino.js"></script>
+		<!-- Controllers -->
+		<script type="text/javascript" src="js/controllers/arduino.js"></script>
+		<script type="text/javascript" src="js/controllers/bluetooth.js"></script>
+		<script type="text/javascript" src="js/controllers/direction.js"></script>
+		<!-- Services -->
+		<script type="text/javascript" src="js/services/bluetooth.js"></script>
+		<script type="text/javascript" src="js/services/direction.js"></script>
+		<script type="text/javascript" src="js/services/geolocation.js"></script>
+		<script type="text/javascript" src="js/services/speech.js"></script>
+		<script type="text/javascript" src="js/services/weather.js"></script>
 
 		<!-- Cordova -->
 		<script type="text/javascript" src="cordova.js"></script>

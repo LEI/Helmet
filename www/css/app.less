@@ -1,5 +1,5 @@
 // angular empty href fix
-.nav, .pagination, .carousel, .panel-title a {
+.nav, .pagination, .carousel, .clickable, a {
 	cursor: pointer;
 }
 .white {
@@ -34,13 +34,13 @@ body .app {
 		position: absolute;
 		top: 50%;
 		left: 0; right: 0;
-		margin-top: -50px;
+		margin-top: -25px;
 		text-align: center;
 		font-size: 50px;
 	}
 	.spinner-message {
 		position: absolute;
-		top: 70%;
+		top: 75%;
 		left: 0; right: 0;
 		margin-top: -50px;
 		text-align: center;
@@ -48,7 +48,7 @@ body .app {
 	}
 }
 .loading {
-	display: inline-block;
+	//display: inline-block;
 	.spinner {
 		font-size: 1.5em;
 		&.inherit-size {
@@ -62,16 +62,24 @@ body .app {
 		min-width: 1.5em;
 	}
 }
+
+.direction-form {
+	padding: 10px 0 10px 10px;
+	@media (max-width : 991px) {
+		padding: 0 0 10px 0;
+	}
+}
 .direction-container {
 	clear: both;
 }
-.direction-steps{
+.direction-steps {
 	clear: both;
 }
 .directions {
 	clear: both;
 	text-align: center;
 }
+
 .clear-fix {
 	clear: both;
 }
@@ -86,7 +94,8 @@ body .app {
 #google-map {
 	clear: both;
     min-height: 150px;
-    height: 40vh;
+    height: 50vh;
+    height: calc(~"100vh - 350px");
     margin-bottom: 10px;
 }
 .item-count {

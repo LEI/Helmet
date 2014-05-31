@@ -1,5 +1,5 @@
 .DS_Store
-www/bower_components/
 hooks/
 platforms/
 plugins/
+www/lib/

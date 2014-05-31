@@ -1,12 +1,12 @@
 # Helmet
 
+	bower install
+
 ## AngularJS
 
 http://www.learn-angular.org/
 
 http://www.ng-newsletter.com/posts/how-to-learn-angular.html
-
-? http://angular-google-maps.org/
 
 ### Bluetooth
 
@@ -27,4 +27,11 @@ Ajouter ces lignes si l'application ne fonctionne pas correctement
 
 ## Cordova
 
+	cordova create helmet fr.faclab.helmet Helmet
+
 	adb logcat CordovaLog:D *:S
+
+
+http://github.com/poiuytrez/SpeechRecognizer
+
+http://blog.safaribooksonline.com/2013/10/30/html5-web-speech-angularjs-directive/

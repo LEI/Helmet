@@ -2,12 +2,8 @@ angular.module('helmetApp', [
 	'ngRoute',
 	'ngSanitize',
 	'mobile-angular-ui',
-	'helmetApp.controllers',
 	'helmetApp.directives',
-	'helmetApp.filters',
-	'helmetApp.services',
-	'helmetApp.bluetooth',
-	'helmetApp.arduino'
+	'helmetApp.filters'
 ])
 
 .config([
@@ -37,4 +33,22 @@ function($routeProvider, $locationProvider) {
 
 	//$locationProvider.html5Mode(true);
 
-}]);
+}])
+
+.controller('AppController', [
+	'$rootScope',
+	'$scope',
+	function($rootScope, $scope) {
+		// Chargement : route, position, weather, direction
+		$rootScope.loading = {};
+
+		$rootScope.$on("$routeChangeStart", function(){
+			$rootScope.loading.route = true;
+			$rootScope.message = '';
+		});
+
+		$rootScope.$on("$routeChangeSuccess", function(){
+			$rootScope.loading.route = false;
+		});
+	}
+]);
