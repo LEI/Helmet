@@ -19,6 +19,7 @@ function($scope, $rootScope, $bluetooth) {
 						$rootScope.loading.bluetooth = false;
 						for (var i = res.length - 1; i >= 0; i--) {
 							$scope.deviceList[res[i].id] = res[i];
+                            console.log($scope.deviceList);
 						};
 
 						console.log(JSON.stringify(res, null, 4));
