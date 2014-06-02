@@ -53,12 +53,14 @@ angular.module('helmetApp')
 			distance = $geolocation.calculateDistance(
 				startPos.coords.latitude, startPos.coords.longitude,
 				position.coords.latitude, position.coords.longitude);
+
 			console.log(position);
+
 			if (position.coords.speed) {
 				$rootScope.speed = position.coords.speed;
 			}
 			$rootScope.distance = '(' + (distance * 1000).toFixed(2) + ' m)';
-			//$direction.locateMe(position);
+			//$scope.findMe();
 		}, function(error) {
 			alert(error);
 			$rootScope.message = 'Position inconnue...';

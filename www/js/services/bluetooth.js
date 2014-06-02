@@ -2,106 +2,161 @@
 
 angular.module('helmetApp')
 
-.factory('$bluetooth', [function() {
-	if ('cordova' in window) {
-		alert('bluetoothSerial ', 'bluetoothSerial' in window);
-		/*var deviceList = [],
-		status = '';
+.factory('$bluetooth', [
+	'$q',
+function($q) {
+	if ('bluetoothSerial' in window) {
 		return {
-			onDeviceList: function(devices) {
-			        var option;
-			        deviceList = [];
-			        this.setStatus('');
+			isEnabled: function() {
+				var deferred = $q.defer();
+				bluetoothSerial.isEnabled(
+					function(response) { deferred.resolve(response); },
+					function(error) { deferred.reject(error); }
+				);
 
-			        for (var i = devices.length - 1; i >= 0; i--) {
-			        	deviceList.push(devices[i]);
+				return deferred.promise;
+			},
+			isConnected: function() {
+				var deferred = $q.defer();
+				bluetoothSerial.isConnected(
+					function(response) { deferred.resolve(response); },
+					function(error) { deferred.reject(error); }
+				);
 
-			        	//option.value = device.uuid || device.address
-			        	//options.content = device.name
-			        	//...
-
-			        };
-
-			    }
-			}
-		};
-		return {
+				return deferred.promise;
+			},
 			list: function() {
-
-				bluetoothSerial.list(this.ondevicelist, this.generateFailureFunction("List Failed"));
-			},
-			connect: function (deviceId) {
-				bluetoothSerial.connect(deviceId, this.onconnect, this.ondisconnect);
-			},
-			disconnect: function(event) {
-				if (event) {
-					event.preventDefault();
-				}
-
-				this.setStatus("Disconnecting...");
-				bluetoothSerial.disconnect(this.ondisconnect);
-			},
-			onconnect: function() {
-				connectionScreen.hidden = true;
-				colorScreen.hidden = false;
-				this.setStatus("Connected.");
-			},
-			ondisconnect: function() {
-				connectionScreen.hidden = false;
-				colorScreen.hidden = true;
-				this.setStatus("Disconnected.");
-			},
-			timeoutId: 0,
-			setStatus: function(status) {
-				if (this.timeoutId) {
-					clearTimeout(this.timeoutId);
-				}
-				var messageDiv = status;
-				this.timeoutId = setTimeout(function() { messageDiv = ""; }, 4000);
-			},
-			onDeviceList: function(devices) {
-				var listItem, deviceId;
-
-				// remove existing devices
-				var deviceList = "";
-				this.setStatus("");
-
-				devices.forEach(function(device) {
-					if (this.hasOwnProperty("uuid")) { // TODO https://github.com/don/BluetoothSerial/issues/5
-						deviceId = this.uuid;
-					} else if (this.hasOwnProperty("address")) {
-						deviceId = this.address;
-					} else {
-						deviceId = "ERROR " + JSON.stringify(this);
+				var deferred = $q.defer();//, deviceList = [];
+				bluetoothSerial.list(
+					function(devices) {
+						/*for (var i = devices.length - 1; i >= 0; i--) {
+							deviceList.push(devices[i]);
+						};*/
+						deferred.resolve(devices);
+					},
+					function(error) {
+						deferred.reject(error);
 					}
-					listItem.setAttribute('deviceId', this.address);
-					listItem.innerHTML = this.name + "<br/><i>" + deviceId + "</i>";
-					deviceList.appendChild(listItem);
-				});
+				);
 
-				if (devices.length === 0) {
-
-					if (cordova.platformId === "ios") { // BLE
-						this.setStatus("No Bluetooth Peripherals Discovered.");
-					} else { // Android
-						this.setStatus("Please Pair a Bluetooth Device.");
-					}
-
-				} else {
-					this.setStatus("Found " + devices.length + " device" + (devices.length === 1 ? "." : "s."));
-				}
+				return deferred.promise;
 			},
-			generateFailureFunction: function(message) {
-				var func = function(reason) {
-					var details = "";
-					if (reason) {
-						details += ": " + JSON.stringify(reason);
-					}
-					this.setStatus(message + details);
-				};
-				return func;
+			connect: function(macAddress) {
+				var deferred = $q.defer();
+				bluetoothSerial.connect(
+					macAddress,
+					function(response) { deferred.resolve(response); },
+					function(error) { deferred.reject(error); }
+				);
+
+				return deferred.promise;
+			},
+			connectInsecure: function(macAddress) {
+				var deferred = $q.defer();
+				bluetoothSerial.connectInsecure(
+					macAddress,
+					function(response) { deferred.resolve(response); },
+					function(error) { deferred.reject(error); }
+				);
+
+				return deferred.promise;
+			},
+			disconnect: function() {
+				var deferred = $q.defer();
+				bluetoothSerial.disconnect(
+					function(response) { deferred.resolve(response); },
+					function(error) { deferred.reject(error); }
+				);
+
+				return deferred.promise;
+			},
+			write: function(data) {
+				var deferred = $q.defer();
+				bluetoothSerial.write(
+					data,
+					function(response) { deferred.resolve(response); },
+					function(error) { deferred.reject(error); }
+				);
+
+				return deferred.promise;
+			},
+			available: function() {
+				var deferred = $q.defer();
+				bluetoothSerial.available(
+					function(response) {
+						console.log("There are " + response + " available to read.");
+						deferred.resolve(response);
+					},
+					function(error) { deferred.reject(error); }
+				);
+
+				return deferred.promise;
+			},
+			read: function() {
+				var deferred = $q.defer();
+				bluetoothSerial.read(
+					function(data) {
+						deferred.resolve(data);
+					},
+					function(error) { deferred.reject(error); }
+				);
+
+				return deferred.promise;
+			},
+			readUntil: function(delimiter) {
+				delimiter = delimiter === undefined ? '\n' : delimiter;
+				var deferred = $q.defer();
+				bluetoothSerial.readUntil(
+					delimiter,
+					function(data) {
+						deferred.resolve(data);
+					},
+					function(error) { deferred.reject(error); }
+				);
+
+				return deferred.promise;
+			},
+			subscribe: function(delimiter) {
+				delimiter = delimiter === undefined ? '\n' : delimiter;
+				var deferred = $q.defer();
+				bluetoothSerial.subscribe(
+					delimiter,
+					function(data) {
+						deferred.resolve(data);
+					},
+					function(error) { deferred.reject(error); }
+				);
+
+				return deferred.promise;
+			},
+			unsubscribe: function() {
+				var deferred = $q.defer();
+				bluetoothSerial.unsubscribe(
+					function(response) { deferred.resolve(response); },
+					function(error) { deferred.reject(error); }
+				);
+
+				return deferred.promise;
+			},
+			clear: function() {
+				var deferred = $q.defer();
+				bluetoothSerial.clear(
+					function(response) { deferred.resolve(response); },
+					function(error) { deferred.reject(error); }
+				);
+
+				return deferred.promise;
 			}
-		};*/
+			/*readRSSI: function() {
+				var deferred = $q.defer();
+				bluetoothSerial.readRSSI(
+					function(response) { deferred.resolve(response); },
+					function(error) { deferred.reject(error); }
+				);
+
+				return deferred.promise;
+			}*/
+		};
 	}
 	return {};
 }]);
