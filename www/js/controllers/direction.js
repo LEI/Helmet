@@ -10,12 +10,11 @@ angular.module('helmetApp')
 	'$scope',
 	'$timeout',
 	'$filter',
-	'$sce',
 	'$geolocation',
 	'$direction',
 	'TextToSpeech',
 	'SpeechRecognition',
-	function($rootScope, $scope, $timeout, $filter, $sce, $geolocation, $direction, TextToSpeech, SpeechRecognition) {
+	function($rootScope, $scope, $timeout, $filter, $geolocation, $direction, TextToSpeech, SpeechRecognition) {
 
 		var distance, startPos;
 		if ('google' in window) {
@@ -35,7 +34,9 @@ angular.module('helmetApp')
 			startPos = position;
 			$rootScope.loading.position = false;
 			$rootScope.message = '';
-			$direction.initMap(position); // $direction undefined ?
+			$timeout(function() {
+				$direction.initMap(position); // $direction undefined ?
+			});
 			if (position.coords.speed) {
 				$rootScope.speed = position.coords.speed;
 			}
@@ -44,34 +45,40 @@ angular.module('helmetApp')
 			$rootScope.message = 'Position inconnue';
 		});
 
-		// watchPosition
-		$rootScope.watchId = $geolocation.watchPosition({
-			timeout: 30000
-		}).then(function(position) {
-			$rootScope.loading.position = false;
-			$rootScope.position = position;
-			distance = $geolocation.calculateDistance(
-				startPos.coords.latitude, startPos.coords.longitude,
-				position.coords.latitude, position.coords.longitude);
+		$scope.startWatch = function() {
+			// watchPosition
+			$geolocation.watchPosition({
+				timeout: 30000
+			}).then(function(position) {
+				$rootScope.loading.position = false;
+				$rootScope.position = position;
 
-			console.log(position);
+				if (position.coords.speed) {
+					$rootScope.speed = position.coords.speed;
+				}
 
-			if (position.coords.speed) {
-				$rootScope.speed = position.coords.speed;
-			}
-			$rootScope.distance = '(' + (distance * 1000).toFixed(2) + ' m)';
-			//$scope.findMe();
-		}, function(error) {
-			alert(error);
-			$rootScope.message = 'Position inconnue...';
-		});
+				distance = $geolocation.calculateDistance(
+					startPos.coords.latitude, startPos.coords.longitude,
+					position.coords.latitude, position.coords.longitude);
+				$rootScope.distance = '(' + (distance * 1000).toFixed(2) + ' m)';
 
-		$scope.stopWatch = function() {
-			navigator.geolocation.clearWatch($rootScope.waitPosition);
+				console.log('Position mise à jour !');
+
+			}, function(error) {
+				alert(error);
+				$rootScope.message = 'Position inconnue...';
+			}, function(update) {
+				console.log(update);
+				$direction.locateMe(update);
+			});
 		};
 
-		$scope.findMe = function() {
-			$direction.locateMe($rootScope.position);
+		$scope.stopWatch = function() {
+			$geolocation.clearWatch();
+		};
+
+		$scope.findMe = function(position) {
+			$scope.startWatch();
 		};
 
 		// Affiche un itinéraire
@@ -121,6 +128,7 @@ angular.module('helmetApp')
 					$scope.clearSteps();
 				});
 			});
+			$scope.stopWatch();
 		};
 
 		$scope.$on('$destroy', function () {

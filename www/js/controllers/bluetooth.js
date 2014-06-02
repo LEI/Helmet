@@ -6,9 +6,10 @@ angular.module('helmetApp')
 	'$scope',
 	'$rootScope',
 	'$bluetooth',
-function($scope, $rootScope, $bluetooth) {
+	'$timeout',
+function($scope, $rootScope, $bluetooth, $timeout) {
 
-		$scope.deviceList = {};
+		$rootScope.devices = {};
 
 		$scope.searchDevice = function() {
 			$rootScope.loading.bluetooth = true;
@@ -16,15 +17,18 @@ function($scope, $rootScope, $bluetooth) {
 				$bluetooth.list().then( function(res) {
 					$scope.bluetoothError = res.length + ' appareil(s) connecté(s)';
 					if (res.length > 0) {
+
 						$rootScope.loading.bluetooth = false;
-						for (var i = res.length - 1; i >= 0; i--) {
-							$scope.deviceList[res[i].id] = res[i];
-                            console.log($scope.deviceList);
-						};
+
+						$timeout(function() {
+							$scope.$apply(function() {
+								$rootScope.devices.list = res;
+							});
+						});
+
+						//$scope.connect(res[0].id);
 
 						console.log(JSON.stringify(res, null, 4));
-
-						$scope.connect(res[0].id);
 
 					} else {
 						$scope.bluetoothError = 'Aucun périphérique bluetooth';
@@ -41,7 +45,7 @@ function($scope, $rootScope, $bluetooth) {
 
 		$scope.connect = function(id) {
 			console.log('Tentative de connexion ' + id + '...');
-			$bluetooth.connect(id).then( function(response) {
+			$bluetooth.connectInsecure(id).then( function(response) {
 				console.log(response);
 				$scope.check();
 			}, function(error) {

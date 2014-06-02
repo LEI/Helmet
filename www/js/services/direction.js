@@ -17,14 +17,18 @@ function($rootScope, $q, $http) {
 			streetViewControl: false
 		};
 		return {
-			initMap: function(position) {
+			initMap: function(position, bounds) {
 				// Cannot read property 'offsetWidth' of null
 				angular.element(document).ready(function () {
 					$rootScope.map = new google.maps.Map(document.getElementById('google-map'), mapOptions);
-					var origin = new google.maps.LatLng(
-						position.coords.latitude,
-						position.coords.longitude);
-					$rootScope.map.setCenter(origin);
+					if (bounds === undefined) {
+						var origin = new google.maps.LatLng(
+							position.coords.latitude,
+							position.coords.longitude);
+						$rootScope.map.setCenter(origin);
+					} else {
+						$rootScope.map.fitBounds(bounds);
+					}
 				});
 			},
 			locateMe: function(position) {
@@ -64,14 +68,16 @@ function($rootScope, $q, $http) {
 				$rootScope.positionMarker.circle.setCenter(center);
 				$rootScope.positionMarker.circle.setRadius(accuracy);
 
+				var bounds = $rootScope.positionMarker.circle.getBounds();
 				if ($rootScope.map === undefined) {
-					this.initMap(position);
+					this.initMap(position, bounds);
+				} else {
+					$rootScope.map.fitBounds(bounds);
 				}
-				$rootScope.map.fitBounds($rootScope.positionMarker.circle.getBounds());
 
-				if (accuracy > 50) {
+				/*if (accuracy > 50) {
 					alert('Précision ~ ' + accuracy);
-				}
+				}*/
 				/*popup = popup !== undefined ? popup : 'Hello You';
 				infowindow = new google.maps.InfoWindow({
 					content: popup

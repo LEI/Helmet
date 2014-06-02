@@ -6,15 +6,16 @@ angular.module('helmetApp')
 	'$rootScope',
 	'$q',
 function ($rootScope, $q) {
-	if (!navigator.geolocation) {
+	if (!'geolocation' in navigator) {
 		alert('Géolocalisation non supportée');
 	}
-
+	var $$watchId;
 	return {
 		getCurrentPosition: function (options, onSuccess, onError) {
 			var deferred = $q.defer();
 			navigator.geolocation.getCurrentPosition(
 				function (position) {
+
 					var that = this,
 						args = arguments;
 					if (onSuccess) {
@@ -39,29 +40,37 @@ function ($rootScope, $q) {
 		},
 		watchPosition: function(options, onSuccess, onError) {
 			var deferred = $q.defer();
-			navigator.geolocation.watchPosition(
+			$$watchId = navigator.geolocation.watchPosition(
 				function (position) {
-					var that = this,
+
+					console.log(JSON.stringify(position, null, 4));
+
+					deferred.notify(position);
+
+					/*var that = this,
 						args = arguments;
 					if (onSuccess) {
 						$rootScope.$apply(function () {
 							onSuccess.apply(that, args);
 						});
 					}
-					deferred.resolve(position);
+					deferred.resolve(position);*/
 				}, function (error) {
-					var that = this,
+					/*var that = this,
 						args = arguments;
 					if (onError) {
 						$rootScope.$apply(function () {
 							onError.apply(that, args);
 						});
-					}
+					}*/
 					deferred.reject(error.message ? error.message : error);
 				},
 			options); // || { frequency: 3000 }
 
 			return deferred.promise;
+		},
+		clearWatch: function() {
+			navigator.geolocation.clearWatch($$watchId);
 		},
 		calculateDistance: function(lat1, lon1, lat2, lon2) {
 			function toRad(n) {
