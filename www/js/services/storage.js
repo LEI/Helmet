@@ -9,10 +9,12 @@ angular.module('helmetApp')
 
 		// Local Storage
 		// http://cordova.apache.org/docs/en/edge/cordova_storage_storage.md.html#Storage
+		var localVar;
 
 		return {
-			method: function() {
-
+			storage: [],
+			add: function(data) {
+				this.storage.push(data);
 			}
 		};
 	}

@@ -1,9 +1,16 @@
 
 <div class="btn-group justified nav-tabs col-md-6 form-group">
 	<!-- reset & stop -->
-	<a class="btn btn-danger" ng-click="clearDirections()" ng-disabled="loading.position || loading.direction || !_directions && !positionMarker">
+	<a class="btn btn-danger" ng-click="resetDirection()"
+		ng-disabled="loading.position || loading.direction || !_directions && !positionMarker">
 		<i class="fa fa-times inherit-size" ng-hide="loading.position || loading.direction || !_directions && !positionMarker"></i>
 		<i class="fa fa-minus-circle inherit-size" ng-show="loading.position || loading.direction || !_directions && !positionMarker"></i>
+	</a>
+	<!-- volume -->
+	<a class="btn btn-default" ng-click="toggleVoice()" ng-show="_directions"
+		ng-disabled="loading.position || loading.direction">
+		<i class="fa fa-volume-up" ng-show="audio.textToSpeech"></i>
+		<i class="fa fa-volume-off" ng-hide="audio.textToSpeech"></i>
 	</a>
 	<!-- start
 	<a class="btn btn-success" title="Démarrer" ng-click="getStep(0)"
@@ -11,19 +18,23 @@
 		<i class="fa fa-flag-checkered"></i>
 	</a> -->
 	<!-- prev -->
-	<a class="btn btn-default" title="Précédent" ng-click="getStep(step.count - 1)"
+	<a class="btn btn-default" title="Précédent" ng-click="getStep(step.count - 1)" ng-show="_directions"
 		ng-disabled="step.count === 0 || loading.position || loading.direction || !_directions">
 		<i class="fa fa-chevron-left"></i>
 	</a>
 	<!-- next -->
-	<a class="btn btn-default" title="Suivant" ng-click="getStep(step.count + 1)"
+	<a class="btn btn-default" title="Suivant" ng-click="getStep(step.count + 1)" ng-show="_directions"
 		ng-disabled="step.count === _steps.length - 1 || loading.position || loading.direction || !_directions">
 		<i class="fa fa-chevron-right"></i>
 	</a>
 	<!-- whereami -->
-	<a class="btn btn-primary" title="Où suis-je ?" ng-click="findMe()"
+	<a class="btn btn-primary" title="Où suis-je ?" ng-click="startWatch()"
 		ng-disabled="loading.position || loading.direction">
-		<i class="fa fa-map-marker"></i>
+		<i class="fa fa-location-arrow" ng-show="positionMarker"></i>
+		<i class="fa fa-map-marker" ng-hide="positionMarker"></i>
+		<span ng-show="accuracy">
+			~{{ accuracy | number:0 }}m
+		</span>
 	</a>
 	<!-- search
 	<a class="btn btn-primary" title="Rechercher" ng-click="getDirection(destination)"

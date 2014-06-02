@@ -10,11 +10,11 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "1.2.16",
-    "angular-sanitize": "~1.2.16",
-    "angular-route": "~1.2.16",
-    "mobile-angular-ui": "~1.1.0-beta.21",
-    "angular-phonegap-geolocation": "~0.0.1",
-    "underscore": "~1.6.0"
+    "angular": "latest",
+    "angular-sanitize": "latest",
+    "angular-route": "latest",
+    "mobile-angular-ui": "latest",
+    "angular-phonegap-geolocation": "latest",
+    "underscore": "latest"
   }
 }

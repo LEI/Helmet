@@ -9,29 +9,14 @@ function ($rootScope, $q) {
 	if (!'geolocation' in navigator) {
 		alert('Géolocalisation non supportée');
 	}
-	var $$watchId;
 	return {
+		$$watchId: null,
 		getCurrentPosition: function (options, onSuccess, onError) {
 			var deferred = $q.defer();
 			navigator.geolocation.getCurrentPosition(
 				function (position) {
-
-					var that = this,
-						args = arguments;
-					if (onSuccess) {
-						$rootScope.$apply(function () {
-							onSuccess.apply(that, args);
-						});
-					}
 					deferred.resolve(position);
 				}, function (error) {
-					var that = this,
-						args = arguments;
-					if (onError) {
-						$rootScope.$apply(function () {
-							onError.apply(that, args);
-						});
-					}
 					deferred.reject(error.message ? error.message : error);
 				},
 			options); //  || { timeout: 30000, enableHighAccuracy: true, maximumAge: 30000 }
@@ -40,29 +25,11 @@ function ($rootScope, $q) {
 		},
 		watchPosition: function(options, onSuccess, onError) {
 			var deferred = $q.defer();
-			$$watchId = navigator.geolocation.watchPosition(
+			this.$watchId = navigator.geolocation.watchPosition(
 				function (position) {
-
-					console.log(JSON.stringify(position, null, 4));
-
+					// notify (update) != resolve (success)
 					deferred.notify(position);
-
-					/*var that = this,
-						args = arguments;
-					if (onSuccess) {
-						$rootScope.$apply(function () {
-							onSuccess.apply(that, args);
-						});
-					}
-					deferred.resolve(position);*/
 				}, function (error) {
-					/*var that = this,
-						args = arguments;
-					if (onError) {
-						$rootScope.$apply(function () {
-							onError.apply(that, args);
-						});
-					}*/
 					deferred.reject(error.message ? error.message : error);
 				},
 			options); // || { frequency: 3000 }
@@ -70,7 +37,7 @@ function ($rootScope, $q) {
 			return deferred.promise;
 		},
 		clearWatch: function() {
-			navigator.geolocation.clearWatch($$watchId);
+			navigator.geolocation.clearWatch(this.$watchId);
 		},
 		calculateDistance: function(lat1, lon1, lat2, lon2) {
 			function toRad(n) {

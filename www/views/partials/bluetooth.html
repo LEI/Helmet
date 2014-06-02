@@ -1,27 +1,24 @@
 <!-- Bluetooth Overlay -->
 <div ng-controller="BluetoothController" overlay="bluetoothOverlay">
 
-	<h4 class="overlay-title">Bluetooth</h4>
+	<h4 class="overlay-title">{{ bluetooth.errorMessage || 'Bluetooth' }}</h4>
 
 	<button class="btn btn-success" ng-click="searchDevice()">
-		Rechercher des périphériques<span ng-show="loading.bluetooth">...</span>
+		Rechercher<span ng-show="bluetooth.loading">...</span>
 	</button>
 
-	<p ng-show="bluetoothError">
-		{{ bluetoothError }}
-	</p>
-
 	<ul>
-		<li ng-repeat="device in devices.list">
+		<li ng-repeat="device in bluetooth.deviceList">
 			{{ device.id }}
-			<a href="#"  class="btn btn-default" ng-click="connect(device.id)">
+			<button class="btn btn-default" ng-click="connect(device.id)">
 				Se connecter
-			</a>
+			</button>
 		</li>
 	</ul>
 
 	<p bubble toggle="off" target="bluetoothOverlay">
-		<span class="btn btn-primary" ng-click="testBt()">Ok</span>
-		<span class="btn btn-default">Annuler</span>
+		<span class="btn btn-default">
+			<i class="fa fa-times"></i>
+		</span>
 	</p>
 </div>
