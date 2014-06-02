@@ -15,12 +15,10 @@ angular.module('helmetApp')
 	'TextToSpeech',
 	'SpeechRecognition',
 	function($rootScope, $scope, $timeout, $filter, $geolocation, $direction, TextToSpeech, SpeechRecognition) {
-
-		var distance, startPos;
 		if ('google' in window) {
 			var directionsDisplay = new google.maps.DirectionsRenderer();
 		}
-
+		var distance, startPos;
 		$rootScope.loading.position = true;
 		$rootScope.message = 'Géolocalisation...';
 
