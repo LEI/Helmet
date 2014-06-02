@@ -46,7 +46,7 @@ angular.module('helmetApp')
 
 		// watchPosition
 		$rootScope.watchId = $geolocation.watchPosition({
-			frequency: 3000
+			timeout: 30000
 		}).then(function(position) {
 			$rootScope.loading.position = false;
 			$rootScope.position = position;
