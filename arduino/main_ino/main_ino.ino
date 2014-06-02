@@ -10,6 +10,8 @@ int rx = 0,
     rn52cmd = 2,
     rn52evtreg = 4;
 
+String string = "";
+
 SoftwareSerial SerialRN52( rn52_rx, rn52_tx ); // RX, TX
 
 /********* FUNCTIONS **********/
@@ -41,23 +43,31 @@ void setup() {
 	 */
 	 Serial.begin( 115200 );
          SerialRN52.begin( 115200 );
+         
+//         string.reserve( 200 );
 }
 
 void loop() {
-	// Basic programm (blink)
-	digitalWrite( led, HIGH );   // turn the LED on (HIGH is the voltage level)
-	delay(1000);               // wait for a second
-	digitalWrite( led, LOW );    // turn the LED off by making the voltage LOW
-	delay(1000);               // wait for a second
-
 	// Main programm
 //	rn52_commandmode( true );
+        
+        
         digitalWrite( rn52cmd, LOW );
-
-        Serial.print( SerialRN52.read() );
+        
+//        Serial.println( 'Attente de réception data ...' );if( SerialRN52.available() ) {
+        SerialRN52.listen();      
+  
+        while( SerialRN52.available() ) {
+          char inChar = (char)SerialRN52.read();
+          string += inChar;
+        }
+        
+        Serial.print( string );
+        
+        delay( 1500 );
        
 //	rn52_commandmode( false );
-        digitalWrite( rn52cmd, HIGH );
-
-        Serial.print( SerialRN52.read() );
+//        digitalWrite( rn52cmd, HIGH );
+//
+//        Serial.print( SerialRN52.read() );
 }
