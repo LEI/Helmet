@@ -3,7 +3,7 @@
 angular.module('helmetApp')
 
 /*
- *	BluetoothSerial
+ *	Bluetooth Serial Port
  */
 .factory('$bluetooth', [
 	'$q',

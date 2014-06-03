@@ -3,8 +3,12 @@
 angular.module('helmetApp')
 
 /*
- *	File System
+ *	File System API
  */
+
+// http://www.html5rocks.com/en/tutorials/file/filesystem/
+// https://github.com/apache/cordova-plugin-file/blob/master/doc/index.md
+
 .factory('FileSystem', [
 	'$q',
 function($q) {
@@ -29,7 +33,7 @@ function($q) {
 			var deferred = $q.defer();
 			console.log(file);
 			file.root.getFile('routes.json', {
-				create: false
+				create: true
 			}, function(fileEntry) {
 				deferred.resolve(fileEntry);
 			}, function(error) {

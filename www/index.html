@@ -13,12 +13,12 @@
 	</head>
 	<body ng-controller="AppController">
 
-		<!-- Sidebar -->
+		<!-- Sidebar
 		<div id="sidebar"
 			ng-include="'views/sidebar.html'"
 			class="sidebar sidebar-left"
 			toggleable parent-active-class="sidebar-left-in">
-		</div>
+		</div> -->
 
 		<div class="app">
 			<!-- Navigation top -->
@@ -27,16 +27,17 @@
 				<div class="navbar-brand navbar-brand-center" yield-to="title">
 					<span>Helmet</span>
 				</div>
-				<!-- left -->
+				<!-- left
 				<div class="btn-group pull-left">
 					<div ng-click="toggle('sidebar')" class="btn btn-navbar sidebar-toggle">
 						<i class="fa fa-bars"></i> Helmet
 					</div>
-				</div>
+				</div> -->
 				<!-- right -->
 				<div class="btn-group pull-right" yield-to="navbarAction"></div>
 			</div>
-			<!-- Navigation bottom
+
+			<!-- Navigation bottom -->
 			<div class="navbar navbar-app navbar-absolute-bottom">
 				<div class="btn-group justified">
 					<a href="#/" class="btn btn-navbar btn-icon-only">
@@ -52,11 +53,7 @@
 						<i class="fa fa-gear fa-navbar"></i>
 					</a>
 				</div>
-			</div> -->
-
-			<div ng-include="'views/partials/bluetooth.html'"></div>
-
-			<div ng-include="'views/partials/weather.html'"></div>
+			</div>
 
 			<div class="app-body scrollable">
 				<div class="notification" ng-bind="notification"></div>
@@ -68,6 +65,11 @@
 				<!-- Contenu -->
 				<div ng-view class="app-content scrollable-content" ng-hide="loading.route"></div>
 			</div>
+
+			<div ng-include="'views/partials/bluetooth.html'"></div>
+
+			<div ng-include="'views/partials/weather.html'"></div>
+
 		</div>
 
 		<!-- browser: AIzaSyBvFpbSPCX7TEnXxQ3ztf8zD_zLVGxiLbg -->
@@ -88,6 +90,7 @@
 		<script type="text/javascript" src="js/controllers/arduino.js"></script>
 		<script type="text/javascript" src="js/controllers/bluetooth.js"></script>
 		<script type="text/javascript" src="js/controllers/direction.js"></script>
+		<script type="text/javascript" src="js/controllers/settings.js"></script>
 		<!-- Services -->
 		<script type="text/javascript" src="js/services/filesystem.js"></script>
 		<script type="text/javascript" src="js/services/bluetooth.js"></script>
