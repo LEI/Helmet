@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('helmetApp.filters', [])
+angular.module('helmetApp')
 
 .filter('capitalize', function() {
 	return function(input, scope) {

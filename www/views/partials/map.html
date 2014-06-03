@@ -19,12 +19,12 @@
 	</a> -->
 	<!-- prev -->
 	<a class="btn btn-default" title="Précédent" ng-click="getStep(step.count - 1)" ng-show="_directions"
-		ng-disabled="step.count === 0 || loading.position || loading.direction || !_directions">
+		ng-disabled="step.count < 1 || loading.position || loading.direction || !_directions">
 		<i class="fa fa-chevron-left"></i>
 	</a>
 	<!-- next -->
 	<a class="btn btn-default" title="Suivant" ng-click="getStep(step.count + 1)" ng-show="_directions"
-		ng-disabled="step.count === _steps.length - 1 || loading.position || loading.direction || !_directions">
+		ng-disabled="step.count + 1 >= _steps.length || loading.position || loading.direction || !_directions">
 		<i class="fa fa-chevron-right"></i>
 	</a>
 	<!-- whereami -->
@@ -63,7 +63,8 @@
 	</div>
 </form>
 
-<!-- Carte -->
-<div class="google-map" id="google-map"></div>
 <!-- Directions -->
 <div ha-directions class="direction-container" ng-show="_directions"></div>
+
+<!-- Carte -->
+<div class="google-map" id="google-map"></div>

@@ -14,7 +14,6 @@ function($rootScope, $q, $http) {
 		geocoder = new google.maps.Geocoder();
 		return {
 			map: null,
-			destination: {},
 			initMap: function(position, p_bounds) {
 				// Cannot read property 'offsetWidth' of null
 				var self = this;
@@ -41,46 +40,45 @@ function($rootScope, $q, $http) {
 				}
 			},
 			getDirection: function(position, destination) {
-				var self = this, deferred = $q.defer();
-				//directionsService = new google.maps.DirectionsService();
-				if (this.destination[destination] === undefined) {
-					// Recherche de la latitude et longitude
-					this.geocode(destination).then(function(latLng) {
-						center = new google.maps.LatLng(
-							position.coords.latitude,
-							position.coords.longitude);
-						// Recherche de l'itinéraire
-						directionsService.route({
-							origin: center,
-							destination: latLng,
-							travelMode: google.maps.DirectionsTravelMode.DRIVING,
-							unitSystem : google.maps.UnitSystem.METRIC,
-							region: 'FR',
-							language: 'FR'
-						}, function (response, status) {
-							if (status === google.maps.DirectionsStatus.OK) {
-								self.destination[destination] = [];
-								self.destination[destination] = response;
-								deferred.resolve(response);
-							} else {
-								switch(status) {
-									case 'ZERO_RESULTS':
-										status = 'Aucun résultat';
-										break;
-									case 'UNKNOWN_ERROR':
-										status = 'Erreur inconnue';
-										break;
-								}
-								deferred.reject(status);
+				var deferred = $q.defer();
+				// Recherche de la latitude et longitude
+				this.geocode(destination).then(function(latLng) {
+					center = new google.maps.LatLng(
+						position.coords.latitude,
+						position.coords.longitude);
+					// Recherche de l'itinéraire
+					directionsService.route({
+						origin: center,
+						destination: latLng,
+						travelMode: google.maps.DirectionsTravelMode.DRIVING,
+						unitSystem : google.maps.UnitSystem.METRIC,
+						region: 'FR',
+						language: 'FR'
+					}, function (response, status) {
+						if (status === google.maps.DirectionsStatus.OK) {
+
+							$rootScope.$storage.destination = response;
+
+							deferred.resolve(response);
+						} else {
+							switch(status) {
+								case 'ZERO_RESULTS':
+									status = 'Aucun résultat';
+									break;
+								case 'UNKNOWN_ERROR':
+									status = 'Erreur inconnue';
+									break;
 							}
-						});
-					}, function(response, status) {
-						console.log(response, status);
-						deferred.reject(status);
+							deferred.reject(status);
+						}
 					});
-				} else {
-					deferred.resolve(this.destination[destination]);
-				}
+				}, function(response, status) {
+					if (response.length === 0) {
+						deferred.reject('Destination inconnue');
+					} else {
+						deferred.reject(status);
+					}
+				});
 
 				return deferred.promise;
 			},

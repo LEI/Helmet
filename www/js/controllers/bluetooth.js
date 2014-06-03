@@ -21,14 +21,14 @@ function($scope, $rootScope, $bluetooth, $timeout) {
 					$scope.bluetooth.loading = false;
 					$scope.bluetooth.errorMessage = res.length + ' appareil(s) connecté(s)';
 					if (res.length > 0) {
-						// applytamer
-						$timeout(function() {
-							$scope.$apply(function() {
-								$scope.bluetooth.deviceList = res;
-							});
-						});
+						angular.forEach(res, function(device, key) {
+							this.push(device);
+						}, $scope.bluetooth.deviceList);
 						//$scope.connect(res[0].id);
-						//console.log(JSON.stringify(res, null, 4));
+						$timeout(function(){
+							scope.$apply();
+						});
+						console.log(JSON.stringify(res, null, 4));
 					} else {
 						$scope.bluetoothError = 'Aucun périphérique bluetooth';
 					}

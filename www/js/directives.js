@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('helmetApp.directives', [])
+angular.module('helmetApp')
 
 .directive('haPosition', [function() {
 	return {

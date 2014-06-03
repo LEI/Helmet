@@ -1,9 +1,8 @@
 angular.module('helmetApp', [
 	'ngRoute',
 	'ngSanitize',
-	'mobile-angular-ui',
-	'helmetApp.directives',
-	'helmetApp.filters'
+	'ngStorage',
+	'mobile-angular-ui'
 ])
 
 .config([

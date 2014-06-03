@@ -8,9 +8,10 @@ angular.module('helmetApp')
 function ($rootScope, $q) {
 	if (!'geolocation' in navigator) {
 		alert('Géolocalisation non supportée');
+		// Sur votre appareil mobile, appuyez sur Paramètres, puis sur Services de localisation
 	}
 	return {
-		$$watchId: null,
+		$watchId: null,
 		getCurrentPosition: function (options, onSuccess, onError) {
 			var deferred = $q.defer();
 			navigator.geolocation.getCurrentPosition(
@@ -19,7 +20,11 @@ function ($rootScope, $q) {
 				}, function (error) {
 					deferred.reject(error.message ? error.message : error);
 				},
-			options); //  || { timeout: 30000, enableHighAccuracy: true, maximumAge: 30000 }
+			options || {
+				timeout: 30000,
+				maximumAge: 30000,
+				enableHighAccuracy: true
+			});
 
 			return deferred.promise;
 		},
@@ -32,7 +37,11 @@ function ($rootScope, $q) {
 				}, function (error) {
 					deferred.reject(error.message ? error.message : error);
 				},
-			options); // || { frequency: 3000 }
+			options || {
+				timeout: 30000,
+				maximumAge: 30000,
+				enableHighAccuracy: true
+			});
 
 			return deferred.promise;
 		},
