@@ -1,9 +1,8 @@
 angular.module('helmetApp', [
 	'ngRoute',
 	'ngSanitize',
-	'mobile-angular-ui',
-	'helmetApp.directives',
-	'helmetApp.filters'
+	'ngStorage',
+	'mobile-angular-ui'
 ])
 
 .config([
@@ -38,17 +37,16 @@ function($routeProvider, $locationProvider) {
 .controller('AppController', [
 	'$rootScope',
 	'$scope',
-	function($rootScope, $scope) {
-		// Chargement : route, position, weather, direction
-		$rootScope.loading = {};
+function($rootScope, $scope) {
+	// Chargement : route, position, weather, direction
+	$rootScope.loading = {};
 
-		$rootScope.$on("$routeChangeStart", function(){
-			$rootScope.loading.route = true;
-			$rootScope.message = '';
-		});
+	$rootScope.$on("$routeChangeStart", function(){
+		$rootScope.loading.route = true;
+		$rootScope.message = '';
+	});
 
-		$rootScope.$on("$routeChangeSuccess", function(){
-			$rootScope.loading.route = false;
-		});
-	}
-]);
+	$rootScope.$on("$routeChangeSuccess", function(){
+		$rootScope.loading.route = false;
+	});
+}]);

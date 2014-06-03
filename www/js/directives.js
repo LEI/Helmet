@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('helmetApp.directives', [])
+angular.module('helmetApp')
 
 .directive('haPosition', [function() {
 	return {
@@ -43,7 +43,7 @@ angular.module('helmetApp.directives', [])
 function($rootScope, openWeatherApi) {
 	return {
 		restrict: 'EA',
-		templateUrl: 'views/partials/weather.html',
+		//templateUrl: 'views/partials/weather.html',
 		controller: function($scope) {
 			// Attente de la position
 			$rootScope.loading.weather = true;
@@ -60,13 +60,11 @@ function($rootScope, openWeatherApi) {
 								main: data.main,
 								data: data.weather
 							};
-						},
-						function(error) {
+						}, function(error) {
 							$rootScope.loading.weather = false;
 							$rootScope.currentWeather.errorMessage = error;
 						});
-					},
-					function(error) {
+					}, function(error) {
 						$rootScope.currentWeather.errorMessage = error;
 					});
 				}

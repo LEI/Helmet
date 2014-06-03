@@ -5,13 +5,13 @@ angular.module('helmetApp')
 /*
  *	Text To Speech
  */
-.service('TextToSpeech', [
+.factory('TextToSpeech', [
 	'$q',
 function($q) {
 	if ('speechSynthesis' in window) {
-		this.message = new SpeechSynthesisUtterance();
-		this.voices = speechSynthesis.getVoices();
-		this.message.lang = 'fr-FR';
+		var message = new SpeechSynthesisUtterance(),
+			voices = speechSynthesis.getVoices();
+		message.lang = 'fr-FR';
 		// voiceURI 'native'
 		// volume (1) [0-1]
 		// rate (1) [0.1-10]
@@ -19,30 +19,29 @@ function($q) {
 	} else {
 		//alert('Synthèse vocale impossible');
 	}
-	this.say = function(text) {
-		var deferred = $q.defer();
-		if (this.message !== undefined) {
-			this.message.onend = function(e) { deferred.resolve(e); };
-			this.message.text = text;
-			speechSynthesis.speak(this.message);
-		} else {
-			deferred.reject('Synthèse vocale impossible');
-		}
-		return deferred.promise;
-	}
-	this.setVoice = function(name) {
-		if (this.message !== undefined) {
-			this.message.voice = voices.filter( function(voice) {
+	return {
+		active: false,
+		say: function(text) {
+			var deferred = $q.defer();
+			if (this.active) {
+				message.text = text;
+				message.onend = function(e) { deferred.resolve(e); };
+				speechSynthesis.speak(message);
+			}
+			return deferred.promise;
+		},
+		setVoice: function(name) {
+			message.voice = voices.filter( function(voice) {
 				return voice.name == name;
 			})[0];
 		}
-	}
+	};
 }])
 
 /*
  *	Speech Recognition
  */
-.service('SpeechRecognition', [
+.factory('SpeechRecognition', [
 	'$rootScope',
 function($rootScope) {
 	window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition || null;
@@ -77,17 +76,19 @@ function($rootScope) {
 		sr.onerror = function(event) {
 			console.log('Erreur ' + event.message);
 		};
-		this.start = function () {
+	} else {
+		//alert('Reconnaissance vocale impossible');
+	}
+	return {
+		start: function () {
 			try {
 				sr.start();
 			} catch(e) {
 				alert(e.message);
 			}
-		};
-		this.stop = function () {
+		},
+		stop: function () {
 			sr.stop();
-		};
-	} else {
-		//alert('Reconnaissance vocale impossible');
-	}
+		}
+	};
 }]);

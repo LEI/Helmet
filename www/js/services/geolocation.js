@@ -6,62 +6,47 @@ angular.module('helmetApp')
 	'$rootScope',
 	'$q',
 function ($rootScope, $q) {
-	if (!navigator.geolocation) {
+	if (!'geolocation' in navigator) {
 		alert('Géolocalisation non supportée');
+		// Sur votre appareil mobile, appuyez sur Paramètres, puis sur Services de localisation
 	}
-
 	return {
+		$watchId: null,
 		getCurrentPosition: function (options, onSuccess, onError) {
 			var deferred = $q.defer();
 			navigator.geolocation.getCurrentPosition(
 				function (position) {
-					var that = this,
-						args = arguments;
-					if (onSuccess) {
-						$rootScope.$apply(function () {
-							onSuccess.apply(that, args);
-						});
-					}
 					deferred.resolve(position);
 				}, function (error) {
-					var that = this,
-						args = arguments;
-					if (onError) {
-						$rootScope.$apply(function () {
-							onError.apply(that, args);
-						});
-					}
 					deferred.reject(error.message ? error.message : error);
 				},
-			options); //  || { timeout: 30000, enableHighAccuracy: true, maximumAge: 30000 }
+			options || {
+				timeout: 30000,
+				maximumAge: 30000,
+				enableHighAccuracy: true
+			});
 
 			return deferred.promise;
 		},
 		watchPosition: function(options, onSuccess, onError) {
 			var deferred = $q.defer();
-			navigator.geolocation.watchPosition(
+			this.$watchId = navigator.geolocation.watchPosition(
 				function (position) {
-					var that = this,
-						args = arguments;
-					if (onSuccess) {
-						$rootScope.$apply(function () {
-							onSuccess.apply(that, args);
-						});
-					}
-					deferred.resolve(position);
+					// notify (update) != resolve (success)
+					deferred.notify(position);
 				}, function (error) {
-					var that = this,
-						args = arguments;
-					if (onError) {
-						$rootScope.$apply(function () {
-							onError.apply(that, args);
-						});
-					}
 					deferred.reject(error.message ? error.message : error);
 				},
-			options); // || { frequency: 3000 }
+			options || {
+				timeout: 30000,
+				maximumAge: 30000,
+				enableHighAccuracy: true
+			});
 
 			return deferred.promise;
+		},
+		clearWatch: function() {
+			navigator.geolocation.clearWatch(this.$watchId);
 		},
 		calculateDistance: function(lat1, lon1, lat2, lon2) {
 			function toRad(n) {

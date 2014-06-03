@@ -14,15 +14,24 @@
 </div>
 
 <!-- Chargement -->
-<div ng-show="loading.position" class="app-content-loading">
+<div ng-show="loading.route" class="app-content-loading">
 	<i class="fa fa-map-marker spinner"></i>
 	<div class="spinner-message" loading-message="message">
 	</div>
 </div>
-<div ng-hide="loading.position">
+<div ng-hide="loading.route">
 
+	<!-- Titre -->
+	<div class="panel-heading">
+		<h2 class="panel-title">
+			{{ message || 'Destination' }} {{ speed }} {{ direction.routes[0].summary }}
+			<span ng-show="distance">
+				({{ distance | number:0 }}m)
+			</span>
+		</h2>
+	</div>
 	<!-- Contenu -->
-	<div bs-panel title="{{ message || 'Destination' }} {{ distance }} {{ speed }} {{ direction.routes[0].summary }}">
+	<div class="panel-body">
 		<div ha-map></div>
 	</div>
 

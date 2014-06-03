@@ -1,0 +1,22 @@
+<!-- Titre -->
+<div content-for="title">
+  <span>Paramètres</span>
+</div>
+
+<!-- Navigation -->
+<div content-for="navbarAction">
+	<div bt-icon class="btn btn-navbar" ng-click="toggle('bluetoothOverlay', 'on')"></div>
+</div>
+
+<!-- Contenu -->
+
+<div class="panel">
+	<div class="panel-heading">
+		<h2 class="panel-title">
+			Général
+		</h2>
+	</div>
+	<div class="panel-body">
+		<switch ng-model="loading.position" class="pull-right"></switch> Test
+	</div>
+</div>

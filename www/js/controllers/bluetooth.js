@@ -6,36 +6,39 @@ angular.module('helmetApp')
 	'$scope',
 	'$rootScope',
 	'$bluetooth',
-function($scope, $rootScope, $bluetooth) {
+	'$timeout',
+function($scope, $rootScope, $bluetooth, $timeout) {
 
-		$scope.deviceList = {};
+		$scope.bluetooth = {
+			deviceList: []
+		};
 
 		$scope.searchDevice = function() {
-			$rootScope.loading.bluetooth = true;
 			$bluetooth.isEnabled().then( function(response) {
+				$scope.bluetooth.loading = true;
+				// Découverte des périphériques
 				$bluetooth.list().then( function(res) {
-					$scope.bluetoothError = res.length + ' appareil(s) connecté(s)';
+					$scope.bluetooth.loading = false;
+					$scope.bluetooth.errorMessage = res.length + ' appareil(s) connecté(s)';
 					if (res.length > 0) {
-						$rootScope.loading.bluetooth = false;
-						for (var i = res.length - 1; i >= 0; i--) {
-							$scope.deviceList[res[i].id] = res[i];
-                            console.log($scope.deviceList);
-						};
-
+						angular.forEach(res, function(device, key) {
+							this.push(device);
+						}, $scope.bluetooth.deviceList);
+						//$scope.connect(res[0].id);
+						$timeout(function(){
+							scope.$apply();
+						});
 						console.log(JSON.stringify(res, null, 4));
-
-						$scope.connect(res[0].id);
-
 					} else {
 						$scope.bluetoothError = 'Aucun périphérique bluetooth';
 					}
 				}, function(error) {
+					$scope.bluetooth.loading = false;
 					console.log(error);
-					$scope.bluetoothError = error;
+					$scope.bluetooth.errorMessage = error;
 				});
 			}, function(error) {
-				console.log(error);
-				$scope.bluetoothError = 'Bluetooth indisponible ' + error;
+				$scope.bluetooth.errorMessage = error;
 			});
 		}
 
@@ -46,7 +49,7 @@ function($scope, $rootScope, $bluetooth) {
 				$scope.check();
 			}, function(error) {
 				console.log(error);
-				$scope.bluetoothError = error;
+				$scope.bluetooth.errorMessage = error;
 			});
 		}
 
