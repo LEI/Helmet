@@ -48,7 +48,7 @@ void loop() {
     
     // Serial sent by the RN52 module
     for( byte i = 0; i < nbBytes; i++ ) {
-        inData[i] = SerialRN52.read();
+      inData[i] = SerialRN52.read();
     }
       
     inData[nbBytes] = '\0';
@@ -74,7 +74,7 @@ void loop() {
     
     // Serial sent by the RN52 module
     for( byte i = 0; i < nbBytes; i++ ) {
-        inData[i] = SerialRN52.read();
+      inData[i] = SerialRN52.read();
     }
       
     inData[nbBytes] = '\0';
