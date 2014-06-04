@@ -73,3 +73,12 @@ https://github.com/TalAter/annyang
 	I/BluetoothSerial(15942): MESSAGE_STATE_CHANGE: 0
 	I/BluetoothSerial(15942): BluetoothSerialService.STATE_NONE
 	D/CordovaLog(15942): file:///android_asset/www/js/controllers/bluetooth.js: Line 50 : Unable to connect to device
+
+## Arduino
+
+*Les ports data de l'Arduino (RX & TX) sont utilisés par le port USB lorsque celui-ci est connecté à un ordinateur. Cette ligne de donnée étant occupée, la library SoftwareSerial est utilisée pour créer une ligne data sur les pins digitales 5 et 6 de l'Arduino.*
+
+Pour le développement Arduino, les configurations nécessaires sont les suivantes (à configurer dans l'IDE utilisé).
+	
+* Pour l'upload du programme sur le microcontrolleur, utiliser le port série `/dev/tty.usbmodemfxxxx`, et pas `/dev/cu.usbmodemfxxxx`
+* Utiliser le même baudrate (bps) sur le port série USB que celui configuré dans le code (9600).
