@@ -17,7 +17,6 @@ angular.module('helmetApp')
 	'TextToSpeech',
 	'SpeechRecognition',
 function($scope, $rootScope, $timeout, $filter, $localStorage, $geolocation, $direction, FileSystem, TextToSpeech, SpeechRecognition) {
-	$rootScope.$storage = $localStorage;
 
 	// TODO
 	//FileSystem.read();
@@ -38,15 +37,14 @@ function($scope, $rootScope, $timeout, $filter, $localStorage, $geolocation, $di
 		$rootScope.position = position;
 		$rootScope.loading.position = false;
 		$rootScope.message = '';
-		$timeout(function() { // $direction undefined ?
+		/*$timeout(function() {
 			$direction.initMap(position);
-		});
+		});*/
 		if (position.coords.speed) {
 			$rootScope.speed = position.coords.speed;
 		}
 	}, function(error) {
-		console.log(error);
-		$rootScope.message = 'Position inconnue';
+		$rootScope.message = error;
 	});
 
 	$scope.startWatch = function() {
@@ -60,8 +58,7 @@ function($scope, $rootScope, $timeout, $filter, $localStorage, $geolocation, $di
 			// resolve
 		}, function(error) {
 			// reject
-			alert(error);
-			$rootScope.message = 'Position inconnue...';
+			$rootScope.message = error+'...';
 		}, function(newPos) {
 			// notify
 			$rootScope.loading.position = false;
@@ -101,6 +98,7 @@ function($scope, $rootScope, $timeout, $filter, $localStorage, $geolocation, $di
 					// Initialisation de l'itinéraire
 					$scope.clearSteps();
 					$scope._directions = direction;
+					// Sauvegarde l'itinéraire
 					$rootScope.$storage.destination = direction;
 					$rootScope.message = '';
 					// Affichage carte
@@ -124,6 +122,7 @@ function($scope, $rootScope, $timeout, $filter, $localStorage, $geolocation, $di
 				$scope.step = {};
 				$scope.step.current = $scope._steps[ key ];
 				$scope.step.count = key;
+				// Sauvegarde de l'étape
 				$rootScope.$storage.step = $scope.step;
 				// Affichage carte
 				//$direction.fitStep($scope.step.current);
@@ -143,7 +142,11 @@ function($scope, $rootScope, $timeout, $filter, $localStorage, $geolocation, $di
 
 	// Efface l'itinéraire
 	$scope.resetDirection = function() {
-		$localStorage.$reset();
+		if ($rootScope.$storage.destination)
+			delete $rootScope.$storage.destination;
+		if ($rootScope.$storage.step)
+			delete $rootScope.$storage.step;
+		//$localStorage.$reset();
 		$scope.clearDirection();
 		$timeout(function() {
 		    $scope.$apply(function () {
@@ -153,8 +156,7 @@ function($scope, $rootScope, $timeout, $filter, $localStorage, $geolocation, $di
 			});
 		});
 		//directionsDisplay.setMap(null);
-		//if ($direction !== undefined && $rootScope.position !== undefined)
-		$direction.initMap($rootScope.position);
+		//$direction.initMap($rootScope.position);
 	};
 
 	$scope.clearDirection = function() {
@@ -184,31 +186,19 @@ function($scope, $rootScope, $timeout, $filter, $localStorage, $geolocation, $di
 		$scope.step.count = -1;
 	};
 
+	// Active ou désactive la synthèse vocale
 	$scope.toggleVoice = function() {
 		TextToSpeech.active = !TextToSpeech.active;
 		$rootScope.audio.textToSpeech = TextToSpeech.active;
 	};
 
+	// Local Storage : restitution du dernier itinéraire et de l'étape en cours
 	if ($rootScope.$storage.destination !== undefined) {
 		$scope._directions = $rootScope.$storage.destination;
 		$scope._steps = $scope._directions.routes[0].legs[0].steps;
+	}
+	if ($rootScope.$storage.step !== undefined) {
 		$scope.step = $rootScope.$storage.step;
-		/*angular.element(document).ready(function () {
-			var ridePath = new google.maps.Polyline({
-				map:            $direction.map,
-				path:           google.maps.geometry.encoding.decodePath($scope._directions.routes[0].overview_polyline.points),
-				strokeColor:    "#FF0000",
-				strokeOpacity:  1.0,
-				strokeWeight:   3
-			});
-			var ne = new google.maps.LatLng(
-				$scope._directions.routes[0].bounds.Ba.j,
-				$scope._directions.routes[0].bounds.Ba.k);
-			var sw = new google.maps.LatLng(
-				$scope._directions.routes[0].bounds.ra.j,
-				$scope._directions.routes[0].bounds.ra.k);
-				$direction.initMap($rootScope.position, new google.maps.LatLngBounds(sw, ne));
-		});*/
 	}
 
 }]);

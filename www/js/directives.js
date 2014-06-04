@@ -8,6 +8,13 @@ angular.module('helmetApp')
 	};
 }])
 
+.directive('haWeather', [function() {
+	return {
+		controller: 'openWeatherController',
+		templateUrl: 'views/partials/weather.html'
+	};
+}])
+
 .directive('haMap', [function () {
 	return {
 		templateUrl: 'views/partials/map.html'
@@ -34,60 +41,6 @@ angular.module('helmetApp')
 .directive('btIcon', [function() {
 	return {
 		template: '<i class="fa fa-signal"></i>'
-	};
-}])
-
-.directive('haWeather', [
-	'$rootScope',
-	'$geolocation',
-	'openWeatherApi',
-function($rootScope, $geolocation, openWeatherApi) {
-	return {
-		restrict: 'EA',
-		//templateUrl: 'views/partials/weather.html',
-		controller: function($scope) {
-			// Attente de la position
-			$rootScope.loading.weather = true;
-			$scope.currentWeather = {};
-			$geolocation.getCurrentPosition().then( function(position) {
-				// Recherche de la météo
-				openWeatherApi.getCurrentWeather(position).then(function(data) {
-					$rootScope.loading.weather = false;
-					$scope.currentWeather = {
-						city: data.name,
-						main: data.main,
-						data: data.weather
-					};
-				}, function(error) {
-					$rootScope.loading.weather = false;
-					$scope.currentWeather.errorMessage = error || 'Erreur';
-				});
-			}, function(error) {
-				$scope.currentWeather.errorMessage = error;
-			});
-			/*$rootScope.$watch('waitPosition', function(newValue, oldValue, scope){});
-				// newValue.coords.accuracy !== oldValue.coords.accuracy ?
-				if (newValue !== undefined) {
-					$rootScope.currentWeather = {};
-					newValue.then(function() {
-						// Recherche de la météo
-						openWeatherApi.getCurrentWeather($rootScope.position).then(function(data) {
-							$rootScope.loading.weather = false;
-							$rootScope.currentWeather = {
-								city: data.name,
-								main: data.main,
-								data: data.weather
-							};
-						}, function(error) {
-							$rootScope.loading.weather = false;
-							$rootScope.currentWeather.errorMessage = error;
-						});
-					}, function(error) {
-						$rootScope.currentWeather.errorMessage = error;
-					});
-				}
-			});*/
-		}
 	};
 }])
 

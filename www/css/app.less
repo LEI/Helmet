@@ -47,7 +47,7 @@ body .app {
 	}
 }
 
-.direction-form {
+.custom-form {
 	padding: 10px 0 10px 10px;
 	@media (max-width : 991px) {
 		padding: 0 0 10px 0;
@@ -94,14 +94,17 @@ body .app {
 
 .settings {
 	li {
+		overflow: hidden;
 		min-height: 54px;
 		padding: 10px;
 		border-bottom: 1px solid #ddd;
+		&.stored {
+			color: #999;
+		}
 		span {
-			font-size: 20px;
-			line-height: 34px;
 			&.title {
-				color: #999;
+				line-height: 34px;
+				font-size: 20px;
 			}
 		}
 	}

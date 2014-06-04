@@ -4,7 +4,7 @@
 	<a class="btn btn-danger" ng-click="resetDirection()"
 		ng-disabled="loading.position || loading.direction || !_directions && !positionMarker">
 		<i class="fa fa-times inherit-size" ng-hide="loading.position || loading.direction || !_directions && !positionMarker"></i>
-		<i class="fa fa-minus-circle inherit-size" ng-show="loading.position || loading.direction || !_directions && !positionMarker"></i>
+		<i class="fa fa-ban inherit-size" ng-show="loading.position || loading.direction || !_directions && !positionMarker"></i>
 	</a>
 	<!-- volume -->
 	<a class="btn btn-default" ng-click="toggleVoice()" ng-show="_directions"
@@ -32,9 +32,6 @@
 		ng-disabled="loading.position || loading.direction">
 		<i class="fa fa-location-arrow" ng-show="positionMarker"></i>
 		<i class="fa fa-map-marker" ng-hide="positionMarker"></i>
-		<span ng-show="accuracy">
-			~{{ accuracy | number:0 }}m
-		</span>
 	</a>
 	<!-- search
 	<a class="btn btn-primary" title="Rechercher" ng-click="getDirection(destination)"
@@ -43,7 +40,7 @@
 	</a> -->
 </div>
 
-<form novalidate ng-submit="getDirection(destination)" name="directionForm" class="direction-form col-xs-12 col-md-6">
+<form novalidate ng-submit="getDirection(destination)" name="directionForm" class="custom-form col-xs-12 col-md-6">
 	<div class="input-group margin-bottom-sm">
 		<span class="input-group-addon clickable" title="Rechercher" ng-click="getDirection(destination)">
 			<i class="fa fa-refresh fa-spin fa-fw" ng-show="loading.position || loading.direction"></i>
@@ -57,7 +54,7 @@
 		ng-model="destination"
 		label=""
 		label-class="col-xs-12"
-		ng-disabled="loading.position || loading.direction";
+		ng-disabled="loading.position || loading.direction"
 		autofocus
 		required>
 	</div>

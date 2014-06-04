@@ -22,32 +22,64 @@
 	</li>
 </ul-->
 
+<!-- Bluetooth -->
 <ul class="settings">
 	<li>
 		<button class="btn btn-default col-xs-12" ng-click="discover()"
 			ng-class="{'btn-danger': bluetooth.errorMessage}">
+			<span ng-hide="bluetooth.loading">
+				<i class="fa fa-search" ng-hide="bluetooth.errorMessage"></i>
+				<i class="fa fa-warning" ng-show="bluetooth.errorMessage"></i>
+			</span>
 			<i class="fa fa-refresh fa-spin" ng-show="bluetooth.loading"></i>
-			{{ bluetooth.errorMessage || 'Bluetooth' }}
+			{{ bluetooth.errorMessage || 'Recherche' }}
 		</button>
 	</li>
-	<li ng-repeat="device in bluetooth.deviceList">
-		<button ng-hide="device.connected" class="btn btn-success pull-right" ng-click="connect(device.id)">
-			Connexion
-		</button>
-		<button ng-show="device.connected" class="btn btn-danger pull-right" ng-click="disconnect(device.id)">
-			Déconnexion
-		</button>
-		<span>
+	<!-- Liste des appareils -->
+	<li ng-repeat="device in bluetooth.deviceList" ng-class="{'stored': device.stored}"}>
+
+		<!-- Nom du périphérique -->
+		<span class="title">
+			<i class="fa fa-headphones"></i>
 			{{ device.name }}
 		</span>
-		<br>
-		<small>
-			{{ device.id }}
-		</small>
-		<form ng-show="device.connected" class="container" ng-submit="write(bluetooth.data)">
-			<input type="text" class="form-control" ng-model="bluetooth.data" required>
-			<br>
-			<input type="submit" class="btn btn-primary col-xs-12" value="Envoyer à {{ device.name }}">
-		</form>
+		<!-- Adresse MAC -->
+		<small>{{ device.id }}</small>
+		<div class="pull-right">
+			<!-- Connexion -->
+			<button class="btn btn-success" ng-click="connect(device.id)"
+				ng-hide="device.connected" ng-disabled="loading.bluetooth || device.stored">
+				<i class="fa fa-power-off"></i>
+			</button>
+			<div class="btn-group pull-right">
+				<button class="hidden"></button>
+				<!-- Souscrire -->
+				<button class="btn btn-primary" ng-click="subscribe(device.id)"
+					ng-show="device.connected" ng-disabled="loading.bluetooth || device.stored">
+					<i class="fa fa-code" ng-show="device.subscribed"></i>
+					<i class="fa fa-exchange" ng-hide="device.subscribed"></i>
+				</button>
+				<!-- Déxonnexion -->
+				<button class="btn btn-danger" ng-click="disconnect(device.id)"
+					ng-show="device.connected" ng-disabled="loading.bluetooth || device.stored">
+					<i class="fa fa-check"></i>
+				</button>
+			</div>
+			<!-- Write data -->
+			<form ng-show="device.connected" novalidate ng-submit="write(bluetooth.data)" name="writeForm">
+				<div class="input-group margin-bottom-sm">
+					<span class="input-group-addon clickable" title="Envoyer" ng-click="write(bluetooth.data)">
+						<i class="fa fa-refresh fa-spin" ng-show="loading.bluetooth"></i>
+						<i class="fa fa-terminal" ng-hide="loading.bluetooth"></i>
+					</span>
+					<input class="form-control"
+					type="text"
+					placeholder="Envoyer des données"
+					ng-model="bluetooth.data"
+					ng-disabled="loading.bluetooth || device.stored"
+					required>
+				</div>
+			</form>
+		</div>
 	</li>
 </ul>

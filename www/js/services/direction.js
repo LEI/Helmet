@@ -15,10 +15,10 @@ function($rootScope, $q, $http) {
 		return {
 			map: null,
 			initMap: function(position, p_bounds) {
-				// Cannot read property 'offsetWidth' of null
 				var self = this;
 				angular.element(document).ready(function () {
 					// Initialisation Google Map
+					// Cannot read property 'offsetWidth' of null
 					self.map = new google.maps.Map(document.getElementById('google-map'), {
 						zoom: 15,
 						mapTypeId: 'roadmap',
@@ -144,11 +144,11 @@ function($rootScope, $q, $http) {
 				$rootScope.accuracy = position.coords.accuracy;
 				$rootScope.positionMarker.circle.setRadius($rootScope.accuracy);
 				bounds = $rootScope.positionMarker.circle.getBounds();
-				if (this.map === undefined) {
+				/*if (this.map === undefined) {
 					this.initMap(position, bounds);
 				} else {
 					this.map.fitBounds(bounds);
-				}
+				}*/
 			},
 			getInstruction: function(step) {
 				var instruction = step.current.instructions,
@@ -158,7 +158,7 @@ function($rootScope, $q, $http) {
 				return tmp.textContent || tmp.innerText;
 			}
 		};
-	} else {
+	}/* else {
 		alert('API Google inaccessible');
-	}
+	}*/
 }]);

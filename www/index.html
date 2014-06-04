@@ -33,13 +33,13 @@
 						<i class="fa fa-bars"></i> Helmet
 					</div>
 				</div> -->
-				<!-- right -->
+				<!-- right
 				<div class="btn-group pull-right" yield-to="navbarAction">
-					<!-- Weather -->
+					// overlay
 					<div ng-click="toggle('weatherOverlay', 'on')" class="btn btn-navbar">
 						<i class="fa fa-sun-o"></i>
 					</div>
-				</div>
+				</div> -->
 			</div>
 
 			<!-- Navigation bottom -->
@@ -71,8 +71,6 @@
 				<div ng-view class="app-content scrollable-content" ng-hide="loading.route"></div>
 			</div>
 
-			<div ng-include="'views/partials/weather.html'"></div>
-
 		</div>
 
 		<!-- browser: AIzaSyBvFpbSPCX7TEnXxQ3ztf8zD_zLVGxiLbg -->
@@ -94,10 +92,11 @@
 		<script type="text/javascript" src="js/controllers/direction.js"></script>
 		<script type="text/javascript" src="js/controllers/settings.js"></script>
 		<!-- Services -->
-		<script type="text/javascript" src="js/services/filesystem.js"></script>
 		<script type="text/javascript" src="js/services/bluetooth.js"></script>
 		<script type="text/javascript" src="js/services/direction.js"></script>
+		<script type="text/javascript" src="js/services/filesystem.js"></script>
 		<script type="text/javascript" src="js/services/geolocation.js"></script>
+		<script type="text/javascript" src="js/services/notification.js"></script>
 		<script type="text/javascript" src="js/services/speech.js"></script>
 		<script type="text/javascript" src="js/services/weather.js"></script>
 

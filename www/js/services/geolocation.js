@@ -5,20 +5,44 @@ angular.module('helmetApp')
 .factory('$geolocation', [
 	'$rootScope',
 	'$q',
-function ($rootScope, $q) {
+	'$notification',
+function ($rootScope, $q, $notification) {
+
 	if (!'geolocation' in navigator) {
-		alert('Géolocalisation non supportée');
-		// Sur votre appareil mobile, appuyez sur Paramètres, puis sur Services de localisation
+		$notification.alert('Géolocalisation non supportée', 'Géolocalisation', 'OK');
 	}
+
+	var handleError = function(error) {
+		var msg = '';
+		switch(error.code) {
+			case error.PERMISSION_DENIED:
+				msg = "Localisation refusée";
+				break;
+			case error.POSITION_UNAVAILABLE:
+				msg = "Localisation impossible";
+				break;
+			case error.TIMEOUT:
+				msg = "La requête a expiré";
+				break;
+			case error.UNKNOWN_ERROR:
+				msg = "Une erreur inconnue est survenue";
+				break;
+			default:
+				msg = error.message ? error.message : error;
+				break;
+		}
+		return msg || 'Erreur';
+	};
+
 	return {
-		$watchId: null,
 		getCurrentPosition: function (options, onSuccess, onError) {
 			var deferred = $q.defer();
 			navigator.geolocation.getCurrentPosition(
 				function (position) {
 					deferred.resolve(position);
 				}, function (error) {
-					deferred.reject(error.message ? error.message : error);
+					error = handleError(error);
+					deferred.reject(error);
 				},
 			options || {
 				timeout: 30000,
@@ -28,6 +52,7 @@ function ($rootScope, $q) {
 
 			return deferred.promise;
 		},
+		$watchId: null,
 		watchPosition: function(options, onSuccess, onError) {
 			var deferred = $q.defer();
 			this.$watchId = navigator.geolocation.watchPosition(
@@ -35,7 +60,8 @@ function ($rootScope, $q) {
 					// notify (update) != resolve (success)
 					deferred.notify(position);
 				}, function (error) {
-					deferred.reject(error.message ? error.message : error);
+					error = handleError(error);
+					deferred.reject(error);
 				},
 			options || {
 				timeout: 30000,
