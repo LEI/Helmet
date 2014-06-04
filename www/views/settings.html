@@ -3,20 +3,51 @@
   <span>Paramètres</span>
 </div>
 
-<!-- Navigation -->
-<div content-for="navbarAction">
-	<div bt-icon class="btn btn-navbar" ng-click="toggle('bluetoothOverlay', 'on')"></div>
-</div>
+<!--ul class="settings">
+	<li>
+		<span>Paramètre</span>
+		<switch ng-model="loading.position" class="pull-right"></switch>
+	</li>
+	<li>
+		<span>Patamèrre</span>
+		<switch ng-init="trololol = true; trolol = false; trol = true;" ng-model="trololol" class="pull-right"></switch>
+	</li>
+	<li>
+		<span>Paramètre</span>
+		<switch ng-model="trolol" class="pull-right"></switch>
+	</li>
+	<li>
+		<span>Paramètre</span>
+		<switch ng-model="trol" class="pull-right"></switch>
+	</li>
+</ul-->
 
-<!-- Contenu -->
-
-<div class="panel">
-	<div class="panel-heading">
-		<h2 class="panel-title">
-			Général
-		</h2>
-	</div>
-	<div class="panel-body">
-		<switch ng-model="loading.position" class="pull-right"></switch> Test
-	</div>
-</div>
+<ul class="settings">
+	<li>
+		<button class="btn btn-default col-xs-12" ng-click="discover()"
+			ng-class="{'btn-danger': bluetooth.errorMessage}">
+			<i class="fa fa-refresh fa-spin" ng-show="bluetooth.loading"></i>
+			{{ bluetooth.errorMessage || 'Bluetooth' }}
+		</button>
+	</li>
+	<li ng-repeat="device in bluetooth.deviceList">
+		<button ng-hide="device.connected" class="btn btn-success pull-right" ng-click="connect(device.id)">
+			Connexion
+		</button>
+		<button ng-show="device.connected" class="btn btn-danger pull-right" ng-click="disconnect(device.id)">
+			Déconnexion
+		</button>
+		<span>
+			{{ device.name }}
+		</span>
+		<br>
+		<small>
+			{{ device.id }}
+		</small>
+		<form ng-show="device.connected" class="container" ng-submit="write(bluetooth.data)">
+			<input type="text" class="form-control" ng-model="bluetooth.data" required>
+			<br>
+			<input type="submit" class="btn btn-primary col-xs-12" value="Envoyer à {{ device.name }}">
+		</form>
+	</li>
+</ul>

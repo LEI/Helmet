@@ -41,7 +41,6 @@ body .app {
   right: 0;
   margin-top: -25px;
   text-align: center;
-  font-size: 50px;
 }
 .app-content-loading .spinner-message {
   position: absolute;
@@ -51,18 +50,6 @@ body .app {
   margin-top: -50px;
   text-align: center;
   font-size: 1.5em;
-}
-.loading .spinner {
-  font-size: 1.5em;
-}
-.loading .spinner.inherit-size {
-  font-size: inherit;
-}
-.sidebar {
-  font-size: 1.1em;
-}
-.sidebar .fa {
-  min-width: 1.5em;
 }
 .direction-form {
   padding: 10px 0 10px 10px;
@@ -107,6 +94,18 @@ body .app {
 }
 .step-maneuver {
   margin-right: 10px;
+}
+.settings li {
+  min-height: 54px;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+.settings li span {
+  font-size: 20px;
+  line-height: 34px;
+}
+.settings li span.title {
+  color: #999;
 }
 .sprite {
   display: block;

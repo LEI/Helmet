@@ -36,7 +36,6 @@ body .app {
 		left: 0; right: 0;
 		margin-top: -25px;
 		text-align: center;
-		font-size: 50px;
 	}
 	.spinner-message {
 		position: absolute;
@@ -45,21 +44,6 @@ body .app {
 		margin-top: -50px;
 		text-align: center;
 		font-size: 1.5em;
-	}
-}
-.loading {
-	//display: inline-block;
-	.spinner {
-		font-size: 1.5em;
-		&.inherit-size {
-			font-size: inherit;
-		}
-	}
-}
-.sidebar {
-	font-size: 1.1em;
-	.fa {
-		min-width: 1.5em;
 	}
 }
 
@@ -108,7 +92,19 @@ body .app {
 	margin-right: 10px;
 }
 
-.maneuver {
+.settings {
+	li {
+		min-height: 54px;
+		padding: 10px;
+		border-bottom: 1px solid #ddd;
+		span {
+			font-size: 20px;
+			line-height: 34px;
+			&.title {
+				color: #999;
+			}
+		}
+	}
 }
 
 .sprite{
@@ -119,7 +115,6 @@ body .app {
     background-image: url('../img/maneuvers.png');
     background-repeat: no-repeat;
 }
-
 .turn-sharp-left { background-position: 0px 0px; }
 .turn-sharp-right { background-position: 0px -20px; }
 .turn-left { background-position: 0px -40px; }

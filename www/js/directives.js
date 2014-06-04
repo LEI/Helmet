@@ -39,15 +39,33 @@ angular.module('helmetApp')
 
 .directive('haWeather', [
 	'$rootScope',
+	'$geolocation',
 	'openWeatherApi',
-function($rootScope, openWeatherApi) {
+function($rootScope, $geolocation, openWeatherApi) {
 	return {
 		restrict: 'EA',
 		//templateUrl: 'views/partials/weather.html',
 		controller: function($scope) {
 			// Attente de la position
 			$rootScope.loading.weather = true;
-			$rootScope.$watch('waitPosition', function(newValue, oldValue, scope){
+			$scope.currentWeather = {};
+			$geolocation.getCurrentPosition().then( function(position) {
+				// Recherche de la météo
+				openWeatherApi.getCurrentWeather(position).then(function(data) {
+					$rootScope.loading.weather = false;
+					$scope.currentWeather = {
+						city: data.name,
+						main: data.main,
+						data: data.weather
+					};
+				}, function(error) {
+					$rootScope.loading.weather = false;
+					$scope.currentWeather.errorMessage = error || 'Erreur';
+				});
+			}, function(error) {
+				$scope.currentWeather.errorMessage = error;
+			});
+			/*$rootScope.$watch('waitPosition', function(newValue, oldValue, scope){});
 				// newValue.coords.accuracy !== oldValue.coords.accuracy ?
 				if (newValue !== undefined) {
 					$rootScope.currentWeather = {};
@@ -68,7 +86,7 @@ function($rootScope, openWeatherApi) {
 						$rootScope.currentWeather.errorMessage = error;
 					});
 				}
-			});
+			});*/
 		}
 	};
 }])

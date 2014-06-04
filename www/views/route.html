@@ -1,21 +1,11 @@
 <!-- Titre -->
 <div content-for="title">
-  <span class="hidden-phone">{{ destination || 'Itinéraire' | capitalize}}</span>
-</div>
-
-<!-- Navigation -->
-<div content-for="navbarAction">
-	<!-- Weather -->
-	<div ng-click="toggle('weatherOverlay', 'on')" class="btn btn-navbar">
-		<i class="fa fa-sun-o"></i>
-	</div>
-	<!-- Bluetooth -->
-	<div bt-icon class="btn btn-navbar" ng-click="toggle('bluetoothOverlay', 'on')"></div>
+  <span class="hidden-phone">Itinéraire</span>
 </div>
 
 <!-- Chargement -->
 <div ng-show="loading.route" class="app-content-loading">
-	<i class="fa fa-map-marker spinner"></i>
+	<i class="fa fa-map-marker fa-3x spinner"></i>
 	<div class="spinner-message" loading-message="message">
 	</div>
 </div>
@@ -24,10 +14,13 @@
 	<!-- Titre -->
 	<div class="panel-heading">
 		<h2 class="panel-title">
-			{{ message || 'Destination' }} {{ speed }} {{ direction.routes[0].summary }}
-			<span ng-show="distance">
-				({{ distance | number:0 }}m)
-			</span>
+			{{ message || destination || 'Destination' | capitalize }}
+			<small>
+				{{ speed }} {{ direction.routes[0].summary }}
+				<span ng-show="distance">
+					({{ distance | number:2 }}m)
+				</span>
+			</small>
 		</h2>
 	</div>
 	<!-- Contenu -->

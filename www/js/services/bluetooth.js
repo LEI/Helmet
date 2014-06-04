@@ -11,7 +11,7 @@ function($q) {
 	return {
 		isEnabled: function() {
 			var deferred = $q.defer();
-			if (!'bluetoothSerial' in window) {
+			if ('bluetoothSerial' in window) {
 				bluetoothSerial.isEnabled(
 					function(response) { deferred.resolve(response); },
 					function(error) { deferred.reject(error); }

@@ -101,7 +101,8 @@ function($scope, $rootScope, $timeout, $filter, $localStorage, $geolocation, $di
 					// Initialisation de l'itinéraire
 					$scope.clearSteps();
 					$scope._directions = direction;
-					$rootScope.$storage.route = direction;
+					$rootScope.$storage.destination = direction;
+					$rootScope.message = '';
 					// Affichage carte
 					//$direction.displayDirection(direction);
 				}, function(error) {
