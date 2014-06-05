@@ -37,7 +37,9 @@ function($routeProvider, $locationProvider) {
 .controller('AppController', [
 	'$rootScope',
 	'$scope',
-function($rootScope, $scope) {
+	'$localStorage',
+function($rootScope, $scope, $localStorage) {
+	$rootScope.$storage = $localStorage;
 	// Chargement : route, position, weather, direction
 	$rootScope.loading = {};
 

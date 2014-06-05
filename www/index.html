@@ -33,8 +33,13 @@
 						<i class="fa fa-bars"></i> Helmet
 					</div>
 				</div> -->
-				<!-- right -->
-				<div class="btn-group pull-right" yield-to="navbarAction"></div>
+				<!-- right
+				<div class="btn-group pull-right" yield-to="navbarAction">
+					// overlay
+					<div ng-click="toggle('weatherOverlay', 'on')" class="btn btn-navbar">
+						<i class="fa fa-sun-o"></i>
+					</div>
+				</div> -->
 			</div>
 
 			<!-- Navigation bottom -->
@@ -59,16 +64,12 @@
 				<div class="notification" ng-bind="notification"></div>
 				<!-- Chargement -->
 				<div ng-show="loading.route" class="app-content-loading">
-					<i class="fa fa-refresh fa-spin spinner"></i>
+					<i class="fa fa-refresh fa-spin fa-3x spinner"></i>
 					<div class="spinner-message" ng-bind="message"></div>
 				</div>
 				<!-- Contenu -->
 				<div ng-view class="app-content scrollable-content" ng-hide="loading.route"></div>
 			</div>
-
-			<div ng-include="'views/partials/bluetooth.html'"></div>
-
-			<div ng-include="'views/partials/weather.html'"></div>
 
 		</div>
 
@@ -88,14 +89,14 @@
 		<script type="text/javascript" src="js/filters.js"></script>
 		<!-- Controllers -->
 		<script type="text/javascript" src="js/controllers/arduino.js"></script>
-		<script type="text/javascript" src="js/controllers/bluetooth.js"></script>
 		<script type="text/javascript" src="js/controllers/direction.js"></script>
 		<script type="text/javascript" src="js/controllers/settings.js"></script>
 		<!-- Services -->
-		<script type="text/javascript" src="js/services/filesystem.js"></script>
 		<script type="text/javascript" src="js/services/bluetooth.js"></script>
 		<script type="text/javascript" src="js/services/direction.js"></script>
+		<script type="text/javascript" src="js/services/filesystem.js"></script>
 		<script type="text/javascript" src="js/services/geolocation.js"></script>
+		<script type="text/javascript" src="js/services/notification.js"></script>
 		<script type="text/javascript" src="js/services/speech.js"></script>
 		<script type="text/javascript" src="js/services/weather.js"></script>
 

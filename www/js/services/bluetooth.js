@@ -7,17 +7,25 @@ angular.module('helmetApp')
  */
 .factory('$bluetooth', [
 	'$q',
-function($q) {
+	'$rootScope',
+	'$notification',
+function($q, $rootScope, $notification) {
 	return {
-		isEnabled: function() {
+		isEnabled: function(hideAlert) {
 			var deferred = $q.defer();
-			if (!'bluetoothSerial' in window) {
+			if ('bluetoothSerial' in window) {
 				bluetoothSerial.isEnabled(
 					function(response) { deferred.resolve(response); },
 					function(error) { deferred.reject(error); }
 				);
 			} else {
 				deferred.reject('Bluetooth indisponible');
+				if (!hideAlert) {
+					$notification.alert( // message, titre, bouton, callback
+						'Activez le bluetooth et associez les périphériques depuis les paramètres :\n'
+						+ 'Paramètres > Sans fil et réseaux',
+						'Bluetooth', 'OK');
+				}
 			}
 
 			return deferred.promise;
@@ -98,9 +106,7 @@ function($q) {
 		read: function() {
 			var deferred = $q.defer();
 			bluetoothSerial.read(
-				function(data) {
-					deferred.resolve(data);
-				},
+				function(data) { deferred.resolve(data); },
 				function(error) { deferred.reject(error); }
 			);
 
@@ -111,9 +117,7 @@ function($q) {
 			var deferred = $q.defer();
 			bluetoothSerial.readUntil(
 				delimiter,
-				function(data) {
-					deferred.resolve(data);
-				},
+				function(data) { deferred.resolve(data); },
 				function(error) { deferred.reject(error); }
 			);
 
@@ -124,9 +128,7 @@ function($q) {
 			var deferred = $q.defer();
 			bluetoothSerial.subscribe(
 				delimiter,
-				function(data) {
-					deferred.resolve(data);
-				},
+				function(data) { deferred.resolve(data); },
 				function(error) { deferred.reject(error); }
 			);
 

@@ -1,33 +1,19 @@
-<!-- Weather Overlay -->
-<div overlay="weatherOverlay">
-
-	<!-- Position -->
-	<div ha-position></div>
-
-	<!-- Météo -->
-	<div ha-weather class="weather" ng-show="currentWeather">
-		<div ng-show="loading.weather" class="loading">
-			<i class="fa fa-spinner fa-spin spinner"></i>
-		</div>
-		<div ng-show="currentWeather.errorMessage">
-			{{ currentWeather.errorMessage }}
-		</div>
-		<div ng-show="currentWeather.data && !loading.weather">
-			<!--small>
-				{{ currentWeather.city || 'Météo' }}
-			</small-->
-			{{ currentWeather.main.temp || '?' }} °C
-			<span ng-repeat="w in currentWeather.data">
-				<img ng-src="//openweathermap.org/img/w/{{ w.icon }}.png" alt="{{ w.icon }}">
-				{{ w.description | capitalize }}
-			</span>
-		</div>
+<div class="weather" ng-show="currentWeather">
+	<div ng-show="currentWeather.loading" class="loading">
+		<i class="fa fa-spinner fa-spin spinner"></i>
 	</div>
-
-	<p bubble toggle="off" target="weatherOverlay">
-		<span class="btn btn-default">
-			<i class="fa fa-times"></i>
+	<div ng-show="currentWeather.errorMessage">
+		{{ currentWeather.errorMessage }}
+	</div>
+	<div ng-show="currentWeather.data && !currentWeather.loading">
+		<!--small>
+			{{ currentWeather.city || 'Météo' }}
+		</small-->
+		{{ currentWeather.main.temp || '?' }} °C
+		<span ng-repeat="w in currentWeather.data">
+			<img ng-src="//openweathermap.org/img/w/{{ w.icon }}.png" alt="{{ w.icon }}">
+			{{ w.description | capitalize }}
 		</span>
-	</p>
+	</div>
 </div>
 

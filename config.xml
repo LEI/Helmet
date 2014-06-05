@@ -6,7 +6,8 @@
 	</description>
 	<author email="dev@cordova.apache.org" href="http://cordova.io">
 		Apache Cordova Team
-	</author>
+	</author>$
+	<plugin name="Notification" value="org.apache.cordova.Notification"/>
 	<feature name="File">
 		<param name="android-package" value="org.apache.cordova.FileUtils" />
 	</feature>

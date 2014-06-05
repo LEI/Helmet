@@ -41,7 +41,6 @@ body .app {
   right: 0;
   margin-top: -25px;
   text-align: center;
-  font-size: 50px;
 }
 .app-content-loading .spinner-message {
   position: absolute;
@@ -52,23 +51,11 @@ body .app {
   text-align: center;
   font-size: 1.5em;
 }
-.loading .spinner {
-  font-size: 1.5em;
-}
-.loading .spinner.inherit-size {
-  font-size: inherit;
-}
-.sidebar {
-  font-size: 1.1em;
-}
-.sidebar .fa {
-  min-width: 1.5em;
-}
-.direction-form {
+.custom-form {
   padding: 10px 0 10px 10px;
 }
 @media (max-width: 991px) {
-  .direction-form {
+  .custom-form {
     padding: 0 0 10px 0;
   }
 }
@@ -107,6 +94,19 @@ body .app {
 }
 .step-maneuver {
   margin-right: 10px;
+}
+.settings li {
+  overflow: hidden;
+  min-height: 54px;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+.settings li.stored {
+  color: #999;
+}
+.settings li span.title {
+  line-height: 34px;
+  font-size: 20px;
 }
 .sprite {
   display: block;
