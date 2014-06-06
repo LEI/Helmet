@@ -22,8 +22,10 @@ function($q, $scope, $rootScope, $timeout, $localStorage, $bluetooth, $notificat
 		loading: false,
 		errorMessage: ''
 	};
+
 	//$scope.bluetooth.deviceList['01:23:45:67:89']={id:'01:23:45:67:89',name:'EX_AMPPLE',connected:false,stored:true};
 	//$scope.bluetooth.deviceList['98:76:54:32:10']={id:'98:76:54:32:10',name:'JET_TSET',connected:true,stored:false};
+
 	$bluetooth.isEnabled(true).then(function() {}, function(error) {
 		$scope.bluetooth.errorMessage = error;
 	});

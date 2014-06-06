@@ -26,7 +26,7 @@
 <ul class="settings">
 	<li>
 		<button class="btn btn-default col-xs-12" ng-click="discover()"
-			ng-class="{'btn-danger': bluetooth.errorMessage}">
+			ng-class="{'btn-danger': bluetooth.errorMessage}" ng-disabled="bluetooth.loading">
 			<span ng-hide="bluetooth.loading">
 				<i class="fa fa-search" ng-hide="bluetooth.errorMessage"></i>
 				<i class="fa fa-warning" ng-show="bluetooth.errorMessage"></i>
@@ -49,7 +49,7 @@
 			<!-- Connexion -->
 			<button class="btn btn-success" ng-click="connect(device.id)"
 				ng-hide="device.connected" ng-disabled="loading.bluetooth || device.stored">
-				<i class="fa fa-power-off"></i>
+				<i class="fa fa-link"></i>
 			</button>
 			<div class="btn-group pull-right">
 				<button class="hidden"></button>
@@ -62,7 +62,7 @@
 				<!-- Déxonnexion -->
 				<button class="btn btn-danger" ng-click="disconnect(device.id)"
 					ng-show="device.connected" ng-disabled="loading.bluetooth || device.stored">
-					<i class="fa fa-check"></i>
+					<i class="fa fa-power-off"></i>
 				</button>
 			</div>
 			<!-- Write data -->

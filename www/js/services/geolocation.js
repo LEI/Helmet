@@ -16,16 +16,16 @@ function ($rootScope, $q, $notification) {
 		var msg = '';
 		switch(error.code) {
 			case error.PERMISSION_DENIED:
-				msg = "Localisation refusée";
+				msg = "Permission refusée";
 				break;
 			case error.POSITION_UNAVAILABLE:
 				msg = "Localisation impossible";
 				break;
 			case error.TIMEOUT:
-				msg = "La requête a expiré";
+				msg = "Délai de requête expiré";
 				break;
 			case error.UNKNOWN_ERROR:
-				msg = "Une erreur inconnue est survenue";
+				msg = "Erreur inconnue";
 				break;
 			default:
 				msg = error.message ? error.message : error;
