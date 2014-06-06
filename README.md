@@ -76,9 +76,8 @@ https://github.com/TalAter/annyang
 
 ## Arduino
 
-*Les ports data de l'Arduino (RX & TX) sont utilisés par le port USB lorsque celui-ci est connecté à un ordinateur. Cette ligne de donnée étant occupée, la library SoftwareSerial est utilisée pour créer une ligne data sur les pins digitales 5 et 6 de l'Arduino.*
-
-Pour le développement Arduino, les configurations nécessaires sont les suivantes (à configurer dans l'IDE utilisé).
+*Les ports data de l'Arduino (RX & TX) sont utilisés par le port USB lorsque celui-ci est connecté à un ordinateur. Cette ligne de donnée étant occupée, la library [SoftwareSerial](http://arduino.cc/en/Reference/SoftwareSerial) est utilisée pour créer une ligne data sur les pins digitales 5 et 6 de l'Arduino.*
 	
-* Pour l'upload du programme sur le microcontrolleur, utiliser le port série `/dev/tty.usbmodemfxxxx`, et pas `/dev/cu.usbmodemfxxxx`
+* Pour l'upload du programme sur le microcontrolleur, préférer le port série `/dev/cu.usbmodemxxxxx`
 * Utiliser le même baudrate (bps) sur le port série USB que celui configuré dans le code (9600).
+* Utiliser la commande suivante pour un monitoring du port série USB `screen /dev/tty.usbmodemxxxxx <bps>`
