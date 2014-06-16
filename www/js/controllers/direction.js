@@ -59,6 +59,7 @@ function($scope, $rootScope, $timeout, $filter, $localStorage, $geolocation, $di
 		}, function(error) {
 			// reject
 			$rootScope.message = error+'...';
+			alert('La position n\'est plus observée');
 		}, function(newPos) {
 			// notify
 			$rootScope.loading.position = false;

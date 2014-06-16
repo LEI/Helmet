@@ -43,7 +43,7 @@ function($rootScope, $timeout) {
 					navigator.notification.vibrate(milliseconds);
 			},
 			fallbackAlert: function(title, message) {
-				alert(title + '\n\n' + message);
+				alert(title + ': ' + message);
 			}
 		};
 	}

@@ -39,10 +39,16 @@ function($q, $rootScope, $notification) {
 
 			return deferred.promise;
 		},
+		deviceList: [],
 		list: function() {
-			var deferred = $q.defer();
+			var that = this, deferred = $q.defer();
 			bluetoothSerial.list(
 				function(devices) {
+
+					angular.forEach(devices, function(device, key) {
+						this[device.id] = device;
+					}, that.deviceList);
+
 					deferred.resolve(devices);
 				},
 				function(error) {

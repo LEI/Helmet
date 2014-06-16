@@ -3,10 +3,14 @@
 angular.module('helmetApp')
 
 .controller('ArduinoController', [
-	'$rootScope',
 	'$scope',
+	'$rootScope',
 	'$bluetooth',
-	function($rootScope, $scope, $bluetooth) {
+function($scope, $rootScope, $bluetooth) {
 
-	}
-]);
+	$scope.show = function() {
+		console.log($bluetooth.deviceList);
+		alert($bluetooth.deviceList);
+	};
+
+}]);

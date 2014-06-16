@@ -18,17 +18,23 @@ function($q, $scope, $rootScope, $timeout, $localStorage, $bluetooth, $notificat
 	 *	Bluetooth
 	 */
 	$scope.bluetooth = {
-		deviceList: {},
 		loading: false,
 		errorMessage: ''
 	};
+	$scope.initBluetooth = function() {
 
-	//$scope.bluetooth.deviceList['01:23:45:67:89']={id:'01:23:45:67:89',name:'EX_AMPPLE',connected:false,stored:true};
-	//$scope.bluetooth.deviceList['98:76:54:32:10']={id:'98:76:54:32:10',name:'JET_TSET',connected:true,stored:false};
+		//$bluetooth.deviceList['01:23:45:67:89']={id:'01:23:45:67:89',name:'EX_AMPPLE',connected:false,stored:true};
+		//$bluetooth.deviceList['98:76:54:32:10']={id:'98:76:54:32:10',name:'JET_TSET',connected:true,stored:false};
 
-	$bluetooth.isEnabled(true).then(function() {}, function(error) {
-		$scope.bluetooth.errorMessage = error;
-	});
+		$bluetooth.isEnabled(true).then(function() {
+			$timeout(function() {
+				$scope.bluetooth.errorMessage = '';
+				$scope.$apply();
+			})
+		}, function(error) {
+			$scope.bluetooth.errorMessage = error;
+		});
+	}
 
 	$scope.discover = function() {
 		$bluetooth.isEnabled().then( function(response) {
@@ -39,9 +45,7 @@ function($q, $scope, $rootScope, $timeout, $localStorage, $bluetooth, $notificat
 				if (response.length > 0) {
 					$scope.bluetooth.errorMessage = '';
 					//console.log(JSON.stringify(response, null, 4));
-					angular.forEach(response, function(device, key) {
-						this[device.id] = device;
-					}, $scope.bluetooth.deviceList);
+					$scope.deviceList = $bluetooth.deviceList;
 				} else {
 					$scope.bluetooth.errorMessage = 'Aucun périphérique associé';
 				}
@@ -61,13 +65,12 @@ function($q, $scope, $rootScope, $timeout, $localStorage, $bluetooth, $notificat
 			$bluetooth.connect(id).then( function(response) {
 				$scope.bluetooth.loading = false;
 				$scope.bluetooth.errorMessage = '';
-				//$scope.bluetooth.connected = true;
-				$scope.bluetooth.deviceList[id].connected = true;
+				$bluetooth.deviceList[id].connected = true;
 				// Sauvegarde de l'appareil connecté
 				if ($rootScope.$storage.deviceList === undefined) {
 					$rootScope.$storage.deviceList = {};
 				}
-				$rootScope.$storage.deviceList[id] = $scope.bluetooth.deviceList[id];
+				$rootScope.$storage.deviceList[id] = $bluetooth.deviceList[id];
 			}, function(error) {
 				$scope.bluetooth.loading = false;
 				// 'Connexion impossible'
@@ -86,8 +89,7 @@ function($q, $scope, $rootScope, $timeout, $localStorage, $bluetooth, $notificat
 			$bluetooth.disconnect().then( function(response) {
 				$scope.bluetooth.loading = false;
 				$scope.bluetooth.errorMessage = '';
-				//$scope.bluetooth.connected = false;
-				$scope.bluetooth.deviceList[id].connected = false;
+				$bluetooth.deviceList[id].connected = false;
 			}, function(error) {
 				$scope.bluetooth.loading = false;
 				$scope.bluetooth.errorMessage = error;
@@ -191,6 +193,10 @@ function($q, $scope, $rootScope, $timeout, $localStorage, $bluetooth, $notificat
 		});
 	};
 
+	// Initialisation
+	$scope.$on('resume', $scope.initBluetooth);
+	$scope.initBluetooth();
+
 	// Local Storage
 	if ($rootScope.$storage.deviceList !== undefined) {
 		// Restitution des derniers appareils connectés
@@ -198,7 +204,7 @@ function($q, $scope, $rootScope, $timeout, $localStorage, $bluetooth, $notificat
 			device.stored = true;
 			device.connected = false;
 			this[device.id] = device;
-		}, $scope.bluetooth.deviceList);
+		}, $bluetooth.deviceList);
 	}
 
 }]);

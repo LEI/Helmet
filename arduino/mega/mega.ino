@@ -14,78 +14,86 @@
 // 0002
 
 int cmdPin = 2,
-    evtPin = 4,
-    bpsPin = 3;
+		evtPin = 4,
+		bpsPin = 3;
 
 void setup() {
-  
-  pinMode(evtPin,INPUT);
-  
-  /* baud rate 115200 */
-  pinMode(bpsPin,INPUT);
-  
-  /* baud rate 9600 */
+
+	pinMode(evtPin,INPUT);
+
+	/* baud rate 115200 */
+	pinMode(bpsPin,INPUT);
+
+	/* baud rate 9600 */
 //  pinMode(bpsPin,OUTPUT);
 //  digitalWrite(bpsPin,LOW);
-  
-  Serial.begin(9600);
-  Serial1.begin(115200);
-  
-  delay(1000);
-  
-  Serial.println("serial bluetooth started");
+
+	Serial.begin(9600);
+	Serial1.begin(115200);
+
+	delay(1000);
+
+	Serial.println("serial bluetooth started");
 }
 
 void loop() {
-  
-  // Serial USB
-  if (Serial.available() > 0) {
-    //Serial.println("--- serial available ---");
-    
-    char inChar = Serial.read();
-    
-    if (inChar == '0') {
-      Serial.println("*DATA MODE*");
-      pinMode(cmdPin,INPUT);
-    } else if (inChar == '1') {
-      Serial.println("*CMD MODE*");
-      pinMode(cmdPin,OUTPUT);
-      digitalWrite(cmdPin,LOW);
-    } else {
-      Serial.println( inChar );
-      Serial1.write( inChar ); 
-    }
-    
-    //delay(1000);
-    
-  }
-    
-  if (Serial1.available() > 0) {
-      
-      int inByte = Serial1.read();
-      Serial.write(inByte); 
+
+	// Serial USB
+	if (Serial.available() > 0) {
+
+		char inChar = Serial.read();
+
+		switch (inChar) {
+			case '0':
+				Serial.println("*DATA MODE*");
+				pinMode(cmdPin,INPUT);
+				break;
+			case '1':
+				Serial.println("*CMD MODE*");
+				pinMode(cmdPin,OUTPUT);
+				digitalWrite(cmdPin,LOW);
+				break;
+			case '2':
+				Serial.println('SD,02');
+				Serial1.write('SD,02');
+				break;
+			default:
+				Serial.println( inChar );
+				Serial1.write( inChar );
+		}
+
+	}
+
+	if (Serial1.available() > 0) {
+
+		int inByte = Serial1.read();
+		Serial.write(inByte);
+
+	}
+
+
 //    String str = bluetooth.readString();
 //    Serial.println(str);
-    
-    
-    // Donnees envoyees depuis le module bluetooth
-    //Serial.println("--- bluetooth available ---");
-    
+
+
+		// Donnees envoyees depuis le module bluetooth
+		//Serial.println("--- bluetooth available ---");
+
 //    int nbBytes = bluetooth.available();
 //    char inData[nbBytes];
 //    for (int i = 0; i < nbBytes; i++) {
 //      inData[i] = bluetooth.read();
 //    }
 
-    /*byte bytesReceived = Serial.readBytesUntil('\n', inData, nbBytes);
-    inData[bytesReceived] = '\0';
-    for (int i = 0; i < nbBytes; i++) {
-      inData[i] = bluetooth.read();
-    }
-    Serial.flush();
-    Serial.println();
-    Serial.println(inData);*/
-    
+		/*byte bytesReceived = Serial.readBytesUntil('\n', inData, nbBytes);
+		inData[bytesReceived] = '\0';
+		for (int i = 0; i < nbBytes; i++) {
+			inData[i] = bluetooth.read();
+		}
+		Serial.flush();
+		Serial.println();
+		Serial.println(inData);*/
+
 //    while(bluetooth.available() > 0) { //&& bluetooth.read() != '\n'
 //      byte inChar = bluetooth.read();
 //      Serial.write( inChar );
@@ -95,8 +103,5 @@ void loop() {
 //      Serial.println( (byte)inChar );
 //      //Serial.write( bluetooth.read() );
 //    }
-    
-  }
-  
-  //delay(100);
+	//delay(100);
 }
