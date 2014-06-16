@@ -15,11 +15,13 @@
 
 int cmdPin = 2,
 		evtPin = 4,
-		bpsPin = 3;
+		bpsPin = 3,
+    resetPin = 5;
 
 void setup() {
 
 	pinMode(evtPin,INPUT);
+	pinMode(resetPin,INPUT);
 
 	/* baud rate 115200 */
 	pinMode(bpsPin,INPUT);
@@ -57,17 +59,30 @@ void loop() {
 				Serial.println('SD,02');
 				Serial1.write('SD,02');
 				break;
+                        case 'D':
+				Serial.println('D: settings');
+				Serial1.write('D');
+				break;
+                        case 'R':
+                                Serial.print("*Reset RN52*");
+                                pinMode(resetPin, OUTPUT);
+                                digitalWrite(resetPin, LOW); delay(1000);
+                                pinMode(resetPin, INPUT); delay(1000);
+                                pinMode(resetPin, OUTPUT);
+                                digitalWrite(resetPin, LOW); delay(1000);
+                                pinMode(resetPin, INPUT); delay(1000);
+                                
 			default:
 				Serial.println( inChar );
 				Serial1.write( inChar );
 		}
 
 	}
-
+        
+        // RN52 return
 	if (Serial1.available() > 0) {
-
 		int inByte = Serial1.read();
-		Serial.write(inByte);
+		Serial.write((char)inByte);
 
 	}
 
