@@ -119,10 +119,9 @@ function($q, $rootScope, $notification) {
 			return deferred.promise;
 		},
 		readUntil: function(delimiter) {
-			delimiter = delimiter === undefined ? '\n' : delimiter;
 			var deferred = $q.defer();
 			bluetoothSerial.readUntil(
-				delimiter,
+				delimiter || '\n',
 				function(data) { deferred.resolve(data); },
 				function(error) { deferred.reject(error); }
 			);
@@ -130,10 +129,9 @@ function($q, $rootScope, $notification) {
 			return deferred.promise;
 		},
 		subscribe: function(delimiter) {
-			delimiter = delimiter === undefined ? '\n' : delimiter;
 			var deferred = $q.defer();
 			bluetoothSerial.subscribe(
-				delimiter,
+				delimiter || '\n',
 				function(data) { deferred.resolve(data); },
 				function(error) { deferred.reject(error); }
 			);

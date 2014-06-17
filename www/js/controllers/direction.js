@@ -66,6 +66,7 @@ function($scope, $rootScope, $timeout, $filter, $localStorage, $geolocation, $di
 			$rootScope.position = newPos;
 			if (newPos.coords.speed !== null) {
 				$rootScope.speed = newPos.coords.speed;
+				alert( newPos.coords.speed );
 			}
 			// Calcul de la distance depuis le point de départ
 			distance = $geolocation.calculateDistance(

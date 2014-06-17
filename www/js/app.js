@@ -24,7 +24,7 @@ function($routeProvider, $locationProvider) {
 		})
 		.when('/settings', {
 			templateUrl: 'views/settings.html',
-			controller: 'SettingsController'
+			controller: 'ArduinoController'
 		})
 		.otherwise({
 			redirectTo: '/'
