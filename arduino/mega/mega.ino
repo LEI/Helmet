@@ -1,17 +1,4 @@
-// -> D
-//BTA=000666524220
-//BTName=RN52-4220
-//Authen=1
-//Authen=1
-//COD=240704
-//DiscoveryMask=FF
-//ConnectionMask=FF
-//PinCod=1234
-//AudioRoute=00
-//ExtFeatr
-
-// -> Q
-// 0002
+#define BUFFER_SIZE 64
 
 int cmdPin = 2,
 		evtPin = 4,
@@ -22,6 +9,8 @@ void setup() {
 
 	pinMode(evtPin,INPUT);
 	pinMode(resetPin,INPUT);
+
+//        resetFactory();
 
 	/* baud rate 115200 */
 	pinMode(bpsPin,INPUT);
@@ -36,107 +25,73 @@ void setup() {
 	delay(1000);
 
 	Serial.println("serial bluetooth started");
+
+        pinMode(cmdPin, OUTPUT);
+        digitalWrite(cmdPin, LOW);
+
 }
 
+unsigned char buf[BUFFER_SIZE] = {0};
+unsigned char len = 0;
+
 void loop() {
-
-	// Serial USB
-	if (Serial.available() > 0) {
-
-		char inChar = Serial.read();
-                
-                // user actions
-		switch (inChar) {
-			case '0':
-				Serial.println("*DATA MODE*");
-				pinMode(cmdPin,INPUT);
-				break;
-			case '1':
-				Serial.println("*CMD MODE*");
-				pinMode(cmdPin,OUTPUT);
-				digitalWrite(cmdPin,LOW);
-				break;
-			
-                        case 'R': // RESET
-                          Serial.print("*Reset RN52*");
-                          // 0
-                          pinMode(resetPin, OUTPUT);
-                          digitalWrite(resetPin, LOW); delay(1000);
-                          // 1
-                          pinMode(resetPin, INPUT); delay(1000);
-                          // 0
-                          pinMode(resetPin, OUTPUT);
-                          digitalWrite(resetPin, LOW); delay(1000);
-                          // 1
-                          pinMode(resetPin, INPUT); delay(1000);
-                          break;
-                                
-			default:
-				Serial.println( inChar );
-				Serial1.write( inChar );
-		}
-                
-                // Commands
-                if(digitalRead(cmdPin) == LOW) {
-                  switch(inChar) {
-                    case '2':
-		      Serial.println("SD,02");
-		      Serial1.write("SD,02");
-		      break;
-                    case '3':
-                      Serial.println("SN,MyRN52");
-                      Serial1.write("SN,MyRN52");
-                      break;
-                    case 'D':
-                      Serial.println('D: settings');
-  		      Serial1.write('D');
-  		      break;
-                    case 'Q':
-                      Serial.print("*Connection Status*");
-  		      Serial1.write('Q');
-                  }
-                }
-
-	}
-        
+  
         // RN52 return
-	if (Serial1.available() > 0) {
-		int inByte = Serial1.read();
-		Serial.write((char)inByte);
-
+	if (Serial1.available()) {
+          while(Serial1.available() > 0) {
+		Serial.write(Serial1.read());
+          }
 	}
 
+        while(Serial.available() > 0) {
+          unsigned char c = Serial.read();
+          Serial.print((char)c);
+          if(c == 0xA || c == 0xD) {
+            sendData();
+          } else {
+            bufferData(c);
+          }
+        }
+}
 
-//    String str = bluetooth.readString();
-//    Serial.println(str);
+// ----------------------------------------------------------------------
 
+void bufferData(char c) {
+  if(len < BUFFER_SIZE) {
+    buf[len++] = c;
+  }
+  if(c == 'X') {
+    resetFactory();
+  }
+}
 
-		// Donnees envoyees depuis le module bluetooth
-		//Serial.println("--- bluetooth available ---");
+void sendData() {
+  for(byte i = 0; i < len; i++) {
+    Serial1.write(buf[i]) ;
+    //Serial.write((char)buf[i]) ;
+  }
+  
+  Serial1.write(0xD);
+  Serial.write(0xD);
+  len = 0;
+  Serial1.flush();
+  
+  Serial.println();
+}
 
-//    int nbBytes = bluetooth.available();
-//    char inData[nbBytes];
-//    for (int i = 0; i < nbBytes; i++) {
-//      inData[i] = bluetooth.read();
-//    }
-
-		/*byte bytesReceived = Serial.readBytesUntil('\n', inData, nbBytes);
-		inData[bytesReceived] = '\0';
-		for (int i = 0; i < nbBytes; i++) {
-			inData[i] = bluetooth.read();
-		}
-		Serial.flush();
-		Serial.println();
-		Serial.println(inData);*/
-
-//    while(bluetooth.available() > 0) { //&& bluetooth.read() != '\n'
-//      byte inChar = bluetooth.read();
-//      Serial.write( inChar );
-//      Serial.print(" ");
-//      Serial.print( inChar );
-//      Serial.print(" ");
-//      Serial.println( (byte)inChar );
-//      //Serial.write( bluetooth.read() );
-//    }
-	//delay(100);
+void resetFactory() {
+  // LOW
+  pinMode(resetPin, OUTPUT); digitalWrite(resetPin, LOW);
+  delay(1000);
+  // HIGH
+  pinMode(resetPin, INPUT);
+  delay(1000);
+  // LOW
+  pinMode(resetPin, OUTPUT); digitalWrite(resetPin, LOW);
+  delay(1000);
+  // HIGH
+  pinMode(resetPin, INPUT);
+  delay(1000);
+  Serial1.write('\r');
+  Serial.print("Reset terminé");
 }
