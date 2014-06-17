@@ -39,17 +39,23 @@ void loop() {
         // RN52 return
 	if (Serial1.available()) {
           while(Serial1.available() > 0) {
-		Serial.write(Serial1.read());
+	    Serial.write(Serial1.read());
           }
 	}
 
         while(Serial.available() > 0) {
           unsigned char c = Serial.read();
-          Serial.print((char)c);
+          Serial.write(c);
           if(c == 0xA || c == 0xD) {
             sendData();
           } else {
             bufferData(c);
+          }
+          if(c == '&') {
+            resetFactory();
+          } else if (c == 'X') {
+             Serial1.write("SF,1\r");
+             Serial1.write("R,1\r");
           }
         }
 }
@@ -60,26 +66,19 @@ void bufferData(char c) {
   if(len < BUFFER_SIZE) {
     buf[len++] = c;
   }
-  if(c == 'X') {
-    resetFactory();
-  }
 }
 
 void sendData() {
   for(byte i = 0; i < len; i++) {
-    Serial1.write(buf[i]) ;
-    //Serial.write((char)buf[i]) ;
+    Serial1.write(buf[i]);
   }
-  
   Serial1.write(0xD);
-  Serial.write(0xD);
   len = 0;
   Serial1.flush();
-  
-  Serial.println();
 }
 
 void resetFactory() {
+  Serial.println("Hard Reset");
   // LOW
   pinMode(resetPin, OUTPUT); digitalWrite(resetPin, LOW);
   delay(1000);
@@ -93,5 +92,5 @@ void resetFactory() {
   pinMode(resetPin, INPUT);
   delay(1000);
   Serial1.write('\r');
-  Serial.print("Reset terminé");
+  Serial.println("-> OK");
 }
