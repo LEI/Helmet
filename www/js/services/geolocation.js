@@ -74,7 +74,11 @@ function ($rootScope, $q, $notification) {
 		clearWatch: function() {
 			navigator.geolocation.clearWatch(this.$watchId);
 		},
-		calculateDistance: function(lat1, lon1, lat2, lon2) {
+		calculateDistance: function(prev, next) {
+			var lat1 = prev.coords.latitude,
+				lon1 = prev.coords.longitude,
+				lat2 = next.coords.latitude,
+				lon2 = next.coords.longitude;
 			function toRad(n) {
 				return n * Math.PI / 180;
 			}
@@ -89,7 +93,20 @@ function ($rootScope, $q, $notification) {
 				Math.sin(dLon/2) * Math.sin(dLon/2);
 			var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 			var d = R * c;
-			return d;
+			return d * 1000;
+		},
+		calculateSpeed: function(prev, next) {
+			if (next.coords.speed !== null) {
+				return next.coords.speed;
+			}
+			// (1 m / 60 secs * 3.6) * 1000 = 60 km/h
+			var distance = this.calculateDistance(prev, next),
+				time = (next.timestamp - prev.timestamp) * 3.6,
+				speed = distance / time * 1000;
+
+			console.log(distance + " / " + time + " (*3.6) = " + speed + " (*1000)");
+
+			return isNaN(speed) ? 0 : speed;
 		}
 	};
 }]);

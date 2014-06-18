@@ -19,9 +19,6 @@ angular.module('helmetApp')
 	'SpeechRecognition',
 function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geolocation, $direction, FileSystem, TextToSpeech, SpeechRecognition) {
 
-	// TODO
-	//FileSystem.read();
-
 	$scope.init = function() {
 		// Initialisation de la position
 		$rootScope.loading.position = true;
@@ -71,14 +68,16 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 			enableHighAccuracy: false,
 			maximumAge: 30000
 		}).then(function(position) {
+			$rootScope.loading.position = false;
 			// resolve
 		}, function(error) {
+			$rootScope.loading.position = false;
 			// reject
 			$rootScope.message = error+'...';
-			alert('La position n\'est plus observée');
+			$timeout($scope.watchLocation, 1000);
 		}, function(newPos) {
-			// notify
 			$rootScope.loading.position = false;
+			// notify
 			if ($rootScope.position !== undefined) {
 				prevPos = $rootScope.position;
 			} else {
@@ -86,28 +85,13 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 			}
 			$rootScope.position = newPos;
 			// Calcul de la distance depuis le point de départ
-			$rootScope.distance = $geolocation.calculateDistance(
-				prevPos.coords.latitude, prevPos.coords.longitude,
-				newPos.coords.latitude, newPos.coords.longitude) * 1000;
-			// Vitesse
-			var timeDelta = (newPos.timestamp - prevPos.timestamp) * 3.6,
-				speed = $rootScope.distance / timeDelta * 1000;
-			// (1 m / 60 secs * 3.6) * 1000 = 60 km/h
+			$rootScope.distance = $geolocation.calculateDistance(prevPos, newPos);
+			// Calcul de la vitesse
+			$rootScope.speed = $geolocation.calculateSpeed(prevPos, newPos);
 			console.log('Distance: ' + $rootScope.distance);
+			console.log('Vitesse: ' + $rootScope.speed);
 
-			if (newPos.coords.speed !== null) {
-				$rootScope.speed = newPos.coords.speed;
-				alert( 'Vitesse: ' + newPos.coords.speed );
-
-				$scope.updateSpeedGraph($rootScope.speed, timeDelta);
-			} else if (!isNaN(speed)) {
-				console.log('~Vitesse: ' + speed);
-
-				$scope.updateSpeedGraph(speed, timeDelta);
-			}
-
-			// Affichage du point sur la carte
-			//$direction.updatePositionMarker(newPos);
+			$scope.updateSpeedGraph($rootScope.speed);
 			//console.log(JSON.stringify(newPos,null,4));
 		});
 	};
@@ -155,7 +139,7 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 	// Affiche une étape de l'itinéraire
 	$scope.getStep = function(key) {
 
-		$scope.updateSpeedGraph(key);
+		//$scope.updateSpeedGraph(key);
 
 		if ($scope._directions !== undefined) {
 			$scope._steps = $scope._directions.routes[0].legs[0].steps;
@@ -177,8 +161,18 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 			}
 			if (key+1 == $scope._steps.length) {
 				TextToSpeech.say('Bien joué !');
+
+				$scope.saveTrip();
 			}
 		}
+	};
+
+	$scope.saveTrip = function() {
+		FileSystem.write({
+			destination: $rootScope.destination,
+			direction: $scope._directions,
+			speedGraph: $scope.speedGraph
+		});
 	};
 
 	// Efface l'itinéraire
@@ -187,7 +181,7 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 		$scope.clearDirection();
 		$scope.initSpeedGraph();
 		$timeout(function() {
-		    $scope.$apply(function () {
+		    $scope.$apply(function() {
 				$rootScope.accuracy = undefined;
 				$rootScope.distance = undefined;
 			});
@@ -199,7 +193,7 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 	$scope.clearDirection = function() {
 		$scope.clearLocation();
 		$timeout(function() {
-		    $scope.$apply(function () {
+		    $scope.$apply(function() {
 				$rootScope.message = '';
 				$rootScope.destination = '';
 				$scope._directions = undefined;
@@ -210,7 +204,7 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 		});
 	};
 
-	$scope.$on('$destroy', function () {
+	$scope.$on('$destroy', function() {
 		$scope.clearDirection();
 	});
 
@@ -235,21 +229,21 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 				width: $window.innerWidth - 100
 			},
 			data: {
-				labels: [0],
+				labels: [],
 				datasets: [
 					{
 						fillColor : "rgba(151,187,205,0.5)",
 						strokeColor : "rgba(151,187,205,1)",
 						pointColor : "rgba(151,187,205,1)",
 						pointStrokeColor : "#fff",
-						data : [0]
+						data : []
 					}
 				]
 			}
 		};
 	};
 
-	$scope.updateSpeedGraph = function(speed, time) {
+	$scope.updateSpeedGraph = function(speed) {
 		var data = $scope.speedGraph.data;
 		data.labels.push( $scope.speedGraph.data.labels.length + 1 ); // time
 		data.datasets[0].data.push(speed);

@@ -17,7 +17,7 @@
 			{{ step.count + 1 }} / {{ _steps.length }}
 		</div>
 		<div class="maneuver">
-			<span class="sprite {{ step.current.maneuver }}"></span>
+			<span class="sprite {{ 'turn-right' || step.current.maneuver }}"></span>
 		</div>
 	</div>
 	<p>

@@ -40,7 +40,8 @@ function($routeProvider, $locationProvider) {
 	'$scope',
 	'$window',
 	'$localStorage',
-function($rootScope, $scope, $localStorage) {
+function($rootScope, $scope, $window, $localStorage) {
+	$scope.innerWidth = $window.innerWidth;
 	$rootScope.$storage = $localStorage;
 	// Chargement : route, position, weather, direction
 	$rootScope.loading = {};

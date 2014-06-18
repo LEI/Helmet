@@ -3,4 +3,15 @@
   <span>Dashboard</span>
 </div>
 
-{{tripList}}
+<ul>
+	<li ng-repeat="trip in tripList">
+		<h2>
+			{{ trip.destination }}
+		</h2>
+		<p>
+			<i class="fa fa-road"></i> {{ trip.direction.routes[0].legs[0].distance.text }}<br>
+			<i class="fa fa-clock-o"></i> {{ trip.direction.routes[0].legs[0].duration.text }}
+		</p>
+		<chart value="trip.speedGraph" width="{{ innerWidth - 100 }}"></chart>
+	</li>
+</ul>
