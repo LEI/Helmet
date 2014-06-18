@@ -17,8 +17,7 @@ function($q, $scope, $rootScope, $timeout, $localStorage, FileSystem) {
 	FileSystem.read().then(function(response){
 		console.log(response);
 		$scope.tripList = response;
-	},
-	function(error){
+	}, function(error){
 		console.log(error);
 	});
 }]);

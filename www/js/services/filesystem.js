@@ -30,8 +30,7 @@ function($q) {
 		getDirectory: function(file) {
 			file.root.getDirectory("helmet", {create:true}, function(dirEntry) {
 		    	console.log("helmet crée");
-		    },
-		    function(error) {
+		    }, function(error) {
 		    	console.log('Error with #getDirectory method.',error);
 		    });
 		},
@@ -87,46 +86,50 @@ function($q) {
 			return deferred.promise;
 		},
 		write: function(content) {
-			var self = this;
+			var deferred = $q.defer(),
+				self = this;
 			window.webkitStorageInfo.requestQuota(PERSISTENT, 1024*1024, function(grantedBytes) {
 				self.request(PERSISTENT, grantedBytes).then( function(file) {
 					self.getDirectory(file);
-					self.getFile(file).then( function(fileEntry) {				
-						self.writeFile(fileEntry, content).then( function(response) {
-							console.log(response);
+					self.getFile(file).then( function(fileEntry) {
+						self.writeFile(fileEntry, content).then(function(response) {
+							deferred.resolve(response);
 						}, function(error) {
-							console.log(error);
+							deferred.reject(error);
 						});
 					}, function(error) {
-						console.log(error);
+						deferred.reject(error);
 					});
 				}, function(error) {
-					console.log(error);
+					deferred.reject(error);
 				});
 			}, function(error) {
-				console.log(error);
+				deferred.reject(error);
 			});
+
+			return deferred.promise;
 		},
 		read: function() {
-			var deferred = $q.defer();
-			var self = this;
+			var deferred = $q.defer(),
+				self = this;
 			window.webkitStorageInfo.requestQuota(PERSISTENT, 1024*1024, function(grantedBytes) {
 				self.request(PERSISTENT, grantedBytes).then( function(file) {
 					self.getFile(file).then( function(fileEntry) {
 						self.loadFile(fileEntry).then( function(response) {
 							deferred.resolve(response);
 						}, function(error) {
-							console.log(error);
+							deferred.reject(error);
 						});
 					}, function(error) {
-						console.log(error);
+						deferred.reject(error);
 					});
 				}, function(error) {
-					console.log(error);
+					deferred.reject(error);
 				});
 			}, function(error) {
-				console.log(error);
+				deferred.reject(error);
 			});
+
 			return deferred.promise;
 		}
 	};

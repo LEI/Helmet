@@ -50,11 +50,11 @@ void loop() {
             Serial.write(c);
             
             // Affichage LCD
-//            if (c != '\n' && c != '\r') {
-//              lcd.write(c);
-//            } else {
-//              lcd.write(" ");
-//            }
+            if (c != '\n' && c != '\r') {
+              lcd.write(c);
+            } else {
+              lcd.write(" ");
+            }
             
           }
 	}

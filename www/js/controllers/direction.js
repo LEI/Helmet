@@ -45,7 +45,7 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 			$rootScope.loading.position = false;
 			$rootScope.message = error;
 			console.log(error);
-			$timeout($scope.init);
+			$timeout($scope.init, 1000);
 		});
 		// Audio
 		$rootScope.audio = {
@@ -95,14 +95,15 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 			// (1 m / 60 secs * 3.6) * 1000 = 60 km/h
 			console.log('Distance: ' + $rootScope.distance);
 
-			//$scope.updateSpeedGraph(speed || 0, (prevPos.timestamp - startPos.timestamp));
-
-			if (!isNaN(speed) && speed !== 0) {
-				console.log('~Vitesse: ' + speed);
-			}
 			if (newPos.coords.speed !== null) {
 				$rootScope.speed = newPos.coords.speed;
 				alert( 'Vitesse: ' + newPos.coords.speed );
+
+				$scope.updateSpeedGraph($rootScope.speed, timeDelta);
+			} else if (!isNaN(speed)) {
+				console.log('~Vitesse: ' + speed);
+
+				$scope.updateSpeedGraph(speed, timeDelta);
 			}
 
 			// Affichage du point sur la carte
@@ -153,7 +154,9 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 
 	// Affiche une étape de l'itinéraire
 	$scope.getStep = function(key) {
+
 		$scope.updateSpeedGraph(key);
+
 		if ($scope._directions !== undefined) {
 			$scope._steps = $scope._directions.routes[0].legs[0].steps;
 			if (key >= 0 && key <= $scope._steps.length) {
