@@ -8,6 +8,7 @@ angular.module('helmetApp')
 .controller('DirectionController', [
 	'$scope',
 	'$rootScope',
+	'$window',
 	'$timeout',
 	'$filter',
 	'$localStorage',
@@ -16,38 +17,53 @@ angular.module('helmetApp')
 	'FileSystem',
 	'TextToSpeech',
 	'SpeechRecognition',
-function($scope, $rootScope, $timeout, $filter, $localStorage, $geolocation, $direction, FileSystem, TextToSpeech, SpeechRecognition) {
+function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geolocation, $direction, FileSystem, TextToSpeech, SpeechRecognition) {
 
 	// TODO
 	//FileSystem.read();
 
-	var distance, startPos;
-	$rootScope.loading.position = true;
-	$rootScope.audio = {
-		textToSpeech: false
-	};
-	$rootScope.message = 'Géolocalisation...';
-	// Initialisation de la position
-	$rootScope.waitPosition = $geolocation.getCurrentPosition({
-		timeout: 30000,
-		enableHighAccuracy: true,
-		maximumAge: 30000
-	}).then(function(position) {
-		startPos = position;
-		$rootScope.position = position;
-		$rootScope.loading.position = false;
-		$rootScope.message = '';
-		/*$timeout(function() {
-			$direction.initMap(position);
-		});*/
-		if (position.coords.speed) {
-			$rootScope.speed = position.coords.speed;
-		}
-	}, function(error) {
-		$rootScope.message = error;
-	});
+	$scope.init = function() {
+		// Initialisation de la position
+		$rootScope.loading.position = true;
+		$rootScope.message = 'Géolocalisation...';
+		$rootScope.waitPosition = $geolocation.getCurrentPosition({
+			timeout: 30000,
+			enableHighAccuracy: true,
+			maximumAge: 30000
+		}).then(function(position) {
+			startPos = position;
+			$rootScope.position = position;
+			$rootScope.loading.position = false;
+			$rootScope.message = '';
+			/*$timeout(function() {
+				$direction.initMap(position);
+			});*/
+			if (position.coords.speed) {
+				$rootScope.speed = position.coords.speed;
+			}
+		}, function(error) {
+			$rootScope.loading.position = false;
+			$rootScope.message = error;
+			console.log(error);
+			$timeout($scope.init);
+		});
+		// Audio
+		$rootScope.audio = {
+			textToSpeech: false
+		};
 
-	$scope.startWatch = function() {
+		$scope.initStorage();
+		$scope.initSpeedGraph();
+	};
+
+	$scope.start = function() {
+		$scope.watchLocation();
+		$scope.location = true;
+		$scope.getStep(0);
+	};
+
+	var startPos, prevPos;
+	$scope.watchLocation = function() {
 		// watchPosition
 		$rootScope.loading.position = true;
 		$geolocation.watchPosition({
@@ -63,25 +79,43 @@ function($scope, $rootScope, $timeout, $filter, $localStorage, $geolocation, $di
 		}, function(newPos) {
 			// notify
 			$rootScope.loading.position = false;
+			if ($rootScope.position !== undefined) {
+				prevPos = $rootScope.position;
+			} else {
+				prevPos = startPos;
+			}
 			$rootScope.position = newPos;
+			// Calcul de la distance depuis le point de départ
+			$rootScope.distance = $geolocation.calculateDistance(
+				prevPos.coords.latitude, prevPos.coords.longitude,
+				newPos.coords.latitude, newPos.coords.longitude) * 1000;
+			// Vitesse
+			var timeDelta = (newPos.timestamp - prevPos.timestamp) * 3.6,
+				speed = $rootScope.distance / timeDelta * 1000;
+			// (1 m / 60 secs * 3.6) * 1000 = 60 km/h
+			console.log('Distance: ' + $rootScope.distance);
+
+			//$scope.updateSpeedGraph(speed || 0, (prevPos.timestamp - startPos.timestamp));
+
+			if (!isNaN(speed) && speed !== 0) {
+				console.log('~Vitesse: ' + speed);
+			}
 			if (newPos.coords.speed !== null) {
 				$rootScope.speed = newPos.coords.speed;
-				alert( newPos.coords.speed );
+				alert( 'Vitesse: ' + newPos.coords.speed );
 			}
-			// Calcul de la distance depuis le point de départ
-			distance = $geolocation.calculateDistance(
-				startPos.coords.latitude, startPos.coords.longitude,
-				newPos.coords.latitude, newPos.coords.longitude);
-			// Conversion en mètres
-			$rootScope.distance = distance * 1000;
+
 			// Affichage du point sur la carte
-			$direction.updatePositionMarker(newPos);
+			//$direction.updatePositionMarker(newPos);
 			//console.log(JSON.stringify(newPos,null,4));
 		});
 	};
 
-	$scope.stopWatch = function() {
+	$scope.clearLocation = function() {
 		$geolocation.clearWatch();
+		$scope.location = false;
+		//console.log($scope.speedGraph);
+		//$scope.speedGraph = [];
 	};
 
 	// Affiche un itinéraire
@@ -95,13 +129,14 @@ function($scope, $rootScope, $timeout, $filter, $localStorage, $geolocation, $di
 				$direction.getDirection(
 					$rootScope.position,
 					$rootScope.destination
-				).then(function(direction, custom) {
+				).then(function(direction) {
 					$rootScope.loading.direction = false;
 					// Initialisation de l'itinéraire
 					$scope.clearSteps();
 					$scope._directions = direction;
 					// Sauvegarde l'itinéraire
-					$rootScope.$storage.destination = direction;
+					$rootScope.$storage.destination = destination;
+					$rootScope.$storage.direction = direction;
 					$rootScope.message = '';
 					// Affichage carte
 					//$direction.displayDirection(direction);
@@ -118,6 +153,7 @@ function($scope, $rootScope, $timeout, $filter, $localStorage, $geolocation, $di
 
 	// Affiche une étape de l'itinéraire
 	$scope.getStep = function(key) {
+		$scope.updateSpeedGraph(key);
 		if ($scope._directions !== undefined) {
 			$scope._steps = $scope._directions.routes[0].legs[0].steps;
 			if (key >= 0 && key <= $scope._steps.length) {
@@ -144,17 +180,13 @@ function($scope, $rootScope, $timeout, $filter, $localStorage, $geolocation, $di
 
 	// Efface l'itinéraire
 	$scope.resetDirection = function() {
-		if ($rootScope.$storage.destination)
-			delete $rootScope.$storage.destination;
-		if ($rootScope.$storage.step)
-			delete $rootScope.$storage.step;
-		//$localStorage.$reset();
+		$scope.resetStorage();
 		$scope.clearDirection();
+		$scope.initSpeedGraph();
 		$timeout(function() {
 		    $scope.$apply(function () {
 				$rootScope.accuracy = undefined;
 				$rootScope.distance = undefined;
-				$rootScope.positionMarker = undefined;
 			});
 		});
 		//directionsDisplay.setMap(null);
@@ -162,7 +194,7 @@ function($scope, $rootScope, $timeout, $filter, $localStorage, $geolocation, $di
 	};
 
 	$scope.clearDirection = function() {
-		$geolocation.clearWatch();
+		$scope.clearLocation();
 		$timeout(function() {
 		    $scope.$apply(function () {
 				$rootScope.message = '';
@@ -194,13 +226,62 @@ function($scope, $rootScope, $timeout, $filter, $localStorage, $geolocation, $di
 		$rootScope.audio.textToSpeech = TextToSpeech.active;
 	};
 
-	// Local Storage : restitution du dernier itinéraire et de l'étape en cours
-	if ($rootScope.$storage.destination !== undefined) {
-		$scope._directions = $rootScope.$storage.destination;
-		$scope._steps = $scope._directions.routes[0].legs[0].steps;
-	}
-	if ($rootScope.$storage.step !== undefined) {
-		$scope.step = $rootScope.$storage.step;
-	}
+	$scope.initSpeedGraph = function() {
+		$scope.speedGraph = {
+			options: {
+				width: $window.innerWidth - 100
+			},
+			data: {
+				labels: [0],
+				datasets: [
+					{
+						fillColor : "rgba(151,187,205,0.5)",
+						strokeColor : "rgba(151,187,205,1)",
+						pointColor : "rgba(151,187,205,1)",
+						pointStrokeColor : "#fff",
+						data : [0]
+					}
+				]
+			}
+		};
+	};
+
+	$scope.updateSpeedGraph = function(speed, time) {
+		var data = $scope.speedGraph.data;
+		data.labels.push( $scope.speedGraph.data.labels.length + 1 ); // time
+		data.datasets[0].data.push(speed);
+
+		$scope.speedGraph = {
+			data: data,
+			options: $scope.speedGraph.options
+		};
+	};
+
+	$scope.initStorage = function() {
+		// Local Storage : restitution du dernier itinéraire et de l'étape en cours
+		$rootScope.$storage = $localStorage;
+		if ($rootScope.$storage.destination !== undefined) {
+			$rootScope.destination = $rootScope.$storage.destination;
+		}
+		if ($rootScope.$storage.direction !== undefined) {
+			$scope._directions = $rootScope.$storage.direction;
+			$scope._steps = $scope._directions.routes[0].legs[0].steps;
+		}
+		if ($rootScope.$storage.step !== undefined) {
+			$scope.step = $rootScope.$storage.step;
+		}
+	};
+
+	$scope.resetStorage = function() {
+		//$localStorage.$reset();
+		if ($rootScope.$storage.destination)
+			delete $rootScope.$storage.destination;
+		if ($rootScope.$storage.direction)
+			delete $rootScope.$storage.direction;
+		if ($rootScope.$storage.step)
+			delete $rootScope.$storage.step;
+	};
+
+	$scope.init();
 
 }]);

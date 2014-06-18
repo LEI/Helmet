@@ -13,8 +13,6 @@ void setup() {
 	pinMode(evtPin,INPUT);
 	pinMode(resetPin,INPUT);
 
-//        resetFactory();
-
 	/* baud rate 115200 */
 	pinMode(bpsPin,INPUT);
 
@@ -27,29 +25,36 @@ void setup() {
 
 	delay(1000);
 
-	Serial.println("serial bluetooth started");
+        dataMode();
+        
+        delay(1000);
+        
+	Serial.println("Serial Bluetooth");
 
-        //cmdMode();
+        cmdMode();
+        
         lcd.begin(20,2);
 }
 
-unsigned char buf[BUFFER_SIZE] = {0}, str[BUFFER_SIZE] = {0};
-unsigned char len = 0, count = 0;
-unsigned char c;
+unsigned char buf[BUFFER_SIZE] = {0};
+unsigned char len = 0;
 
 void loop() {
   
-        // RN52 return
+        unsigned char c;
+  
+        // Bluetooth Serial
 	if (Serial1.available()) {
           while(Serial1.available() > 0) {
             c = Serial1.read();
             Serial.write(c);
-            if (c != '\n' && c != '\r') {
-              lcd.write(c);
-            } else {
-              lcd.write(" ");
-            }
             
+            // Affichage LCD
+//            if (c != '\n' && c != '\r') {
+//              lcd.write(c);
+//            } else {
+//              lcd.write(" ");
+//            }
             
           }
 	}
@@ -62,17 +67,19 @@ void loop() {
           } else {
             bufferData(c);
           }
-          if (c == '&') {
+          
+          if (c == '£') {
             resetFactory();
-          } else if (c == '#') {
+          } else if (c == '$') {
              Serial1.write("SF,1\r");
              delay(20);
              Serial1.write("R,1\r");
           } else if (c == '*') {
             dataMode();
-          } else if (c == '$') {
+          } else if (c == '#') {
             cmdMode();
           }
+          
         }
 }
 
@@ -90,25 +97,25 @@ void sendData() {
     Serial1.write(buf[i]);
   }
   Serial1.write(0xD);
-  len = 0;
   Serial1.flush();
+  len = 0;
 }
 
 void cmdMode() {
   Serial.println("[CMD MODE]");
   pinMode(cmdPin, OUTPUT);
   digitalWrite(cmdPin, LOW);
-  delay(100);
+  //delay(100);
 }
 
 void dataMode() {
   Serial.println("[DATA MODE]");
   pinMode(cmdPin, INPUT);
-  delay(100);
+  //delay(100);
 }
 
 void resetFactory() {
-  Serial.println("Hard Reset");
+  Serial.println("[RESET]");
   // LOW
   pinMode(resetPin, OUTPUT); digitalWrite(resetPin, LOW);
   delay(1000);

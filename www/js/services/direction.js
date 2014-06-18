@@ -34,10 +34,10 @@ function($rootScope, $q, $http) {
 					}
 				});
 				// Remise à zéro marqueur position
-				if ($rootScope.positionMarker !== undefined) {
+				/*if ($rootScope.positionMarker !== undefined) {
 					$rootScope.positionMarker.marker.setMap(null);
 					$rootScope.positionMarker.circle.setMap(null);
-				}
+				}*/
 			},
 			getDirection: function(position, destination) {
 				var deferred = $q.defer();

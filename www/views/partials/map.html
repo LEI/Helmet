@@ -2,37 +2,38 @@
 <div class="btn-group justified nav-tabs col-md-6 form-group">
 	<!-- reset & stop -->
 	<a class="btn btn-danger" ng-click="resetDirection()"
-		ng-disabled="loading.position || loading.direction || !_directions && !positionMarker">
-		<i class="fa fa-times inherit-size" ng-hide="loading.position || loading.direction || !_directions && !positionMarker"></i>
-		<i class="fa fa-ban inherit-size" ng-show="loading.position || loading.direction || !_directions && !positionMarker"></i>
+		ng-disabled="loading.position || loading.direction || !_directions && !location">
+		<i class="fa fa-times inherit-size" ng-hide="loading.position || loading.direction || !_directions && !location"></i>
+		<i class="fa fa-ban inherit-size" ng-show="loading.position || loading.direction || !_directions && !location"></i>
 	</a>
-	<!-- volume -->
+	<!-- volume
 	<a class="btn btn-default" ng-click="toggleVoice()" ng-show="_directions"
 		ng-disabled="loading.position || loading.direction">
 		<i class="fa fa-volume-up" ng-show="audio.textToSpeech"></i>
 		<i class="fa fa-volume-off" ng-hide="audio.textToSpeech"></i>
-	</a>
-	<!-- start
-	<a class="btn btn-success" title="Démarrer" ng-click="getStep(0)"
-		ng-disabled="loading.position || loading.direction || !(_directions && !_steps)">
-		<i class="fa fa-flag-checkered"></i>
 	</a> -->
 	<!-- prev -->
-	<a class="btn btn-default" title="Précédent" ng-click="getStep(step.count - 1)" ng-show="_directions"
+	<a class="btn btn-default" title="Précédent" ng-click="getStep(step.count - 1)" ng-show="_directions && step.current"
 		ng-disabled="step.count < 1 || loading.position || loading.direction || !_directions">
 		<i class="fa fa-chevron-left"></i>
 	</a>
 	<!-- next -->
-	<a class="btn btn-default" title="Suivant" ng-click="getStep(step.count + 1)" ng-show="_directions"
+	<a class="btn btn-default" title="Suivant" ng-click="getStep(step.count + 1)" ng-show="_directions && step.current"
 		ng-disabled="step.count + 1 >= _steps.length || loading.position || loading.direction || !_directions">
 		<i class="fa fa-chevron-right"></i>
 	</a>
-	<!-- whereami -->
-	<a class="btn btn-primary" title="Où suis-je ?" ng-click="startWatch()"
+	<!-- start -->
+	<a class="btn btn-success" title="Démarrer" ng-click="start()"
+		ng-disabled="loading.position || loading.direction || location || !destination">
+		<i class="fa fa-location-arrow" ng-hide="location"></i>
+		<i class="fa fa-map-marker" ng-show="location"></i>
+	</a>
+	<!-- whereami
+	<a class="btn btn-primary" title="Où suis-je ?" ng-click="watchLocation()"
 		ng-disabled="loading.position || loading.direction">
 		<i class="fa fa-location-arrow" ng-show="positionMarker"></i>
 		<i class="fa fa-map-marker" ng-hide="positionMarker"></i>
-	</a>
+	</a> -->
 	<!-- search
 	<a class="btn btn-primary" title="Rechercher" ng-click="getDirection(destination)"
 		ng-disabled="directionForm.$invalid || loading.position || loading.direction">
@@ -63,5 +64,7 @@
 <!-- Directions -->
 <div ha-directions class="direction-container" ng-show="_directions"></div>
 
-<!-- Carte -->
-<div class="google-map" id="google-map"></div>
+<!-- Carte
+<div class="google-map" id="google-map"></div> -->
+
+<chart value="speedGraph" width="{{ speedGraph.options.width }}" ng-show="speedGraph.data.labels.length > 1"></chart>

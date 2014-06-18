@@ -16,6 +16,7 @@
     "mobile-angular-ui": "latest",
     "angular-phonegap-geolocation": "latest",
     "underscore": "latest",
-    "ngstorage": "latest"
+    "ngstorage": "latest",
+    "angular-chartjs-directive": "*"
   }
 }

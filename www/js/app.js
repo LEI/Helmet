@@ -2,7 +2,8 @@ angular.module('helmetApp', [
 	'ngRoute',
 	'ngSanitize',
 	'ngStorage',
-	'mobile-angular-ui'
+	'mobile-angular-ui',
+	'chartjs-directive'
 ])
 
 .config([
@@ -37,6 +38,7 @@ function($routeProvider, $locationProvider) {
 .controller('AppController', [
 	'$rootScope',
 	'$scope',
+	'$window',
 	'$localStorage',
 function($rootScope, $scope, $localStorage) {
 	$rootScope.$storage = $localStorage;
