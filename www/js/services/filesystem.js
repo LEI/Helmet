@@ -85,7 +85,40 @@ function($q) {
 
 			return deferred.promise;
 		},
-		write: function(content) {
+		init: function() {
+			var deferred = $q.defer(),
+				self = this;
+			window.webkitStorageInfo.requestQuota(PERSISTENT, 1024*1024, function(grantedBytes) {
+				self.request(PERSISTENT, grantedBytes).then( function(file) {
+					self.getDirectory(file);
+					self.getFile(file).then( function(fileEntry) {
+						self.loadFile(fileEntry).then( function(response) {
+							if(response=="") {
+								self.writeFile(fileEntry, JSON.stringify({data:[]})).then(function(response) {
+									deferred.resolve(response);
+								}, function(error) {
+									deferred.reject(error);
+								});
+							} else {
+								deferred.resolve("fichier existant");
+							}
+						}, function(error) {
+							deferred.reject(error);
+						});
+							
+					}, function(error) {
+						deferred.reject(error);
+					});
+				}, function(error) {
+					deferred.reject(error);
+				});
+			}, function(error) {
+				deferred.reject(error);
+			});
+
+			return deferred.promise;
+		},
+		rewrite: function(content) {
 			var deferred = $q.defer(),
 				self = this;
 			window.webkitStorageInfo.requestQuota(PERSISTENT, 1024*1024, function(grantedBytes) {
@@ -109,6 +142,67 @@ function($q) {
 
 			return deferred.promise;
 		},
+		reset: function() {
+			var deferred = $q.defer(),
+				self = this;
+			window.webkitStorageInfo.requestQuota(PERSISTENT, 1024*1024, function(grantedBytes) {
+				self.request(PERSISTENT, grantedBytes).then( function(file) {
+					self.getDirectory(file);
+					self.getFile(file).then( function(fileEntry) {
+						fileEntry.remove(function() {
+					      console.log('File removed.');
+					      self.init();
+					    }, function(error) {
+					    	deferred.reject(error);
+					    });
+					}, function(error) {
+						deferred.reject(error);
+					});
+				}, function(error) {
+					deferred.reject(error);
+				});
+			}, function(error) {
+				deferred.reject(error);
+			});
+
+			return deferred.promise;
+		},
+		write: function(content, reset) {
+			var deferred = $q.defer(),
+				self = this;
+			window.webkitStorageInfo.requestQuota(PERSISTENT, 1024*1024, function(grantedBytes) {
+				self.request(PERSISTENT, grantedBytes).then( function(file) {
+					self.getDirectory(file);
+					self.getFile(file).then( function(fileEntry) {
+						self.loadFile(fileEntry).then( function(response) {
+							if(reset!==true){
+								var a = JSON.parse(response);
+								a.data[a.data.length]=content;
+								content = a;
+							} else {
+								content = {data:[]};
+							}
+							self.writeFile(fileEntry, JSON.stringify(content)).then(function(fileContent) {
+								
+							}, function(error) {
+							 	deferred.reject(error);
+							});
+						}, function(error) {
+							deferred.reject(error);
+						});
+						
+					}, function(error) {
+						deferred.reject(error);
+					});
+				}, function(error) {
+					deferred.reject(error);
+				});
+			}, function(error) {
+				deferred.reject(error);
+			});
+
+			return deferred.promise;
+		},
 		read: function() {
 			var deferred = $q.defer(),
 				self = this;
@@ -116,6 +210,7 @@ function($q) {
 				self.request(PERSISTENT, grantedBytes).then( function(file) {
 					self.getFile(file).then( function(fileEntry) {
 						self.loadFile(fileEntry).then( function(response) {
+							console.log(response);
 							deferred.resolve(response);
 						}, function(error) {
 							deferred.reject(error);
