@@ -2,16 +2,17 @@
 <div content-for="title">
   <span>Dashboard</span>
 </div>
-
 <ul>
-	<li ng-repeat="trip in tripList">
-		<h2>
-			{{ trip.destination }}
-		</h2>
-		<p>
-			<i class="fa fa-road"></i> {{ trip.direction.routes[0].legs[0].distance.text }}<br>
-			<i class="fa fa-clock-o"></i> {{ trip.direction.routes[0].legs[0].duration.text }}
-		</p>
-		<chart value="trip.speedGraph" width="{{ innerWidth - 100 }}"></chart>
+	<li ng-repeat="trip in tripList" style="clear: both;">
+		<div class="col-md-6">
+			<h2>{{ trip.destination }}</h2>
+			<p>
+				<i class="fa fa-road"></i> {{ trip.direction.routes[0].legs[0].distance.text }}<br>
+				<i class="fa fa-clock-o"></i> {{ trip.direction.routes[0].legs[0].duration.text }}
+			</p>
+		</div>
+		<chart class="col-md-6" value="trip.speedGraph" width="{{ (innerWidth-20) / 2 }}" height="100"></chart>
 	</li>
 </ul>
+
+{{tripList}}

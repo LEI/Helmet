@@ -43,8 +43,9 @@ function($q, $http) {
 .controller('openWeatherController', [
 	'$scope',
 	'$geolocation',
+	'$bluetooth',
 	'openWeatherApi',
-function($scope, $geolocation, openWeatherApi) {
+function($scope, $geolocation, $bluetooth, openWeatherApi) {
 	$scope.currentWeather = {};
 	// Attente de la position
 	$scope.currentWeather.loading = true;
@@ -57,6 +58,28 @@ function($scope, $geolocation, openWeatherApi) {
 				main: data.main,
 				data: data.weather
 			};
+			// Gestion alertes
+			if (data.main.temp < 3) {
+				$bluetooth.write('TEMP:'+data.main.temp);
+			}
+			var weatherAlert = [];
+			angular.forEach(data.weather, function(weather, key) {
+				switch (weather.id) {
+					case 200:
+						weatherAlert.push(weather.main);
+						break;
+					case 201:
+						weatherAlert.push(weather.main);
+						break;
+					// ...
+				}
+			});
+			$bluetooth.write('WEATHER:'+weatherAlert.join(', ')).then(function(response) {
+				console.log('Réponse reçue: ' + response);
+			}, function(error) {
+				console.log(error);
+			});
+
 		}, function(error) {
 			$scope.currentWeather.loading = false;
 			$scope.currentWeather.errorMessage = error || 'Erreur Open Weather Api';

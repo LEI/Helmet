@@ -85,14 +85,13 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 			}
 			$rootScope.position = newPos;
 			// Calcul de la distance depuis le point de départ
-			$rootScope.distance = $geolocation.calculateDistance(prevPos, newPos);
+			$rootScope.distance = $geolocation.calculateDistance(startPos, newPos);
 			// Calcul de la vitesse
-			$rootScope.speed = $geolocation.calculateSpeed(prevPos, newPos, $rootScope.distance);
-			console.log('Distance: ' + $rootScope.distance);
-			console.log('Vitesse: ' + $rootScope.speed);
+			$rootScope.speed = $geolocation.calculateSpeed(prevPos, newPos);
+
+			console.log('Distance: ' + $rootScope.distance + '\nVitesse: ' + $rootScope.speed);
 
 			$scope.updateSpeedGraph($rootScope.speed.toFixed(2));
-			//console.log(JSON.stringify(newPos,null,4));
 		});
 	};
 

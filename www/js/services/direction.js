@@ -55,6 +55,7 @@ function($rootScope, $q, $http) {
 						region: 'FR',
 						language: 'FR'
 					}, function (response, status) {
+
 						if (status === google.maps.DirectionsStatus.OK) {
 
 							$rootScope.$storage.destination = response;

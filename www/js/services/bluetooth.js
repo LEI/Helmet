@@ -89,9 +89,14 @@ function($q, $rootScope, $notification) {
 		},
 		write: function(data) {
 			var deferred = $q.defer();
-			bluetoothSerial.write(
-				data,
-				function(response) { deferred.resolve(response); },
+			bluetoothSerial.isConnected(
+				function(response) {
+					bluetoothSerial.write(
+						data,
+						function(response) { deferred.resolve(response); },
+						function(error) { deferred.reject(error); }
+					);
+				},
 				function(error) { deferred.reject(error); }
 			);
 

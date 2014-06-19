@@ -16,20 +16,19 @@
 	<!-- Titre -->
 	<div class="panel-heading">
 		<h2 class="panel-title">
-			Destination {{ destination | capitalize }}
-			<small>
-				{{ direction.routes[0].summary }}
-				<span ng-show="distance">
-					({{ distance | number:2 }}m)
-				</span>
-			</small>
-			<span class="pull-right" ng-show="speed">
-				{{ speed | number:2 }} km/h
+			{{ 'Destination' || destination | capitalize }}
+			<span ng-show="distance">
+				{{ distance | number:2 }}m
+			</span>
+			<span class="pull-right">
+
+				{{ speed || 0 | number:2 }} km/h
 			</span>
 		</h2>
 	</div>
 	<!-- Contenu -->
 	<div class="panel-body">
+		{{ direction.routes[0].summary }}
 		<div ha-map></div>
 
 		<!--div ng-controller="ArduinoController">

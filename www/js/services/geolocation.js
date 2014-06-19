@@ -107,8 +107,6 @@ function ($rootScope, $q, $notification) {
 				time = ( (next.timestamp - prev.timestamp) / 1000 ) % 60, // ms -> s
 				speed = (distance / time) * 3.6; // m/s -> km/h
 
-			console.log(distance, time);
-
 			return isNaN(speed) ? 0 : speed;
 		}
 	};
