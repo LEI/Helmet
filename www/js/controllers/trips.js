@@ -13,16 +13,15 @@ function($q, $scope, $rootScope, $timeout, $localStorage, FileSystem) {
 
 	$rootScope.$storage = $localStorage;
 
-	FileSystem.write({speed:2});
-	FileSystem.read();
+	FileSystem.write("",true);
+	
+	//FileSystem.write({speed:2});
 
-	//FileSystem.write("{data:[]}");
-
-	FileSystem.read().then(function(response){
-		console.log(response);
-		$scope.tripList = response;
-	}, function(error){
-		console.log(error);
-	});
+	// FileSystem.read().then(function(response){
+	// 	console.log(response);
+	// 	$scope.tripList = response;
+	// }, function(error){
+	// 	console.log(error);
+	// });
 
 }]);
