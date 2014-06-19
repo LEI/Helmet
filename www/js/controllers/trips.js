@@ -13,11 +13,28 @@ function($q, $scope, $rootScope, $timeout, $localStorage, FileSystem) {
 
 	$rootScope.$storage = $localStorage;
 
-	FileSystem.write("kikou");
+	FileSystem.write({speed:2});
+	FileSystem.read();
+	
+	//FileSystem.write("{data:[]}");
+
+	// read, JSON.parse
+
+	// var.push(obj)
+	
+	// JSON.stringify
+
+	// save
+
+	// FileSystem.write("{lol:1}");
+
+/*
 	FileSystem.read().then(function(response){
 		console.log(response);
 		$scope.tripList = response;
 	}, function(error){
 		console.log(error);
 	});
+*/
+
 }]);
