@@ -142,31 +142,6 @@ function($q) {
 
 			return deferred.promise;
 		},
-		reset: function() {
-			var deferred = $q.defer(),
-				self = this;
-			window.webkitStorageInfo.requestQuota(PERSISTENT, 1024*1024, function(grantedBytes) {
-				self.request(PERSISTENT, grantedBytes).then( function(file) {
-					self.getDirectory(file);
-					self.getFile(file).then( function(fileEntry) {
-						fileEntry.remove(function() {
-					      console.log('File removed.');
-					      self.init();
-					    }, function(error) {
-					    	deferred.reject(error);
-					    });
-					}, function(error) {
-						deferred.reject(error);
-					});
-				}, function(error) {
-					deferred.reject(error);
-				});
-			}, function(error) {
-				deferred.reject(error);
-			});
-
-			return deferred.promise;
-		},
 		write: function(content, reset) {
 			var deferred = $q.defer(),
 				self = this;
@@ -179,14 +154,39 @@ function($q) {
 								var a = JSON.parse(response);
 								a.data[a.data.length]=content;
 								content = a;
+								self.writeFile(fileEntry, JSON.stringify(content)).then(function(fileContent) {
+									self.loadFile(fileEntry).then( function(response) {
+										console.log(response);
+										deferred.resolve(response);
+									}, function(error) {
+										deferred.reject(error);
+									});
+								}, function(error) {
+								 	deferred.reject(error);
+								});
 							} else {
 								content = {data:[]};
+								fileEntry.remove(function() {
+							      console.log('File removed.');
+							    }, function(error) {
+							    	deferred.reject(error);
+							    });
+							    self.getFile(file).then( function(fileEntry) {
+							    	self.writeFile(fileEntry, JSON.stringify(content)).then(function(fileContent) {
+										self.loadFile(fileEntry).then( function(response) {
+											console.log(response);
+											deferred.resolve(response);
+										}, function(error) {
+											deferred.reject(error);
+										});
+									}, function(error) {
+									 	deferred.reject(error);
+									});
+							    }, function(error) {
+							    	deferred.reject(error);
+							    });
 							}
-							self.writeFile(fileEntry, JSON.stringify(content)).then(function(fileContent) {
-								
-							}, function(error) {
-							 	deferred.reject(error);
-							});
+							
 						}, function(error) {
 							deferred.reject(error);
 						});

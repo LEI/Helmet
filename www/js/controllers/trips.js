@@ -13,10 +13,7 @@ function($q, $scope, $rootScope, $timeout, $localStorage, FileSystem) {
 
 	$rootScope.$storage = $localStorage;
 
-<<<<<<< HEAD
-=======
 	FileSystem.write({speed:2});
-	FileSystem.read();
 	
 	//FileSystem.write("{data:[]}");
 
