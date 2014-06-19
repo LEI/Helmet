@@ -27,12 +27,12 @@
 				<div class="navbar-brand navbar-brand-center" yield-to="title">
 					<span>Helmet</span>
 				</div>
-				<!-- left
-				<div class="btn-group pull-left">
-					<div ng-click="toggle('sidebar')" class="btn btn-navbar sidebar-toggle">
+				<!-- left -->
+				<div class="btn-group pull-left" yield-to="navbarAction">
+					<!--div ng-click="toggle('sidebar')" class="btn btn-navbar sidebar-toggle">
 						<i class="fa fa-bars"></i> Helmet
-					</div>
-				</div> -->
+					</div-->
+				</div>
 				<!-- right
 				<div class="btn-group pull-right" yield-to="navbarAction">
 					// overlay
@@ -74,17 +74,20 @@
 		</div>
 
 		<!-- browser: AIzaSyBvFpbSPCX7TEnXxQ3ztf8zD_zLVGxiLbg -->
-		<script src="http://maps.googleapis.com/maps/api/js?language=fr-FR&amp;sensor=true&amp;libraries=geometry&amp;key=AIzaSyBeWwtoeeOeLsLI1LqOiwERKcm00fq6Vbg"></script>
+		<script src="http://maps.googleapis.com/maps/api/js?language=fr-FR&amp;sensor=false&amp;libraries=geometry&amp;key=AIzaSyBeWwtoeeOeLsLI1LqOiwERKcm00fq6Vbg"></script>
 
 		<!-- Bower -->
 		<script src="lib/angular/angular.js"></script>
 		<script src="lib/angular-sanitize/angular-sanitize.min.js"></script>
 		<script src="lib/angular-route/angular-route.min.js"></script>
 		<script src="lib/ngstorage/ngStorage.min.js"></script>
-		<script src="lib/mobile-angular-ui/dist/js/mobile-angular-ui.min.js"></script>
 		<script src="lib/angular-chartjs-directive/lib/Chart.min.js"></script>
 		<script src="lib/angular-chartjs-directive/chartjs-directive.js"></script>
-
+		<script src="lib/moment/min/moment.min.js"></script>
+		<script src="lib/moment/min/moment-with-langs.min.js"></script>
+		<script src="lib/moment/lang/fr.js"></script>
+		<script src="lib/angular-moment/angular-moment.min.js"></script>
+		<script src="lib/mobile-angular-ui/dist/js/mobile-angular-ui.min.js"></script>
 		<!-- Angular -->
 		<script src="js/app.js"></script>
 		<script src="js/directives.js"></script>

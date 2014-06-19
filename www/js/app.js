@@ -2,8 +2,9 @@ angular.module('helmetApp', [
 	'ngRoute',
 	'ngSanitize',
 	'ngStorage',
-	'mobile-angular-ui',
-	'chartjs-directive'
+	'angularMoment',
+	'chartjs-directive',
+	'mobile-angular-ui'
 ])
 
 .config([
@@ -35,14 +36,19 @@ function($routeProvider, $locationProvider) {
 
 }])
 
+/*.run(function($direction) {
+	console.log($direction);
+})*/
+
 .controller('AppController', [
 	'$rootScope',
 	'$scope',
 	'$window',
 	'$localStorage',
 function($rootScope, $scope, $window, $localStorage) {
-	$scope.innerWidth = $window.innerWidth;
+
 	$rootScope.$storage = $localStorage;
+
 	// Chargement : route, position, weather, direction
 	$rootScope.loading = {};
 
@@ -53,5 +59,10 @@ function($rootScope, $scope, $window, $localStorage) {
 
 	$rootScope.$on("$routeChangeSuccess", function(){
 		$rootScope.loading.route = false;
+	});
+
+	$scope.innerWidth = $window.innerWidth;
+	angular.element($window).bind("resize",function(event){
+		$scope.innerWidth = $window.innerWidth;
 	});
 }]);

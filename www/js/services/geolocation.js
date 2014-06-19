@@ -96,13 +96,10 @@ function ($rootScope, $q, $notification) {
 			return d;
 		},
 		calculateSpeed: function(prev, next, distance) {
-			// float nb -> duino
 			if (next.coords.speed !== null) {
-				// m/s -> km/h
 				console.log(next.coords.speed + " (*3.6)");
-				return next.coords.speed * 3.6;
+				return next.coords.speed * 3.6; // m/s -> km/h
 			}
-			// (1 m / 60 secs * 3.6) * 1000 = 60 km/h
 			var distance = distance || this.calculateDistance(prev, next), // m
 				time = ( (next.timestamp - prev.timestamp) / 1000 ) % 60, // ms -> s
 				speed = (distance / time) * 3.6; // m/s -> km/h

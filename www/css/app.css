@@ -11,6 +11,9 @@ a {
 .hide {
   display: none;
 }
+.clear-both {
+  clear: both;
+}
 .right {
   float: right;
   text-align: right;
@@ -84,8 +87,6 @@ body .app {
   clear: both;
   min-height: 150px;
   height: 50vh;
-  height: calc(100vh - 350px);
-  margin-bottom: 10px;
 }
 .item-count {
   display: block;
@@ -95,11 +96,13 @@ body .app {
 .step-maneuver {
   margin-right: 10px;
 }
-.settings li {
+.list li {
   overflow: hidden;
-  min-height: 54px;
   padding: 10px;
   border-bottom: 1px solid #ddd;
+}
+.settings li {
+  min-height: 54px;
 }
 .settings li.stored {
   color: #999;

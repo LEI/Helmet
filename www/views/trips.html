@@ -1,18 +1,53 @@
 <!-- Titre -->
 <div content-for="title">
-  <span>Dashboard</span>
+  <span>
+  	Trajets
+  </span>
 </div>
-<ul>
-	<li ng-repeat="trip in tripList" style="clear: both;">
-		<div class="col-md-6">
-			<h2>{{ trip.destination }}</h2>
-			<p>
+<!-- Actions -->
+<div content-for="navbarAction">
+	<div ng-click="hideTrip()" ng-show="currentTrip" class="btn btn-navbar">
+		<i class="fa fa-chevron-left"></i>
+	</div>
+</div>
+<!-- Liste des trajets -->
+<div class="list" ng-hide="currentTrip">
+	<div class="panel-heading btn-group justified">
+		<a class="btn btn-danger" href="#/direction"
+			ng-disabled="tripList.length === 0" ng-click="resetTrips()">
+			<i class="fa fa-trash-o"></i>
+		</a>
+		<a class="btn btn-success" href="#/direction">
+			<i class="fa fa-plus"></i>
+		</a>
+	</div>
+	<ul>
+		<li ng-repeat="trip in tripList" class="clickable clear-both" ng-click="showTrip(trip)">
+			<p class="pull-right">
 				<i class="fa fa-road"></i> {{ trip.direction.routes[0].legs[0].distance.text }}<br>
 				<i class="fa fa-clock-o"></i> {{ trip.direction.routes[0].legs[0].duration.text }}
 			</p>
-		</div>
-		<chart class="col-md-6" value="trip.speedGraph" width="{{ (innerWidth-20) / 2 }}" height="100"></chart>
-	</li>
-</ul>
-
-{{tripList}}
+			<h2>{{ trip.destination | capitalize }}</h2>
+			<small am-time-ago="trip.date"></small>
+		</li>
+	</ul>
+</div>
+<!-- Affichage d'un trajet -->
+<div ng-show="currentTrip">
+	<div class="panel-heading">
+		<h2 class="panel-title">
+			{{ currentTrip.destination || 'Destination' | capitalize }}
+		</h2>
+	</div>
+	<div class="panel-body">
+		<p class="pull-right">
+			<i class="fa fa-road"></i> {{ currentTrip.direction.routes[0].legs[0].distance.text }}
+			<i class="fa fa-clock-o"></i> {{ currentTrip.direction.routes[0].legs[0].duration.text }}
+		</p>
+		<small>{{ trip.date }}</small>
+		<chart class="clear" value="currentTrip.speedGraph"
+			width="{{ innerWidth-20 }}" height="150">
+		</chart>
+		<div class="google-map" id="google-map"></div>
+	</div>
+</div>

@@ -40,6 +40,7 @@ Ajouter ces lignes si l'application ne fonctionne pas correctement (platforms/an
 
 	adb logcat CordovaLog:D *:S
 
+https://code.google.com/p/tinkerit/wiki/Cantarino
 
 http://github.com/poiuytrez/SpeechRecognizer
 

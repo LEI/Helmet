@@ -8,6 +8,9 @@
 .hide {
 	display: none;
 }
+.clear-both {
+	clear: both;
+}
 .right {
 	float: right;
 	text-align: right;
@@ -79,8 +82,8 @@ body .app {
 	clear: both;
     min-height: 150px;
     height: 50vh;
-    height: calc(~"100vh - 350px");
-    margin-bottom: 10px;
+    //height: calc(~"100vh - 350px");
+    //margin-bottom: 10px;
 }
 .item-count {
 	display: block;
@@ -92,12 +95,17 @@ body .app {
 	margin-right: 10px;
 }
 
-.settings {
+.list {
 	li {
 		overflow: hidden;
-		min-height: 54px;
 		padding: 10px;
 		border-bottom: 1px solid #ddd;
+	}
+}
+
+.settings {
+	li {
+		min-height: 54px;
 		&.stored {
 			color: #999;
 		}

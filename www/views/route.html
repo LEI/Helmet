@@ -16,12 +16,11 @@
 	<!-- Titre -->
 	<div class="panel-heading">
 		<h2 class="panel-title">
-			{{ 'Destination' || destination | capitalize }}
+			{{ destination || 'Destination' | capitalize }}
 			<span ng-show="distance">
 				{{ distance | number:2 }}m
 			</span>
 			<span class="pull-right">
-
 				{{ speed || 0 | number:2 }} km/h
 			</span>
 		</h2>
