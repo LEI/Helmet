@@ -93,18 +93,21 @@ function ($rootScope, $q, $notification) {
 				Math.sin(dLon/2) * Math.sin(dLon/2);
 			var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 			var d = R * c;
-			return d * 1000;
+			return d;
 		},
-		calculateSpeed: function(prev, next) {
+		calculateSpeed: function(prev, next, distance) {
+			// float nb -> duino
 			if (next.coords.speed !== null) {
-				return next.coords.speed;
+				// m/s -> km/h
+				console.log(next.coords.speed + " (*3.6)");
+				return next.coords.speed * 3.6;
 			}
 			// (1 m / 60 secs * 3.6) * 1000 = 60 km/h
-			var distance = this.calculateDistance(prev, next),
-				time = (next.timestamp - prev.timestamp) * 3.6,
-				speed = distance / time * 1000;
+			var distance = distance || this.calculateDistance(prev, next), // m
+				time = ( (next.timestamp - prev.timestamp) / 1000 ) % 60, // ms -> s
+				speed = (distance / time) * 3.6; // m/s -> km/h
 
-			console.log(distance + " / " + time + " (*3.6) = " + speed + " (*1000)");
+			console.log(distance, time);
 
 			return isNaN(speed) ? 0 : speed;
 		}

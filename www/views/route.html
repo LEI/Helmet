@@ -1,6 +1,8 @@
 <!-- Titre -->
 <div content-for="title">
-  <span>Itinéraire</span>
+  <span>
+		{{ message || 'Itinéraire' }}
+	</span>
 </div>
 
 <!-- Chargement -->
@@ -14,13 +16,16 @@
 	<!-- Titre -->
 	<div class="panel-heading">
 		<h2 class="panel-title">
-			{{ message || destination || 'Destination' | capitalize }}
+			Destination {{ destination | capitalize }}
 			<small>
-				{{ speed }} {{ direction.routes[0].summary }}
+				{{ direction.routes[0].summary }}
 				<span ng-show="distance">
 					({{ distance | number:2 }}m)
 				</span>
 			</small>
+			<span class="pull-right" ng-show="speed">
+				{{ speed | number:2 }} km/h
+			</span>
 		</h2>
 	</div>
 	<!-- Contenu -->
