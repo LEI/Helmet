@@ -25,5 +25,4 @@ function($q, $scope, $rootScope, $timeout, $localStorage, FileSystem) {
 		console.log(error);
 	});
 
-
 }]);
