@@ -1,20 +1,16 @@
 # Helmet
 
-	bower install
+## Cordova
 
-## AngularJS
+http://bower.io/
 
-http://www.learn-angular.org/
+http://github.com/don/BluetoothSerial
 
-http://www.ng-newsletter.com/posts/how-to-learn-angular.html
+	cordova create helmet fr.faclab.helmet Helmet
 
-### Bluetooth
+	adb logcat CordovaLog:D *:S
 
-https://github.com/don/BluetoothSerial
-
-http://don.github.io/slides/2014-04-07-apachecon-bluetooth
-
-## AndroidManifest.xml
+### AndroidManifest.xml
 
 Ajouter ces lignes si l'application ne fonctionne pas correctement (platforms/android/AndroidManifest.xml)
 
@@ -34,13 +30,8 @@ Ajouter ces lignes si l'application ne fonctionne pas correctement (platforms/an
 	<uses-permission android:name="android.permission.MOUNT_UMOUNT_FILESYSTEMS" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-## Cordova
 
-	cordova create helmet fr.faclab.helmet Helmet
 
-	adb logcat CordovaLog:D *:S
-
-schema, os map,
 https://code.google.com/p/tinkerit/wiki/Cantarino
 
 http://github.com/poiuytrez/SpeechRecognizer

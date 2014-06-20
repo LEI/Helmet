@@ -14,8 +14,8 @@ angular.module('helmetApp')
 	'FileSystem',
 function($q, $scope, $rootScope, $location, $timeout, $direction, $geolocation, $localStorage, FileSystem) {
 
-
-	$scope.getTrips = function() {
+	// Initialisation des trajets
+	($scope.getTrips = function() {
 		FileSystem.read().then(function(response){
 			$scope.tripList = {};
 			angular.forEach(response.data, function(trip, key) {
@@ -32,26 +32,16 @@ function($q, $scope, $rootScope, $location, $timeout, $direction, $geolocation, 
 		}, function(error){
 			$rootScope.message = error;
 		});
-	};
+	})();
 
-	$scope.getTrips();
-
-	$scope.resetTrips = function() {
-		FileSystem.write("",true);
-		$scope.tripList = [];
-	};
-
+	// Détais d'un trajet
 	$scope.showTrip = function(trip) {
 		$scope.currentTrip = trip;
 		$location.hash(trip.date);
 		// Carte
 		$direction.initMap(trip.end).then(function(){
 			// Recherche de l'itinéraire
-			$direction._getDirection(
-				trip.start,
-				trip.end,
-				true
-			).then(function(direction) {
+			$direction._getDirection(trip.start, trip.end, true).then(function(direction) {
 				// Affichage carte
 				$direction.displayDirection(direction);
 			}, function(error) {
@@ -62,10 +52,17 @@ function($q, $scope, $rootScope, $location, $timeout, $direction, $geolocation, 
 		});
 	};
 
+	// Masque les détails
 	$scope.hideTrip = function(trip) {
 		$scope.currentTrip = false;
 		$direction.resetMap();
 		$location.hash('');
+	};
+
+	// Efface tous les trajets
+	$scope.resetTrips = function() {
+		FileSystem.write("",true);
+		$scope.tripList = [];
 	};
 
 }]);

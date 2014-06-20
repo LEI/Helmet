@@ -50,7 +50,7 @@ function($rootScope, $q, $http) {
 					}
 				});
 			} else {
-				deferred.reject('Google indisponible');
+				deferred.reject('Connexion impossible');
 			}
 			// Remise à zéro marqueur position
 			/*if ($rootScope.positionMarker !== undefined) {
