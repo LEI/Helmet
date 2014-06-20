@@ -23,34 +23,35 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 
 	$scope.init = function() {
 		// Initialisation de la position
-		$rootScope.loading.position = true;
-		$rootScope.message = 'Géolocalisation...';
-		$rootScope.waitPosition = $geolocation.getCurrentPosition({
-			timeout: 30000,
-			enableHighAccuracy: true,
-			maximumAge: 30000
-		}).then(function(position) {
-			errorCount = 0;
-			$scope.startPos = position;
-			$rootScope.position = position;
-			$rootScope.loading.position = false;
-			$rootScope.message = '';
-			/*$timeout(function() {
-				$direction.initMap(position);
-			});*/
-			if (position.coords.speed) {
-				$rootScope.speed = position.coords.speed;
-			}
-		}, function(error) {
-			$rootScope.loading.position = false;
-			$rootScope.message = error;
-			if (errorCount > 10) {
-				alert(error);
-			} else {
-				errorCount++;
-				$timeout($scope.init, 1000);
-			}
-		});
+		if ($rootScope.position === undefined) {
+			$rootScope.loading.position = true;
+			$rootScope.message = 'Géolocalisation...';
+			$rootScope.waitPosition = $geolocation.getCurrentPosition({
+				timeout: 30000,
+				enableHighAccuracy: true,
+				maximumAge: 30000
+			}).then(function(position) {
+				errorCount = 0;
+				$scope.startPos = position;
+				$rootScope.position = position;
+				$rootScope.loading.position = false;
+				$rootScope.message = '';
+				/*$timeout(function() {
+					$direction.initMap(position);
+				});*/
+			}, function(error) {
+				$rootScope.loading.position = false;
+				$rootScope.message = error;
+				if (errorCount > 10) {
+					alert(error);
+				} else {
+					errorCount++;
+					$timeout(function(){
+						$scope.init();
+					}, 3000);
+				}
+			});
+		}
 		// Audio
 		$rootScope.audio = {
 			textToSpeech: false
@@ -74,7 +75,6 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 			enableHighAccuracy: false,
 			maximumAge: 30000
 		}).then(function(position) {
-			$rootScope.loading.position = false;
 			// resolve
 		}, function(error) {
 			$rootScope.loading.position = false;
@@ -229,6 +229,7 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 		    $scope.$apply(function() {
 				$rootScope.accuracy = undefined;
 				$rootScope.distance = undefined;
+				$rootScope.speed = undefined;
 			});
 		});
 		//directionsDisplay.setMap(null);

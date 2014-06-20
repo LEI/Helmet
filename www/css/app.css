@@ -88,14 +88,6 @@ body .app {
   min-height: 150px;
   height: 50vh;
 }
-.item-count {
-  display: block;
-  font-size: 1.2em;
-  font-weight: bold;
-}
-.step-maneuver {
-  margin-right: 10px;
-}
 .list li {
   overflow: hidden;
   padding: 10px;
@@ -112,10 +104,9 @@ body .app {
   font-size: 20px;
 }
 .sprite {
-  display: block;
+  display: inline-block;
   width: 16px;
   height: 16px;
-  float: right;
   background-image: url('../img/maneuvers.png');
   background-repeat: no-repeat;
   background-size: 19px 630px;

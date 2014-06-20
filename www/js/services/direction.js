@@ -13,39 +13,45 @@ function($rootScope, $q, $http) {
 		directionsDisplay = new google.maps.DirectionsRenderer(),
 		directionsService = new google.maps.DirectionsService();
 	} else {
-		console.log('API Google inaccessible');
+		console.log('Google API inaccessible');
 	}
 	return {
 		map: null,
-		verify: function() {
+		isAvailable: function() {
 			if ( !('google' in window) || google === undefined ) {
-				alert('API Google inaccessible');
+				//alert('Aucune connexion');
+				return false;
+			} else {
+				return true;
 			}
 		},
 		initMap: function(position, p_bounds) {
-			this.verify();
 			var self = this, deferred = $q.defer();
-			angular.element(document).ready(function () {
-				// Initialisation Google Map
-				// Cannot read property 'offsetWidth' of null
-				self.map = new google.maps.Map(document.getElementById('google-map'), {
-					zoom: 15,
-					mapTypeId: 'roadmap',
-					streetViewControl: false
+			if (this.isAvailable()) {
+				angular.element(document).ready(function () {
+					// Initialisation Google Map
+					// Cannot read property 'offsetWidth' of null
+					self.map = new google.maps.Map(document.getElementById('google-map'), {
+						zoom: 15,
+						mapTypeId: 'roadmap',
+						streetViewControl: false
+					});
+					if (p_bounds !== undefined) {
+						self.map.fitBounds(p_bounds);
+						deferred.resolve();
+					} else if (position !== undefined) {
+						center = new google.maps.LatLng(
+							position.coords.latitude,
+							position.coords.longitude);
+						self.map.setCenter(center);
+						deferred.resolve();
+					} else {
+						deferred.reject();
+					}
 				});
-				if (p_bounds !== undefined) {
-					self.map.fitBounds(p_bounds);
-					deferred.resolve();
-				} else if (position !== undefined) {
-					center = new google.maps.LatLng(
-						position.coords.latitude,
-						position.coords.longitude);
-					self.map.setCenter(center);
-					deferred.resolve();
-				} else {
-					deferred.reject();
-				}
-			});
+			} else {
+				deferred.reject('Google indisponible');
+			}
 			// Remise à zéro marqueur position
 			/*if ($rootScope.positionMarker !== undefined) {
 				$rootScope.positionMarker.marker.setMap(null);
@@ -54,46 +60,9 @@ function($rootScope, $q, $http) {
 			return deferred.promise;
 		},
 		resetMap: function() {
-			directionsDisplay.setMap(null);
-		},
-		_getDirection: function(position, destination, ignore) {
-			this.verify();
-			var deferred = $q.defer();
-			// Recherche de l'itinéraire
-			directionsService.route({
-				origin: new google.maps.LatLng(
-					position.coords.latitude,
-					position.coords.longitude),
-				destination: new google.maps.LatLng(
-					destination.coords.latitude,
-					destination.coords.longitude),
-				travelMode: google.maps.DirectionsTravelMode.DRIVING,
-				unitSystem : google.maps.UnitSystem.METRIC,
-				region: 'FR',
-				language: 'FR'
-			}, function (response, status) {
-
-				if (status === google.maps.DirectionsStatus.OK) {
-
-					if (!ignore) {
-						$rootScope.$storage.destination = response;
-					}
-
-					deferred.resolve(response);
-				} else {
-					switch(status) {
-						case 'ZERO_RESULTS':
-							status = 'Aucun résultat';
-							break;
-						case 'UNKNOWN_ERROR':
-							status = 'Erreur inconnue';
-							break;
-					}
-					deferred.reject(status);
-				}
-			});
-
-			return deferred.promise;
+			if (this.isAvailable()) {
+				directionsDisplay.setMap(null);
+			}
 		},
 		getDirection: function(position, destination) {
 			var self = this, deferred = $q.defer();
@@ -119,9 +88,53 @@ function($rootScope, $q, $http) {
 
 			return deferred.promise;
 		},
+		_getDirection: function(position, destination, ignore) {
+			var deferred = $q.defer();
+			// Recherche de l'itinéraire
+			if (this.isAvailable()) {
+				directionsService.route({
+					origin: new google.maps.LatLng(
+						position.coords.latitude,
+						position.coords.longitude),
+					destination: new google.maps.LatLng(
+						destination.coords.latitude,
+						destination.coords.longitude),
+					travelMode: google.maps.DirectionsTravelMode.DRIVING,
+					unitSystem : google.maps.UnitSystem.METRIC,
+					region: 'FR',
+					language: 'FR'
+				}, function (response, status) {
+
+					if (status === google.maps.DirectionsStatus.OK) {
+
+						if (!ignore) {
+							$rootScope.$storage.destination = response;
+						}
+
+						deferred.resolve(response);
+					} else {
+						switch(status) {
+							case 'ZERO_RESULTS':
+								status = 'Aucun résultat';
+								break;
+							case 'UNKNOWN_ERROR':
+								status = 'Erreur inconnue';
+								break;
+						}
+						deferred.reject(status);
+					}
+				});
+			} else {
+				deferred.reject('Google Directions API inaccessible');
+			}
+
+			return deferred.promise;
+		},
 		displayDirection: function(direction) {
-			directionsDisplay.setMap(this.map);
-			directionsDisplay.setDirections(direction);
+			if (this.isAvailable()) {
+				directionsDisplay.setMap(this.map);
+				directionsDisplay.setDirections(direction);
+			}
 		},
 		fitStep: function(step) {
 			bounds = new google.maps.LatLngBounds();
@@ -131,25 +144,30 @@ function($rootScope, $q, $http) {
 		},
 		geocode: function(address) {
 			var deferred = $q.defer();
-			geocoder.geocode({
-				address: address
-			}, function(response, status) {
-				if (status === google.maps.GeocoderStatus.OK) {
-					deferred.resolve(response[0].geometry.location, status);
-				} else {
-					deferred.reject(response, status);
-				}
-			});
+			if (this.isAvailable()) {
+				geocoder.geocode({
+					address: address
+				}, function(response, status) {
+					if (status === google.maps.GeocoderStatus.OK) {
+						deferred.resolve(response[0].geometry.location, status);
+					} else {
+						deferred.reject(response, status);
+					}
+				});
+			} else {
+				deferred.reject('Google Geocoding API inaccessible');
+			}
 
 			return deferred.promise;
 		},
 		getInstruction: function(step) {
-			this.verify();
-			var instruction = step.current.instructions,
-				tmp = document.createElement("div");
-			tmp.innerHTML = instruction;
+			if (step.current !== undefined) {
+				var instruction = step.current.instructions,
+					tmp = document.createElement("div");
+				tmp.innerHTML = instruction;
 
-			return tmp.textContent || tmp.innerText;
+				return tmp.textContent || tmp.innerText;
+			}
 		}
 		/*,updatePositionMarker: function(position) {
 			// Initialisation marqueur et cercle

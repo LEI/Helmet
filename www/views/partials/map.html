@@ -51,7 +51,7 @@
 		<input
 		class="form-control"
 		type="text"
-		placeholder="Destination"
+		placeholder="{{ loading.position ? 'Attente de la position' : 'Renseignez une destination' }}"
 		ng-model="destination"
 		label=""
 		label-class="col-xs-12"

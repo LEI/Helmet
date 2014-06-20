@@ -6,20 +6,35 @@ angular.module('helmetApp')
 	'$q',
 	'$scope',
 	'$rootScope',
+	'$location',
 	'$timeout',
 	'$direction',
 	'$geolocation',
 	'$localStorage',
 	'FileSystem',
-function($q, $scope, $rootScope, $timeout, $direction, $geolocation, $localStorage, FileSystem) {
+function($q, $scope, $rootScope, $location, $timeout, $direction, $geolocation, $localStorage, FileSystem) {
+
 
 	$scope.getTrips = function() {
 		FileSystem.read().then(function(response){
-			$scope.tripList = response.data;
+			$scope.tripList = {};
+			angular.forEach(response.data, function(trip, key) {
+				this[trip.date] = trip;
+			}, $scope.tripList);
+			// Affichage d'un trajet
+			var t = $location.hash();
+			if (t !== undefined && t !== '') {
+				t = $scope.tripList[t]
+				if (t !== undefined) {
+					$scope.showTrip(t);
+				}
+			}
 		}, function(error){
-			console.log(error);
+			$rootScope.message = error;
 		});
 	};
+
+	$scope.getTrips();
 
 	$scope.resetTrips = function() {
 		FileSystem.write("",true);
@@ -28,7 +43,8 @@ function($q, $scope, $rootScope, $timeout, $direction, $geolocation, $localStora
 
 	$scope.showTrip = function(trip) {
 		$scope.currentTrip = trip;
-
+		$location.hash(trip.date);
+		// Carte
 		$direction.initMap(trip.end).then(function(){
 			// Recherche de l'itinéraire
 			$direction._getDirection(
@@ -39,18 +55,17 @@ function($q, $scope, $rootScope, $timeout, $direction, $geolocation, $localStora
 				// Affichage carte
 				$direction.displayDirection(direction);
 			}, function(error) {
-				console.log(error);
+				$rootScope.message = error;
 			});
-		},function(){
-			console.log($direction);
+		}, function(error){
+			$rootScope.message = error;
 		});
 	};
 
 	$scope.hideTrip = function(trip) {
 		$scope.currentTrip = false;
 		$direction.resetMap();
+		$location.hash('');
 	};
-
-	$scope.getTrips();
 
 }]);

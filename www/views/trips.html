@@ -1,8 +1,8 @@
 <!-- Titre -->
 <div content-for="title">
-  <span>
-  	Trajets
-  </span>
+	<span>
+		{{ message || 'Trajets' }}
+	</span>
 </div>
 <!-- Actions -->
 <div content-for="navbarAction">
@@ -35,18 +35,23 @@
 <!-- Affichage d'un trajet -->
 <div ng-show="currentTrip">
 	<div class="panel-heading">
+		<span class="pull-right" am-time-ago="currentTrip.date"></span>
 		<h2 class="panel-title">
 			{{ currentTrip.destination || 'Destination' | capitalize }}
 		</h2>
 	</div>
-	<div class="panel-body">
+	<div class="panel-body clear">
 		<p class="pull-right">
-			<i class="fa fa-road"></i> {{ currentTrip.direction.routes[0].legs[0].distance.text }}
+			<i class="fa fa-road"></i> {{ currentTrip.direction.routes[0].legs[0].distance.text }}<br>
 			<i class="fa fa-clock-o"></i> {{ currentTrip.direction.routes[0].legs[0].duration.text }}
 		</p>
-		<small>{{ trip.date }}</small>
+		<p>
+			<small>{{ currentTrip.direction.routes[0].legs[0].start_address }}</small><br>
+			<i class="fa fa-map-marker"></i>
+			{{ currentTrip.direction.routes[0].legs[0].end_address }}
+		</p>
 		<chart class="clear" value="currentTrip.speedGraph"
-			width="{{ innerWidth-20 }}" height="150">
+			width="{{ innerWidth-30 }}" height="150">
 		</chart>
 		<div class="google-map" id="google-map"></div>
 	</div>
