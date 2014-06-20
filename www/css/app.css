@@ -11,6 +11,9 @@ a {
 .hide {
   display: none;
 }
+.clear-both {
+  clear: both;
+}
 .right {
   float: right;
   text-align: right;
@@ -84,22 +87,14 @@ body .app {
   clear: both;
   min-height: 150px;
   height: 50vh;
-  height: calc(100vh - 350px);
-  margin-bottom: 10px;
 }
-.item-count {
-  display: block;
-  font-size: 1.2em;
-  font-weight: bold;
-}
-.step-maneuver {
-  margin-right: 10px;
-}
-.settings li {
+.list li {
   overflow: hidden;
-  min-height: 54px;
   padding: 10px;
   border-bottom: 1px solid #ddd;
+}
+.settings li {
+  min-height: 54px;
 }
 .settings li.stored {
   color: #999;
@@ -109,10 +104,9 @@ body .app {
   font-size: 20px;
 }
 .sprite {
-  display: block;
+  display: inline-block;
   width: 16px;
   height: 16px;
-  float: right;
   background-image: url('../img/maneuvers.png');
   background-repeat: no-repeat;
   background-size: 19px 630px;

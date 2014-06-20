@@ -36,7 +36,6 @@ function($q) {
 		},
 		getFile: function(file) {
 			var deferred = $q.defer();
-			console.log(file);
 			file.root.getFile('helmet/routes.json', {
 				create: true,
 				exclusive: false
@@ -68,14 +67,12 @@ function($q) {
 		},
 		loadFile: function(fileEntry) {
 			var deferred = $q.defer();
-			//console.log(fileEntry.fullPath);
 			fileEntry.file( function(file) {
 				var reader = new FileReader();
 				reader.onloadend = function(e) {
 					var txtArea = document.createElement('textarea');
 		            txtArea.value = this.result;
 		            document.body.appendChild(txtArea);
-					console.log(e);
 					deferred.resolve(this.result);
 				};
 				reader.readAsText(file);
@@ -105,7 +102,7 @@ function($q) {
 						}, function(error) {
 							deferred.reject(error);
 						});
-							
+
 					}, function(error) {
 						deferred.reject(error);
 					});
@@ -156,7 +153,6 @@ function($q) {
 								content = a;
 								self.writeFile(fileEntry, JSON.stringify(content)).then(function(fileContent) {
 									self.loadFile(fileEntry).then( function(response) {
-										console.log(response);
 										deferred.resolve(response);
 									}, function(error) {
 										deferred.reject(error);
@@ -174,7 +170,6 @@ function($q) {
 							    self.getFile(file).then( function(fileEntry) {
 							    	self.writeFile(fileEntry, JSON.stringify(content)).then(function(fileContent) {
 										self.loadFile(fileEntry).then( function(response) {
-											console.log(response);
 											deferred.resolve(response);
 										}, function(error) {
 											deferred.reject(error);
@@ -186,11 +181,11 @@ function($q) {
 							    	deferred.reject(error);
 							    });
 							}
-							
+
 						}, function(error) {
 							deferred.reject(error);
 						});
-						
+
 					}, function(error) {
 						deferred.reject(error);
 					});
@@ -210,8 +205,8 @@ function($q) {
 				self.request(PERSISTENT, grantedBytes).then( function(file) {
 					self.getFile(file).then( function(fileEntry) {
 						self.loadFile(fileEntry).then( function(response) {
-							console.log(response);
-							deferred.resolve(response);
+
+							deferred.resolve( JSON.parse(response) );
 						}, function(error) {
 							deferred.reject(error);
 						});

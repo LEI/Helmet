@@ -5,12 +5,11 @@ angular.module('helmetApp')
 .controller('ArduinoController', [
 	'$scope',
 	'$rootScope',
+	'$interval',
 	'$localStorage',
 	'$notification',
 	'$bluetooth',
-function($scope, $rootScope, $localStorage, $notification, $bluetooth) {
-
-	$rootScope.$storage = $localStorage;
+function($scope, $rootScope, $interval, $localStorage, $notification, $bluetooth) {
 
 	/*
 	 *	Bluetooth
@@ -67,6 +66,7 @@ function($scope, $rootScope, $localStorage, $notification, $bluetooth) {
 		});
 	};
 
+	var tick;
 	$scope.connect = function(id) {
 		$bluetooth.isEnabled().then(function(response) {
 			// Tentative de connexion
@@ -77,6 +77,13 @@ function($scope, $rootScope, $localStorage, $notification, $bluetooth) {
 				// Sauvegarde de l'appareil connecté
 				//$scope.bluetooth.deviceList[id].connected = true;
 				$scope.bluetooth.connected = id;
+				/*tick = $interval(function() {
+					$bluetooth.read().then(function(response) {
+						console.log(response);
+					}, function(error) {
+						console.log(error);
+					});
+				}, 1000);*/
 				if ($rootScope.$storage.deviceList === undefined) {
 					$rootScope.$storage.deviceList = {};
 				}
@@ -92,6 +99,7 @@ function($scope, $rootScope, $localStorage, $notification, $bluetooth) {
 	};
 
 	$scope.disconnect = function(id) {
+		//$interval.clear(tick);
 		$bluetooth.isConnected().then(function(a) {
 			$scope.bluetooth.loading = true;
 			$bluetooth.disconnect().then(function(response) {

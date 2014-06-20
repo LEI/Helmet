@@ -8,6 +8,9 @@
 .hide {
 	display: none;
 }
+.clear-both {
+	clear: both;
+}
 .right {
 	float: right;
 	text-align: right;
@@ -79,25 +82,21 @@ body .app {
 	clear: both;
     min-height: 150px;
     height: 50vh;
-    height: calc(~"100vh - 350px");
-    margin-bottom: 10px;
-}
-.item-count {
-	display: block;
-	font-size: 1.2em;
-	font-weight: bold;
+    //height: calc(~"100vh - 350px");
+    //margin-bottom: 10px;
 }
 
-.step-maneuver {
-	margin-right: 10px;
+.list {
+	li {
+		overflow: hidden;
+		padding: 10px;
+		border-bottom: 1px solid #ddd;
+	}
 }
 
 .settings {
 	li {
-		overflow: hidden;
 		min-height: 54px;
-		padding: 10px;
-		border-bottom: 1px solid #ddd;
 		&.stored {
 			color: #999;
 		}
@@ -111,10 +110,9 @@ body .app {
 }
 
 .sprite{
-    display: block;
+    display: inline-block;
     width: 16px;
     height: 16px;
-    float: right;
     background-image: url('../img/maneuvers.png');
     background-repeat: no-repeat;
     background-size: 19px 630px;
