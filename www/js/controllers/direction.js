@@ -14,10 +14,11 @@ angular.module('helmetApp')
 	'$localStorage',
 	'$geolocation',
 	'$direction',
+	'$bluetooth',
 	'FileSystem',
 	'TextToSpeech',
 	'SpeechRecognition',
-function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geolocation, $direction, FileSystem, TextToSpeech, SpeechRecognition) {
+function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geolocation, $direction, $bluetooth, FileSystem, TextToSpeech, SpeechRecognition) {
 
 	var errorCount = 0;
 
@@ -299,6 +300,8 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 			data: data,
 			options: $scope.speedGraph.options
 		};
+
+		$bluetooth.write(speed + 'km/h');
 	};
 
 	$scope.initStorage = function() {

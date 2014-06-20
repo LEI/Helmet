@@ -81,9 +81,6 @@ function($scope, $rootScope, $timeout, $geolocation, $bluetooth, openWeatherApi)
 
 	$scope.sendAlerts = function(data) {
 		// Gestion alertes
-		// if (data.main.temp < 3) {
-		// 	$bluetooth.write('TEMP:'+data.main.temp);
-		// }
 		var weatherAlert = [];
 		angular.forEach(data.weather, function(weather, key) {
 			switch (weather.id) {
@@ -291,13 +288,16 @@ function($scope, $rootScope, $timeout, $geolocation, $bluetooth, openWeatherApi)
 			}
 		});
 
-		console.log('weather:'+weatherAlert.join(','));
-
-		// $bluetooth.write('WEATHER:'+weatherAlert.join(', ')).then(function(response) {
-		// 	console.log('Réponse reçue: ' + response);
-		// }, function(error) {
-		// 	console.log(error);
-		// });
+		// if (data.main.temp < 3) {
+		// 	$bluetooth.write('TEMP:'+data.main.temp);
+		// }
+		if (weatherAlert.length > 0) {
+			$bluetooth.write('Météo '+weatherAlert.join(', ')).then(function(response) {
+				console.log('Réponse reçue: ' + response);
+			}, function(error) {
+				console.log(error);
+			});
+		}
 	};
 
 }]);

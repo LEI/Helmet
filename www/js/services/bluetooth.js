@@ -87,18 +87,22 @@ function($q, $rootScope, $notification) {
 
 			return deferred.promise;
 		},
-		write: function(data) {
+		write: function(data, delimiter) {
 			var deferred = $q.defer();
-			bluetoothSerial.isConnected(
-				function(response) {
-					bluetoothSerial.write(
-						data,
-						function(response) { deferred.resolve(response); },
-						function(error) { deferred.reject(error); }
-					);
-				},
-				function(error) { deferred.reject(error); }
-			);
+			if (bluetoothSerial !== undefined) {
+				bluetoothSerial.isConnected(
+					function(response) {
+						bluetoothSerial.write(
+							data + (delimiter || '\r'),
+							function(response) { deferred.resolve(response); },
+							function(error) { deferred.reject(error); }
+						);
+					},
+					function(error) { deferred.reject(error); }
+				);
+			} else {
+				deferred.reject('Cordova indisponible');
+			}
 
 			return deferred.promise;
 		},
