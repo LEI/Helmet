@@ -28,8 +28,11 @@ void setup() {
 void loop() {
    // If data available, read it
    if(Serial.available()) {
+     Serial.println("Serial data available!");
+     
      // CMD return
      if(mode == 'cmd') {
+       Serial.println("[cmd return]");
        while(Serial.available() > 0) {
          Serial.read();
        }
@@ -37,10 +40,14 @@ void loop() {
      
      // DATA return
      if(mode == 'data') {
+       Serial.println("[data return]");
        while(Serial.available() > 0) {
        
        }
      }
+     
+     Serial.println("[Empty serial data]");
+     delay(1000);
      
    // Otherwise ...
    } else {
@@ -62,7 +69,7 @@ void loop() {
 
 void cmdMode() {
   mode = 'cmd';
-  Serial.println("[CMD MODE]");
+  Serial.println("-- RN52 CMD MODE --");
   pinMode(cmdPin, OUTPUT);
   digitalWrite(cmdPin, LOW);
   delay(100);
@@ -70,7 +77,7 @@ void cmdMode() {
 
 void dataMode() {
   pinMode(cmdPin, INPUT);
-  Serial.println("[DATA MODE]");
+  Serial.println("-- RN52 DATA MODE --");
   delay(100);
 }
 
