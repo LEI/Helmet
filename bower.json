@@ -17,8 +17,8 @@
     "angular-phonegap-geolocation": "latest",
     "underscore": "latest",
     "ngstorage": "latest",
-    "angular-chartjs-directive": "*",
-    "moment": "~2.7.0",
-    "angular-moment": "~0.7.1"
+    "angular-chartjs-directive": "latest",
+    "moment": "latest",
+    "angular-moment": "latest",
   }
 }
