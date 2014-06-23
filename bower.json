@@ -19,6 +19,6 @@
     "ngstorage": "latest",
     "angular-chartjs-directive": "latest",
     "moment": "latest",
-    "angular-moment": "latest",
+    "angular-moment": "latest"
   }
 }
