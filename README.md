@@ -49,3 +49,5 @@ https://github.com/TalAter/annyang
 * Pour l'upload du programme sur le microcontrolleur, préférer le port série `/dev/cu.usbmodemxxxxx`
 * Utiliser le même baudrate (bps) sur le port série USB que celui configuré dans le code (9600).
 * Utiliser la commande suivante pour un monitoring du port série USB `screen /dev/tty.usbmodemxxxxx <bps>`
+
+Code Arduino à jour: `arduino/uno/uno.ino`
