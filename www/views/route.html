@@ -1,6 +1,8 @@
 <!-- Titre -->
 <div content-for="title">
-  <span class="hidden-phone">Itinéraire</span>
+	<span>
+		{{ message || 'Itinéraire' }}
+	</span>
 </div>
 
 <!-- Chargement -->
@@ -14,22 +16,23 @@
 	<!-- Titre -->
 	<div class="panel-heading">
 		<h2 class="panel-title">
-			{{ message || destination || 'Destination' | capitalize }}
-			<small>
-				{{ speed }} {{ direction.routes[0].summary }}
-				<span ng-show="distance">
-					({{ distance | number:2 }}m)
-				</span>
+			<strong class="pull-right" ng-show="speed">
+				{{ speed | number:2 }} km/h
+			</strong>
+			{{ destination || 'Destination' | capitalize }}
+			<small ng-show="distance">
+				{{ distance | number:2 }}m
 			</small>
 		</h2>
 	</div>
 	<!-- Contenu -->
 	<div class="panel-body">
+		{{ direction.routes[0].summary }}
 		<div ha-map></div>
 
-		<div ng-controller="ArduinoController">
+		<!--div ng-controller="ArduinoController">
 			<button class="btn btn-default" ng-click="show()">List</button>
-		</div>
+		</div-->
 	</div>
 
 </div>

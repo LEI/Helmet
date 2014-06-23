@@ -12,24 +12,17 @@
 		<i class="fa fa-road"></i> {{ _directions.routes[0].legs[0].distance.text }}<br>
 		<i class="fa fa-clock-o"></i> {{ _directions.routes[0].legs[0].duration.text }}
 	</div>
-	<div ng-show="step.current" class="pull-right step-maneuver">
-		<div class="item-count">
-			{{ step.count + 1 }} / {{ _steps.length }}
-		</div>
-		<div class="maneuver">
-			<span class="sprite {{ step.current.maneuver }}"></span>
-		</div>
-	</div>
 	<p>
-		{{ _directions.routes[0].legs[0].start_address }}
-		<br>
+		<small>{{ _directions.routes[0].legs[0].start_address }}</small><br>
 		<i class="fa fa-map-marker"></i>
 		{{ _directions.routes[0].legs[0].end_address }}
 	</p>
 	<div class="step-instructions clear-fix" ng-show="step.current">
-		<h3 class="right">
+		<strong class="pull-right">{{ step.count + 1 }} / {{ _steps.length }}</strong>
+		<h3>
 			{{ step.current.distance.text }}
-			~ {{ step.current.duration.text }}
+			<span class="sprite {{ step.current.maneuver }}"></span>
+			{{ step.current.duration.text }}
 		</h3>
 		<p ng-bind-html="step.current.instructions"></p>
 	</div>

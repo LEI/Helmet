@@ -87,13 +87,22 @@ function($q, $rootScope, $notification) {
 
 			return deferred.promise;
 		},
-		write: function(data) {
+		write: function(data, delimiter) {
 			var deferred = $q.defer();
-			bluetoothSerial.write(
-				data,
-				function(response) { deferred.resolve(response); },
-				function(error) { deferred.reject(error); }
-			);
+			if (bluetoothSerial !== undefined) {
+				bluetoothSerial.isConnected(
+					function(response) {
+						bluetoothSerial.write(
+							data + (delimiter || '\r'),
+							function(response) { deferred.resolve(response); },
+							function(error) { deferred.reject(error); }
+						);
+					},
+					function(error) { deferred.reject(error); }
+				);
+			} else {
+				deferred.reject('Cordova indisponible');
+			}
 
 			return deferred.promise;
 		},
@@ -119,10 +128,9 @@ function($q, $rootScope, $notification) {
 			return deferred.promise;
 		},
 		readUntil: function(delimiter) {
-			delimiter = delimiter === undefined ? '\n' : delimiter;
 			var deferred = $q.defer();
 			bluetoothSerial.readUntil(
-				delimiter,
+				delimiter || '\n',
 				function(data) { deferred.resolve(data); },
 				function(error) { deferred.reject(error); }
 			);
@@ -130,10 +138,9 @@ function($q, $rootScope, $notification) {
 			return deferred.promise;
 		},
 		subscribe: function(delimiter) {
-			delimiter = delimiter === undefined ? '\n' : delimiter;
 			var deferred = $q.defer();
 			bluetoothSerial.subscribe(
-				delimiter,
+				delimiter || '\n',
 				function(data) { deferred.resolve(data); },
 				function(error) { deferred.reject(error); }
 			);

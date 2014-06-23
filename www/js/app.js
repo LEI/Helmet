@@ -2,6 +2,8 @@ angular.module('helmetApp', [
 	'ngRoute',
 	'ngSanitize',
 	'ngStorage',
+	'angularMoment',
+	'chartjs-directive',
 	'mobile-angular-ui'
 ])
 
@@ -24,7 +26,7 @@ function($routeProvider, $locationProvider) {
 		})
 		.when('/settings', {
 			templateUrl: 'views/settings.html',
-			controller: 'SettingsController'
+			controller: 'ArduinoController'
 		})
 		.otherwise({
 			redirectTo: '/'
@@ -34,12 +36,19 @@ function($routeProvider, $locationProvider) {
 
 }])
 
+/*.run(function($direction) {
+	console.log($direction);
+})*/
+
 .controller('AppController', [
 	'$rootScope',
 	'$scope',
+	'$window',
 	'$localStorage',
-function($rootScope, $scope, $localStorage) {
+function($rootScope, $scope, $window, $localStorage) {
+
 	$rootScope.$storage = $localStorage;
+
 	// Chargement : route, position, weather, direction
 	$rootScope.loading = {};
 
@@ -50,5 +59,10 @@ function($rootScope, $scope, $localStorage) {
 
 	$rootScope.$on("$routeChangeSuccess", function(){
 		$rootScope.loading.route = false;
+	});
+
+	$scope.innerWidth = $window.innerWidth;
+	angular.element($window).bind("resize",function(event){
+		$scope.innerWidth = $window.innerWidth;
 	});
 }]);

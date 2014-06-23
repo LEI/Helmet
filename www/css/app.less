@@ -8,6 +8,9 @@
 .hide {
 	display: none;
 }
+.clear-both {
+	clear: both;
+}
 .right {
 	float: right;
 	text-align: right;
@@ -79,25 +82,21 @@ body .app {
 	clear: both;
     min-height: 150px;
     height: 50vh;
-    height: calc(~"100vh - 350px");
-    margin-bottom: 10px;
-}
-.item-count {
-	display: block;
-	font-size: 1.2em;
-	font-weight: bold;
+    //height: calc(~"100vh - 350px");
+    //margin-bottom: 10px;
 }
 
-.step-maneuver {
-	margin-right: 10px;
+.list {
+	li {
+		overflow: hidden;
+		padding: 10px;
+		border-bottom: 1px solid #ddd;
+	}
 }
 
 .settings {
 	li {
-		overflow: hidden;
 		min-height: 54px;
-		padding: 10px;
-		border-bottom: 1px solid #ddd;
 		&.stored {
 			color: #999;
 		}
@@ -111,24 +110,40 @@ body .app {
 }
 
 .sprite{
-    display: block;
-    width: 20px;
-    height: 20px;
-    float: right;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
     background-image: url('../img/maneuvers.png');
     background-repeat: no-repeat;
+    background-size: 19px 630px;
 }
 .turn-sharp-left { background-position: 0px 0px; }
 .turn-sharp-right { background-position: 0px -20px; }
-.turn-left { background-position: 0px -40px; }
-.turn-right { background-position: 0px -60px; }
 .turn-slight-left { background-position: 0px -80px; }
 .turn-slight-right { background-position: 0px -100px; }
-.ramp-left { background-position: 0px -120px; }
-.ramp-right { background-position: 0px -140px; }
-.fork-left { background-position: 0px -160px; }
 .fork-right { background-position: 0px -180px; }
-.straight { background-position: 0px -200px; }
-.merge { background-position: 0px -220px; }
 .roundabout-left { background-position: 0px -240px; }
-.roundabout-right { background-position: 0px -260px; }
+.merge {
+	background-position: 0 -143px;
+}
+.roundabout-right {
+	background-position: 0 -232px;
+}
+.turn-left {
+	background-position: 0 -413px;
+}
+.ramp-right {
+	background-position: 0 -429px;
+}
+.turn-right {
+	background-position: 0 -483px;
+}
+.ramp-left {
+	background-position: 0 -598px;
+}
+.fork-left {
+	background-position: 0 -550px;
+}
+.straight {
+	background-position: 0 -534px;
+}
