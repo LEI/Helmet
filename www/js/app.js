@@ -1,35 +1,36 @@
+'use strict';
+
 angular.module('helmetApp', [
+	'ionic',
 	'ngRoute',
 	'ngSanitize',
 	'ngStorage',
 	'angularMoment',
-	'chartjs-directive',
-	'mobile-angular-ui'
+	'chartjs-directive'
 ])
 
 .config([
 	'$routeProvider',
-	'$locationProvider',
-function($routeProvider, $locationProvider) {
+function($routeProvider) {
 
 	$routeProvider
-		.when('/', {
-			templateUrl: 'views/home.html'
-		})
-		.when('/direction/:direction?', {
-			templateUrl: 'views/route.html',
+		.when('/direction', {
+			name: 'direction',
+			templateUrl: 'views/direction.html',
 			controller: 'DirectionController'
 		})
-		.when('/trips', {
-			templateUrl: 'views/trips.html',
+		.when('/history/:date?', {
+			name: 'history',
+			templateUrl: 'views/history.html',
 			controller: 'TripsController'
 		})
 		.when('/settings', {
+			name: 'settings',
 			templateUrl: 'views/settings.html',
 			controller: 'ArduinoController'
 		})
 		.otherwise({
-			redirectTo: '/'
+			redirectTo: '/direction'
 		});
 
 	//$locationProvider.html5Mode(true);
@@ -44,9 +45,55 @@ function($routeProvider, $locationProvider) {
 	'$rootScope',
 	'$scope',
 	'$window',
+	'$location',
 	'$localStorage',
-function($rootScope, $scope, $window, $localStorage) {
+function($rootScope, $scope, $window, $location, $localStorage) {
 
+	$scope.go = function(path) {
+		$scope.leftButtons = [];
+		$location.path( path );
+	};
+
+	$scope.leftButtons = [];
+	$scope.goBack = function(callback) {
+		$scope.leftButtons = [];
+		$scope.leftButtons.push({
+			type: 'button-clear',
+			content: '<i class="ion-chevron-left"></i>',
+			tap: function(e) {
+				callback();
+				$scope.leftButtons = [];
+			}
+		});
+	}
+
+	$scope.rightButtons = [{
+		type: 'button-clear',
+		content: '<i class="ion-bluetooth"></i> Bluetooth',
+		tap: function(e) {
+			$scope.go('settings');
+		}
+	}, {
+		type: 'button-clear',
+		content: '<i class="ion-android-clock"></i> Historique',
+		tap: function(e) {
+			$scope.go('history');
+		}
+	}, {
+		type: 'button-clear',
+		content: '<i class="ion-navigate"></i> Itinéraire',
+		tap: function(e) {
+			$scope.go('direction');
+		}
+	}];
+/*
+	<ion-nav-buttons side="right">
+	<ion-nav-buttons side="left">
+		<button ng-click="go('history')" class="button button-icon ion-clock"></button>
+		<button ng-click="go('settings')" class="button button-icon ion-bluetooth"></button>
+	</ion-nav-buttons>
+		<button ng-click="go('direction')" class="button button-icon ion-navigate"></button>
+	</ion-nav-buttons>*/
 	$rootScope.$storage = $localStorage;
 
 	// Chargement : route, position, weather, direction

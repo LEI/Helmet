@@ -1,12 +1,12 @@
 # Helmet
 
-## Cordova
+	git clone git@github.com:LEI/Helmet.git
 
-http://bower.io/
-
-http://github.com/don/BluetoothSerial
+	bower install
 
 	cordova create helmet fr.faclab.helmet Helmet
+
+	cordova run android
 
 	adb logcat CordovaLog:D *:S
 

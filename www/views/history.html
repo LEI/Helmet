@@ -1,0 +1,43 @@
+<div ng-hide="currentTrip">
+	<div class="button-bar button-full">
+		<button ng-click="resetTrips()" class="button icon button-assertive ion-android-trash" ng-disabled="tripList === false"></button>
+		<button ng-click="go('direction')" class="button icon button-balanced ion-plus"></button>
+	</div>
+	<!-- Liste des trajets -->
+	<ion-list>
+		<ion-item ng-repeat="trip in tripList" ng-click="showTrip(trip)">
+			<p class="right">
+				<i class="ion-flag"></i> {{ trip.direction.routes[0].legs[0].distance.text }}<br>
+				<i class="ion-android-clock"></i> {{ trip.direction.routes[0].legs[0].duration.text }}
+			</p>
+			<h3>{{ trip.destination | capitalize }}</h3>
+			<small am-time-ago="trip.date"></small>
+		</ion-item>
+	</ion-list>
+</div>
+
+
+<!-- Affichage d'un trajet -->
+<div ng-show="currentTrip">
+	<div class="panel-heading">
+		<span class="right" am-time-ago="currentTrip.date"></span>
+		<h2 class="panel-title">
+			{{ currentTrip.destination || 'Destination' | capitalize }}
+		</h2>
+	</div>
+	<div class="panel-body clear">
+		<p class="right">
+			<i class="ion-flag"></i> {{ currentTrip.direction.routes[0].legs[0].distance.text }}<br>
+			<i class="ion-android-clock"></i> {{ currentTrip.direction.routes[0].legs[0].duration.text }}
+		</p>
+		<p>
+			<small>{{ currentTrip.direction.routes[0].legs[0].start_address }}</small><br>
+			<i class="fa fa-map-marker"></i>
+			{{ currentTrip.direction.routes[0].legs[0].end_address }}
+		</p>
+		<chart class="clear" value="currentTrip.speedGraph"
+			width="{{ innerWidth-30 }}" height="150">
+		</chart>
+		<div class="google-map" id="google-map"></div>
+	</div>
+</div>

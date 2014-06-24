@@ -10,15 +10,15 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "latest",
-    "angular-sanitize": "latest",
-    "angular-route": "latest",
-    "mobile-angular-ui": "latest",
-    "angular-phonegap-geolocation": "latest",
-    "underscore": "latest",
-    "ngstorage": "latest",
-    "angular-chartjs-directive": "latest",
-    "moment": "latest",
-    "angular-moment": "latest"
+    "normalize-css": "*",
+    "angular": "*",
+    "angular-sanitize": "*",
+    "angular-route": "*",
+    "ionic": "*",
+    "ngstorage": "*",
+    "angular-chartjs-directive": "*",
+    "underscore": "*",
+    "moment": "*",
+    "angular-moment": "*"
   }
 }

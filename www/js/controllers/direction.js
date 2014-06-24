@@ -130,6 +130,7 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 					$rootScope.destination
 				).then(function(direction) {
 					$rootScope.loading.direction = false;
+					$scope.goBack($scope.resetDirection);
 					// Initialisation de l'itinéraire
 					$scope.clearSteps();
 					$scope._directions = direction;
@@ -201,11 +202,12 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 	};
 
 	$scope.saveTrip = function() {
+		var now = moment();
 		FileSystem.write({
 			destination: $rootScope.destination,
 			direction: $scope._directions,
 			speedGraph: $scope.speedGraph,
-			date: moment(),
+			date: now,
 			start: {
 				coords: {
 					latitude: $scope.startPos.coords.latitude,
@@ -218,11 +220,15 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 					longitude: $scope.endPos.coords.longitude
 				}
 			}
+		}).then(function() {
+			$scope.go('history/'+now)
 		});
 	};
 
 	// Efface l'itinéraire
 	$scope.resetDirection = function() {
+		$scope.leftButtons.length = 0;
+
 		$scope.resetStorage();
 		$scope.clearDirection();
 		$scope.initSpeedGraph();
@@ -317,6 +323,7 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 		if ($rootScope.$storage.direction !== undefined) {
 			$scope._directions = $rootScope.$storage.direction;
 			$scope._steps = $scope._directions.routes[0].legs[0].steps;
+			$scope.goBack($scope.resetDirection);
 		}
 		if ($rootScope.$storage.step !== undefined) {
 			$scope.step = $rootScope.$storage.step;

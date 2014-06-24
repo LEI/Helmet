@@ -89,7 +89,7 @@ function($q, $rootScope, $notification) {
 		},
 		write: function(data, delimiter) {
 			var deferred = $q.defer();
-			if (bluetoothSerial !== undefined) {
+			if ('bluetoothSerial' in window) {
 				bluetoothSerial.isConnected(
 					function(response) {
 						bluetoothSerial.write(
