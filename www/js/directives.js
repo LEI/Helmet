@@ -5,7 +5,7 @@ angular.module('helmetApp')
 .directive('haWeather', [function() {
 	return {
 		controller: 'openWeatherController',
-		templateUrl: 'views/includes/weather.html'
+		templateUrl: 'views/weather.html'
 	};
 }])
 

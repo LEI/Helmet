@@ -226,6 +226,7 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 
 	// Efface l'itinéraire
 	$scope.resetDirection = function() {
+		$scope.location = false;
 		$scope.resetStorage();
 		$scope.clearDirection();
 		$scope.initSpeedGraph();
@@ -309,6 +310,9 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 		if ($rootScope.$storage.direction !== undefined) {
 			$scope._directions = $rootScope.$storage.direction;
 			$scope._steps = $scope._directions.routes[0].legs[0].steps;
+
+			$scope.watchLocation();
+			$scope.location = true;
 
 			$scope.goBack($scope.resetDirection);
 		}

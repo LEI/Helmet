@@ -20,6 +20,8 @@
 			<i class="icon ion-search"></i>
 		</a>
 	</form>
+
+	<div ha-weather class="center"></div>
 </div>
 
 <div ng-show="_directions">
@@ -60,27 +62,29 @@
 	</div>
 
 	<div class="card">
-
-		<!-- Directions -->
-		<div class="right">
-			<i class="ion-flag"></i> {{ _directions.routes[0].legs[0].distance.text }}<br>
-			<i class="ion-android-clock"></i> {{ _directions.routes[0].legs[0].duration.text }}
+		<div class="item item-icon-left">
+			<!-- Départ -->
+			<i class="icon ion-ios7-flag-outline"></i>
+			{{ _directions.routes[0].legs[0].start_address }}
 		</div>
-		<p>
-			<small>{{ _directions.routes[0].legs[0].start_address }}</small><br>
-			<i class="ion-location"></i>
+		<div class="item center">
+			<!-- Distance -->
+			{{ _directions.routes[0].legs[0].distance.text }}
+			<!-- Durée -->
+			<i class="ion-android-clock"></i>
+			{{ _directions.routes[0].legs[0].duration.text }}
+		</div>
+		<div class="item item-icon-right align-right">
+			<!-- Arrivée -->
 			{{ _directions.routes[0].legs[0].end_address }}
-		</p>
-
-
-		<div class="step-instructions clear-fix" ng-show="step.current">
-			<h3>
-				<span class="right sprite {{ step.current.maneuver }}"></span>
-				{{ step.current.distance.text }}
-				{{ step.current.duration.text }}
-			</h3>
-			<p ng-bind-html="step.current.instructions"></p>
+			<i class="icon ion-ios7-flag"></i>
 		</div>
-
+		<div class="item center" ng-show="step.current">
+			<p ng-bind-html="step.current.instructions"></p>
+			<span class="sprite {{ step.current.maneuver }}"></span>
+			{{ step.current.distance.text }}
+			<i class="ion-android-clock"></i>
+			{{ step.current.duration.text }}
+		</div>
 	</div>
 </div>

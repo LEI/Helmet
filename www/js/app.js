@@ -66,12 +66,14 @@ function($routeProvider, $provide) {
 	'$localStorage',
 function($rootScope, $scope, $route, $window, $location, $localStorage) {
 
-	$scope.getActiveRoute = function() {
-		return $route.getRoute() ? ' active' : '';
-	}
+	// $scope.getActiveRoute = function(name) {
+	// 	return $route.getRoute(name) ? ' active' : '';
+	// }
 
 	$scope.go = function(path) {
-		$scope.rightButtons = [];
+		if ($location.path() !== '/'+path)
+			$scope.rightButtons = [];
+		// !
 		$location.path( path );
 	};
 

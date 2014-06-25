@@ -1,0 +1,16 @@
+<div ng-show="currentWeather.loading">
+	<i class="fa fa-spinner fa-spin spinner"></i>
+</div>
+<div ng-show="currentWeather.errorMessage">
+	{{ currentWeather.errorMessage }}
+</div>
+<div ng-show="currentWeather.data">
+	<!--small>
+		{{ currentWeather.city || 'Météo' }}
+	</small-->
+	{{ currentWeather.main.temp || '?' }} °C
+	<span ng-repeat="w in currentWeather.data">
+		<img ng-src="//openweathermap.org/img/w/{{ w.icon }}.png" alt="{{ w.icon }}">
+		{{ w.description | capitalize }}
+	</span>
+</div>

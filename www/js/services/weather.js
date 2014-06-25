@@ -15,7 +15,6 @@ function($q, $http) {
 				deferred.reject('Position inconnue');
 				return deferred.promise;
 			}
-
 			$http.get(url, { method: 'GET',
 				params: {
 					mode: 'json', lang: 'fr',
@@ -27,7 +26,6 @@ function($q, $http) {
 				if (response.message === undefined) {
 					deferred.resolve(response, status);
 				} else {
-					console.log(response);
 					deferred.reject(response.cod + ' ' + response.message);
 				}
 			}).error(function(response, status) {
@@ -53,11 +51,11 @@ function($scope, $rootScope, $timeout, $geolocation, $bluetooth, openWeatherApi)
 
 	$scope.init = function(position) {
 		openWeatherApi.getCurrentWeather(position).then(function(data) {
-			$scope.currentWeather.loading = false;
 			$scope.currentWeather = {
+				loading: false,
 				city: data.name,
 				main: data.main,
-				weather: data.weather
+				data: data.weather
 			};
 			// Vérification de la météo une fois par heure
 			$scope.sendAlerts(data);
