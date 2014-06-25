@@ -1,10 +1,25 @@
 <div ng-hide="currentTrip">
+	<!-- Actions -->
 	<div class="button-bar button-full">
-		<button ng-click="resetTrips()" class="button icon button-assertive ion-android-trash" ng-disabled="tripList === false"></button>
-		<button ng-click="go('direction')" class="button icon button-balanced ion-plus"></button>
+		<button ng-click="resetTrips()" class="button icon button-assertive ion-android-trash" ng-disabled="tripList === false">
+			Effacer
+		</button>
+		<button ng-click="go('direction')" class="button icon button-balanced ion-plus">
+			Nouveau
+		</button>
 	</div>
 	<!-- Liste des trajets -->
 	<ion-list>
+		<ion-item class="center" ng-show="fileLoading">
+			<button class="button button-icon">
+				<i class="icon ion-refreshing"></i>
+			</button>
+		</ion-item>
+		<ion-item class="center" ng-hide="tripList || fileLoading">
+			<button class="button button-icon" ng-hide="tripList || fileLoading">
+				Aucun itinéraire
+			</button>
+		</ion-item>
 		<ion-item ng-repeat="trip in tripList" ng-click="showTrip(trip)">
 			<p class="right">
 				<i class="ion-flag"></i> {{ trip.direction.routes[0].legs[0].distance.text }}<br>
@@ -19,25 +34,40 @@
 
 <!-- Affichage d'un trajet -->
 <div ng-show="currentTrip">
-	<div class="panel-heading">
+	<h2>
 		<span class="right" am-time-ago="currentTrip.date"></span>
-		<h2 class="panel-title">
-			{{ currentTrip.destination || 'Destination' | capitalize }}
-		</h2>
+		{{ currentTrip.destination || 'Destination' | capitalize }}
+	</h2>
+	<div class="center" ng-show="fileLoading">
+		<button class="button button-icon">
+			<i class="icon ion-refreshing"></i>
+		</button>
 	</div>
-	<div class="panel-body clear">
-		<p class="right">
-			<i class="ion-flag"></i> {{ currentTrip.direction.routes[0].legs[0].distance.text }}<br>
-			<i class="ion-android-clock"></i> {{ currentTrip.direction.routes[0].legs[0].duration.text }}
-		</p>
-		<p>
-			<small>{{ currentTrip.direction.routes[0].legs[0].start_address }}</small><br>
-			<i class="fa fa-map-marker"></i>
+	<div class="card">
+		<div class="item item-icon-left">
+			<!-- Départ -->
+			<i class="icon ion-ios7-flag-outline"></i>
+			{{ currentTrip.direction.routes[0].legs[0].start_address }}
+		</div>
+		<div class="item center">
+			<!-- Distance -->
+			{{ currentTrip.direction.routes[0].legs[0].distance.text }}
+			<i class="ion-android-clock"></i>
+			<!-- Durée -->
+			{{ currentTrip.direction.routes[0].legs[0].duration.text }}
+		</div>
+		<div class="item item-icon-right align-right">
+			<!-- Arrivée -->
 			{{ currentTrip.direction.routes[0].legs[0].end_address }}
-		</p>
-		<chart class="clear" value="currentTrip.speedGraph"
-			width="{{ innerWidth-30 }}" height="150">
-		</chart>
-		<div class="google-map" id="google-map"></div>
+			<i class="icon ion-ios7-flag"></i>
+		</div>
+		<div class="item">
+			<!-- Graphique vitesse -->
+			<canvas linechart data="speedGraph.data" options="speedGraph.options" width="0" height="150"></canvas>
+		</div>
+		<div class="item">
+			<!-- Directions Google Map -->
+			<div class="google-map" id="google-map"></div>
+		</div>
 	</div>
 </div>

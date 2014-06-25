@@ -60,11 +60,14 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 
 		$scope.initStorage();
 		$scope.initSpeedGraph();
+
+		$geolocation.observeId().then(null, null, function(value){
+			$scope.location = value;
+		})
 	};
 
 	$scope.start = function() {
 		$scope.watchLocation();
-		$scope.location = true;
 		$scope.getStep(0);
 	};
 
@@ -111,7 +114,6 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 
 	$scope.clearLocation = function() {
 		$geolocation.clearWatch();
-		$scope.location = false;
 		//console.log($scope.speedGraph);
 		//$scope.speedGraph = [];
 	};
@@ -202,12 +204,11 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 	};
 
 	$scope.saveTrip = function() {
-		var now = moment();
 		FileSystem.write({
 			destination: $rootScope.destination,
 			direction: $scope._directions,
 			speedGraph: $scope.speedGraph,
-			date: now,
+			date: moment(),
 			start: {
 				coords: {
 					latitude: $scope.startPos.coords.latitude,
@@ -220,15 +221,11 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 					longitude: $scope.endPos.coords.longitude
 				}
 			}
-		}).then(function() {
-			$scope.go('history/'+now)
 		});
 	};
 
 	// Efface l'itinéraire
 	$scope.resetDirection = function() {
-		$scope.leftButtons.length = 0;
-
 		$scope.resetStorage();
 		$scope.clearDirection();
 		$scope.initSpeedGraph();
@@ -278,34 +275,23 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 
 	$scope.initSpeedGraph = function() {
 		$scope.speedGraph = {
-			options: {
-				width: $window.innerWidth - 100
-			},
-			data: {
-				labels: [],
-				datasets: [
-					{
-						fillColor : "rgba(151,187,205,0.5)",
-						strokeColor : "rgba(151,187,205,1)",
-						pointColor : "rgba(151,187,205,1)",
-						pointStrokeColor : "#fff",
-						data : []
-					}
-				]
-			}
+			labels: [],
+			datasets: [
+				{
+					fillColor : "rgba(240,184,64,0.5)",
+					strokeColor : "#d39211",
+					pointColor : "#f0b840",
+					pointStrokeColor : "#fff",
+					data : []
+				}
+			]
 		};
 	};
 
 	$scope.updateSpeedGraph = function(speed, random) {
-		var now = moment().format('hh:mm:ss'),
-			data = $scope.speedGraph.data;
-		data.labels.push(now+(random ?'*':''));
-		data.datasets[0].data.push(speed);
-
-		$scope.speedGraph = {
-			data: data,
-			options: $scope.speedGraph.options
-		};
+		var now = moment().format('hh:mm:ss');
+		$scope.speedGraph.labels.push(now+(random ?'*':''));
+		$scope.speedGraph.datasets[0].data.push(speed);
 
 		$bluetooth.write(speed + 'km/h');
 	};
@@ -323,6 +309,7 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 		if ($rootScope.$storage.direction !== undefined) {
 			$scope._directions = $rootScope.$storage.direction;
 			$scope._steps = $scope._directions.routes[0].legs[0].steps;
+
 			$scope.goBack($scope.resetDirection);
 		}
 		if ($rootScope.$storage.step !== undefined) {

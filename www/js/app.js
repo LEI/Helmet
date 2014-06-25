@@ -6,12 +6,13 @@ angular.module('helmetApp', [
 	'ngSanitize',
 	'ngStorage',
 	'angularMoment',
-	'chartjs-directive'
+	'angles'
 ])
 
 .config([
 	'$routeProvider',
-function($routeProvider) {
+	'$provide',
+function($routeProvider, $provide) {
 
 	$routeProvider
 		.when('/direction', {
@@ -27,13 +28,28 @@ function($routeProvider) {
 		.when('/settings', {
 			name: 'settings',
 			templateUrl: 'views/settings.html',
-			controller: 'ArduinoController'
+			controller: 'SettingsController'
 		})
 		.otherwise({
 			redirectTo: '/direction'
 		});
 
 	//$locationProvider.html5Mode(true);
+
+	$provide.decorator('$route', function($delegate) {
+
+	    $delegate.getRoute = function(name) {
+	        var result = null;
+	        angular.forEach($delegate.routes, function(config, route) {
+	            if (config.name === name) {
+	                result = route;
+	            }
+	        });
+	        return result;
+	    };
+
+	    return $delegate;
+	});
 
 }])
 
@@ -44,30 +60,35 @@ function($routeProvider) {
 .controller('AppController', [
 	'$rootScope',
 	'$scope',
+	'$route',
 	'$window',
 	'$location',
 	'$localStorage',
-function($rootScope, $scope, $window, $location, $localStorage) {
+function($rootScope, $scope, $route, $window, $location, $localStorage) {
+
+	$scope.getActiveRoute = function() {
+		return $route.getRoute() ? ' active' : '';
+	}
 
 	$scope.go = function(path) {
-		$scope.leftButtons = [];
+		$scope.rightButtons = [];
 		$location.path( path );
 	};
 
-	$scope.leftButtons = [];
+	$scope.rightButtons = [];
 	$scope.goBack = function(callback) {
-		$scope.leftButtons = [];
-		$scope.leftButtons.push({
+		$scope.rightButtons = [];
+		$scope.rightButtons.push({
 			type: 'button-clear',
-			content: '<i class="ion-chevron-left"></i>',
+			content: '<i class="ion-close"></i>',
 			tap: function(e) {
 				callback();
-				$scope.leftButtons = [];
+				$scope.rightButtons = [];
 			}
 		});
 	}
 
-	$scope.rightButtons = [{
+	$scope.leftButtons = [{
 		type: 'button-clear',
 		content: '<i class="ion-bluetooth"></i> Bluetooth',
 		tap: function(e) {

@@ -11,12 +11,13 @@
   ],
   "dependencies": {
     "normalize-css": "*",
+    "jquery": "*",
     "angular": "*",
     "angular-sanitize": "*",
     "angular-route": "*",
     "ionic": "*",
     "ngstorage": "*",
-    "angular-chartjs-directive": "*",
+    "angles": "*",
     "underscore": "*",
     "moment": "*",
     "angular-moment": "*"

@@ -1,107 +1,86 @@
 <div ng-hide="_directions">
-	<form class="list" novalidate ng-submit="getDirection(destination)" name="directionForm">
-		<label class="item item-input">
-	   		<i class="icon ion-search placeholder-icon"></i>
+	<h2>
+		Helmet Visio HD+ v2
+	</h2>
+	<div class="center" ng-show="fileLoading">
+		<button class="button button-icon">
+			<i class="icon ion-refreshing"></i>
+		</button>
+	</div>
+	<form class="item-input-inset" novalidate ng-submit="getDirection(destination)" name="directionForm">
+		<label class="item item-input-wrapper">
+	   		<i class="icon ion-location placeholder-icon" ng-hide="loading.direction"></i>
+	   		<i class="icon ion-refreshing placeholder-icon" ng-show="loading.direction"></i>
 			<input type="text" placeholder="{{ loading.position ? 'Attente...' : 'Destination' }}" ng-model="destination" ng-disabled="loading.position || loading.direction" required>
 		</label>
+		<a class="button button-clear" ng-show="destination" ng-click="destination=''">
+			<i class="icon ion-close"></i>
+		</a>
+		<a class="button button-clear" ng-show="destination" ng-disabled="loading.position || loading.direction" ng-click="getDirection(destination)">
+			<i class="icon ion-search"></i>
+		</a>
 	</form>
-
-	<center>
-		<h2>Helmet Visio HD+ v2</h2>
-		<p>
-			Renseignez une destination
-		</p>
-	</center>
 </div>
 
-<div ng-show="_directions" class="bar">
+<div ng-show="_directions">
+
 	<h2 class="title">
+		<span ng-show="speed" class="left">
+			{{ speed | number:2 }} km/h
+		</span>
 		{{ destination || 'Destination' | capitalize }}
-		<span ng-show="distance">
-			({{ distance | number:2 }} <small>m</small>)
+		<span ng-show="distance" class="right">
+			{{ (_directions.routes[0].legs[0].distance.value - distance) | distance }}
 		</span>
 	</h2>
-</div>
 
-<div class="margin-top" ng-show="_directions">
-	<div ng-class="{'button-bar': location, 'button-full': !location}">
-		<button class="button button-balanced icon ion-location" ng-click="start()" ng-hide="location"></button>
-		<!-- prev -->
-		<button class="button button-positive icon ion-chevron-left" ng-click="getStep(step.count - 1)" ng-disabled="step.count < 1 || loading.position || loading.direction || !_directions" ng-show="location">
+	<div class="center" ng-show="loading.position">
+		<button class="button button-icon">
+			<i class="icon ion-refreshing"></i>
 		</button>
-		<button class="button" ng-show="location" disabled>
+	</div>
+
+	<!-- start -->
+	<button class="button button-balanced button-full icon ion-navigate" ng-click="start()" ng-hide="location">
+		Démarrer
+	</button>
+	<div class="button-bar">
+		<!-- prev -->
+		<button class="button button-dark" ng-click="getStep(step.count - 1)" ng-disabled="step.count < 1 || loading.position || loading.direction || !_directions" ng-show="location">
+			<i class="icon ion-chevron-left"></i>
+		</button>
+		<!-- start -->
+		<button class="button button-dark" ng-show="location" disabled>
 			{{ step.count + 1 }} / {{ _steps.length }}
 		</button>
 		<!-- next -->
-		<button class="button button-positive icon ion-chevron-right" ng-click="getStep(step.count + 1)" ng-disabled="step.count + 1 >= _steps.length || loading.position || loading.direction || !_directions" ng-show="location">
+		<button class="button button-dark" ng-click="getStep(step.count + 1)" ng-disabled="step.count + 1 >= _steps.length || loading.position || loading.direction || !_directions" ng-show="location">
+			<i class="icon ion-chevron-right"></i>
 		</button>
 	</div>
 
-	<div ng-show="speed">
-		{{ speed | number:2 }} <small>km/h</small>
+	<div class="card">
+
+		<!-- Directions -->
+		<div class="right">
+			<i class="ion-flag"></i> {{ _directions.routes[0].legs[0].distance.text }}<br>
+			<i class="ion-android-clock"></i> {{ _directions.routes[0].legs[0].duration.text }}
+		</div>
+		<p>
+			<small>{{ _directions.routes[0].legs[0].start_address }}</small><br>
+			<i class="ion-location"></i>
+			{{ _directions.routes[0].legs[0].end_address }}
+		</p>
+
+
+		<div class="step-instructions clear-fix" ng-show="step.current">
+			<h3>
+				<span class="right sprite {{ step.current.maneuver }}"></span>
+				{{ step.current.distance.text }}
+				{{ step.current.duration.text }}
+			</h3>
+			<p ng-bind-html="step.current.instructions"></p>
+		</div>
+
 	</div>
-
-	<!-- Directions -->
-	<div class="right">
-		<i class="ion-flag"></i> {{ _directions.routes[0].legs[0].distance.text }}<br>
-		<i class="ion-android-clock"></i> {{ _directions.routes[0].legs[0].duration.text }}
-	</div>
-	<p>
-		<small>{{ _directions.routes[0].legs[0].start_address }}</small><br>
-		<i class="ion-location"></i>
-		{{ _directions.routes[0].legs[0].end_address }}
-	</p>
-
-
-	<div class="step-instructions clear-fix" ng-show="step.current">
-		<h3>
-			{{ step.current.distance.text }}
-			<span class="sprite {{ step.current.maneuver }}"></span>
-			{{ step.current.duration.text }}
-		</h3>
-		<p ng-bind-html="step.current.instructions"></p>
-	</div>
-
 </div>
-<!--
-{{ direction.routes[0].summary }}
-<div class="button-bar">
-	<button class="button icon ion-android-trash" ng-click="resetDirection()" ng-disabled="loading.position || loading.direction || !_directions && !location">
-	</button>
-	<button class="button icon ion-chevron-left" ng-click="getStep(step.count - 1)" ng-show="_directions && location" ng-disabled="step.count < 1 || loading.position || loading.direction || !_directions">
-	</button>
-	<button class="button icon ion-chevron-right" ng-click="getStep(step.count + 1)" ng-show="_directions && location" ng-disabled="step.count + 1 >= _steps.length || loading.position || loading.direction || !_directions">
-	</button>
-	<button class="button icon" ng-class="{'ion-navigate': !location, 'ion-location': location}" ng-click="start()" ng-disabled="loading.position || loading.direction || location || !destination">
-	</button>
-</div>-->
-<!-- volume
-<a class="btn btn-default" ng-click="toggleVoice()" ng-show="_directions"
-	ng-disabled="loading.position || loading.direction">
-	<i class="fa fa-volume-up" ng-show="audio.textToSpeech"></i>
-	<i class="fa fa-volume-off" ng-hide="audio.textToSpeech"></i>
-</a> -->
-<!-- whereami
-<a class="btn btn-primary" title="Où suis-je ?" ng-click="watchLocation()"
-	ng-disabled="loading.position || loading.direction">
-	<i class="fa fa-location-arrow" ng-show="positionMarker"></i>
-	<i class="fa fa-map-marker" ng-hide="positionMarker"></i>
-</a> -->
-<!-- search
-<a class="btn btn-primary" title="Rechercher" ng-click="getDirection(destination)"
-	ng-disabled="directionForm.$invalid || loading.position || loading.direction">
-	<i class="fa fa-search inherit-size"></i>
-</a> -->
-
-<!--form novalidate ng-submit="getDirection(destination)" name="directionForm">
-	<input type="text"
-		placeholder="{{ loading.position ? 'Attente de la position' : 'Renseignez une destination' }}"
-		ng-model="destination"
-		ng-disabled="loading.position || loading.direction"
-		required>
-	<button ng-click="getDirection(destination)">
-		<i class="fa fa-refresh fa-spin fa-fw" ng-show="loading.position || loading.direction"></i>
-		<i class="fa fa-search fa-fw" ng-hide="loading.position || loading.direction"></i>
-		s
-	</button>
-</form-->

@@ -32,7 +32,8 @@ function ($rootScope, $q, $notification) {
 				break;
 		}
 		return msg || 'Erreur';
-	};
+	},
+	watchPromise = $q.defer();
 
 	return {
 		getCurrentPosition: function (options, onSuccess, onError) {
@@ -53,6 +54,12 @@ function ($rootScope, $q, $notification) {
 			return deferred.promise;
 		},
 		$watchId: null,
+		setId: function(value) {
+			watchPromise.notify(value || this.$watchId);
+		},
+		observeId: function() {
+			return watchPromise.promise;
+		},
 		watchPosition: function(options, onSuccess, onError) {
 			var deferred = $q.defer();
 			this.$watchId = navigator.geolocation.watchPosition(
@@ -68,6 +75,7 @@ function ($rootScope, $q, $notification) {
 				maximumAge: 30000,
 				enableHighAccuracy: true
 			});
+			this.setId();
 
 			return deferred.promise;
 		},

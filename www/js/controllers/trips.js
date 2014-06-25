@@ -15,9 +15,12 @@ angular.module('helmetApp')
 	'FileSystem',
 function($q, $scope, $rootScope, $location, $routeParams, $timeout, $direction, $geolocation, $localStorage, FileSystem) {
 
+	$scope.fileLoading = true;
+
 	// Initialisation des trajets
 	($scope.getTrips = function() {
 		FileSystem.read().then(function(response){
+			$scope.fileLoading = false;
 			if (response.data.length === 0) {
 				$scope.tripList = false;
 			} else {
@@ -39,9 +42,23 @@ function($q, $scope, $rootScope, $location, $routeParams, $timeout, $direction, 
 		});
 	})();
 
+	($scope.initGraph = function() {
+		$scope.speedGraph = {
+			options: {
+				animation: false,
+				barShowStroke: false
+			},
+			data: {
+				labels: [],
+				datasets: []
+			}
+		};
+	})();
+
 	// Détais d'un trajet
 	$scope.showTrip = function(trip) {
 		$scope.currentTrip = trip;
+		$scope.speedGraph.data = trip.speedGraph;
 		$location.path('history/'+trip.date);
 		$scope.goBack($scope.hideTrip);
 		// Carte
@@ -61,6 +78,7 @@ function($q, $scope, $rootScope, $location, $routeParams, $timeout, $direction, 
 	// Masque les détails
 	$scope.hideTrip = function() {
 		$scope.currentTrip = false;
+		$scope.initGraph();
 		$direction.resetMap();
 		$location.path('history');
 	};

@@ -21,39 +21,31 @@
 
 <div class="button-bar button-full">
 	<button class="button" ng-click="discover()" ng-class="{'button-assertive': bluetooth.errorMessage}" ng-disabled="bluetooth.loading">
-		<i class="icon ion-search" ng-hide="bluetooth.errorMessage"></i>
-		<i class="icon ion-alert-circled" ng-show="bluetooth.errorMessage"></i>
+		<i class="icon ion-refreshing" ng-show="bluetooth.loading"></i>
+		<i class="icon ion-search" ng-hide="bluetooth.errorMessage || bluetooth.loading"></i>
+		<i class="icon ion-alert-circled" ng-show="bluetooth.errorMessage && !bluetooth.loading"></i>
 		{{ bluetooth.errorMessage || 'Recherche' }}
 	</button>
 </div>
-<ul class="list">
+<ion-list>
 	<!-- Liste des appareils -->
-	<li ng-repeat="device in bluetooth.deviceList" ng-class="{'stored': device.stored}"}>
-
-		<!-- Nom du périphérique -->
-		<span class="title">
-			<i class="fa fa-headphones"></i>
-			{{ device.name }}
-		</span>
-		<!-- Adresse MAC -->
-		<small>{{ device.id }}</small>
-		<div class="pull-right">
-			<!-- Connexion -->
-			<button class="btn btn-success" ng-click="connect(device.id)"
-				ng-hide="device.id === bluetooth.connected" ng-disabled="loading.bluetooth || device.stored">
-				<i class="fa fa-link"></i>
-			</button>
-			<div class="btn-group pull-right">
+	<ion-item ng-repeat="device in bluetooth.deviceList" ng-class="{'stored': device.stored}">
+		<div class="right">
+			<div class="button-bar">
+				<!-- Connexion -->
+				<button class="button button-balanced" ng-click="connect(device.id)" ng-hide="device.id === bluetooth.connected" ng-disabled="loading.bluetooth || device.stored">
+					<i class="ion-power"></i>
+				</button>
 				<!-- Souscrire -->
-				<button class="btn btn-primary" ng-click="subscribe(device.id)"
+				<button class="button button-positive" ng-click="subscribe(device.id)"
 					ng-show="device.id === bluetooth.connected" ng-disabled="loading.bluetooth || device.stored">
-					<i class="fa fa-code" ng-show="device.subscribed"></i>
-					<i class="fa fa-exchange" ng-hide="device.subscribed"></i>
+					<i class="ion-code" ng-show="device.subscribed"></i>
+					<i class="ion-arrow-swap" ng-hide="device.subscribed"></i>
 				</button>
 				<!-- Déxonnexion -->
-				<button class="btn btn-danger" ng-click="disconnect(device.id)"
+				<button class="button button-assertive" ng-click="disconnect(device.id)"
 					ng-show="device.id === bluetooth.connected" ng-disabled="loading.bluetooth || device.stored">
-					<i class="fa fa-power-off"></i>
+					<i class="ion-power"></i>
 				</button>
 			</div>
 			<!-- Write data -->
@@ -71,25 +63,33 @@
 				</div>
 			</form>
 		</div>
-	</li>
-	<li ng-show="bluetooth.connected">
-		<button class="btn btn-default" ng-click="available()">
-			Available
-		</button>
-		<button class="btn btn-default" ng-click="read()">
-			Read
-		</button>
-		<button class="btn btn-default" ng-click="readuntil()">
-			ReadUntil
-		</button>
-		<button class="btn btn-default" ng-click="subscribe()">
-			Subscribe
-		</button>
-		<button class="btn btn-default" ng-click="unsubscribe()">
-			Unsubscribe
-		</button>
-		<button class="btn btn-default" ng-click="clear()">
-			Clear
-		</button>
-	</li>
-</ul>
+
+		<!-- Nom du périphérique -->
+		<h3 class="title">
+			<i class="fa fa-headphones"></i>
+			{{ device.name }}
+		</h3>
+		<!-- Adresse MAC -->
+		<small>{{ device.id }}</small>
+		<div ng-show="device.id === bluetooth.connected" class="button-bar">
+			<button class="button button-light" ng-click="available()">
+				Available
+			</button>
+			<button class="button button-light" ng-click="read()">
+				Read
+			</button>
+			<button class="button button-light" ng-click="readuntil()">
+				ReadUntil
+			</button>
+			<button class="button button-light" ng-click="subscribe()">
+				Subscribe
+			</button>
+			<button class="button button-light" ng-click="unsubscribe()">
+				Unsubscribe
+			</button>
+			<button class="button button-light" ng-click="clear()">
+				Clear
+			</button>
+		</div>
+	</ion-item>
+</ion-list>
