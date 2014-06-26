@@ -14,18 +14,29 @@
 	<body ng-controller="AppController">
 
 
-		<!-- Chargement -->
-		<div ng-show="loading.route">
-			<i class="icon ion-refreshing"></i>
-		</div>
-
 		<!-- Header -->
 		<ion-header-bar class="bar-dark" left-buttons="leftButtons" right-buttons="rightButtons"></ion-header-bar>
+
+
 
 		<!-- Contenu -->
 		<ion-view class="slide-left-right">
 			<ion-content has-header="true">
+				<!-- Message -->
+				<div class="item item-icon-right item-assertive" ng-show="message">
+					{{message}}
+					<i class="icon ion-close" ng-click="message=''"></i>
+				</div>
+
+				<!-- Contenu -->
 				<div ng-view></div>
+
+				<!-- Chargement -->
+				<div class="center" ng-show="loading.route">
+					<button class="button button-icon">
+						<i class="icon ion-refreshing"></i>
+					</button>
+				</div>
 			</ion-content>
 		</ion-view>
 

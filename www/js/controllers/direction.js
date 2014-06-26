@@ -62,7 +62,11 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 		$scope.initSpeedGraph();
 
 		$geolocation.observeId().then(null, null, function(value){
-			$scope.location = value;
+			$timeout(function(){
+				$scope.$apply(function(){
+					$scope.location = value;
+				});
+			});
 		})
 	};
 
@@ -160,10 +164,9 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 		$scope.updateSpeedGraph(key+rand, true);
 
 		if ($scope._directions !== undefined) {
-			$scope._steps = $scope._directions.routes[0].legs[0].steps;
-			if (key >= 0 && key <= $scope._steps.length) {
+			if (key >= 0 && key <= $scope._directions.routes[0].legs[0].steps.length) {
 				$scope.step = {};
-				$scope.step.current = $scope._steps[ key ];
+				$scope.step.current = $scope._directions.routes[0].legs[0].steps[ key ];
 				$scope.step.count = key;
 				// Sauvegarde de l'étape
 				$rootScope.$storage.step = $scope.step;
@@ -189,7 +192,7 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 				};
 				$rootScope.$storage.position.start = $scope.startPos;
 			}
-			if (key+1 == $scope._steps.length) {
+			if (key+1 == $scope._directions.routes[0].legs[0].steps.length) {
 				//TextToSpeech.say('Bien joué !');
 				$scope.endPos = {
 					coords: {
@@ -235,6 +238,7 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 				$rootScope.accuracy = undefined;
 				$rootScope.distance = undefined;
 				$rootScope.speed = undefined;
+				$scope.clearSteps();
 			});
 		});
 		//directionsDisplay.setMap(null);
@@ -250,7 +254,6 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 				$scope._directions = undefined;
 				//$rootScope.accuracy = undefined;
 				//$rootScope.distance = undefined;
-				$scope.clearSteps();
 			});
 		});
 	};
@@ -261,7 +264,6 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 
 	// Réinitialise les étapes
 	$scope.clearSteps = function() {
-		$scope._steps = undefined;
 		if ($scope.step === undefined)
 			$scope.step = {};
 		$scope.step.current = undefined;
@@ -279,9 +281,9 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 			labels: [],
 			datasets: [
 				{
-					fillColor : "rgba(240,184,64,0.5)",
-					strokeColor : "#d39211",
-					pointColor : "#f0b840",
+					fillColor : "rgba(255,69,0,0.5)",
+					strokeColor : "#ff4500",
+					pointColor : "#ff4500",
 					pointStrokeColor : "#fff",
 					data : []
 				}
@@ -309,15 +311,14 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 		}
 		if ($rootScope.$storage.direction !== undefined) {
 			$scope._directions = $rootScope.$storage.direction;
-			$scope._steps = $scope._directions.routes[0].legs[0].steps;
-
-			$scope.watchLocation();
-			$scope.location = true;
 
 			$scope.goBack($scope.resetDirection);
 		}
 		if ($rootScope.$storage.step !== undefined) {
 			$scope.step = $rootScope.$storage.step;
+
+			$scope.watchLocation();
+			$scope.location = true;
 		}
 	};
 

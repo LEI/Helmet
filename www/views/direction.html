@@ -1,27 +1,24 @@
 <div ng-hide="_directions">
-	<h2>
-		Helmet Visio HD+ v2
+	<h2 class="item-input-inset">
+		<form class="item-input-wrapper" novalidate ng-submit="getDirection(destination)" name="directionForm">
+			<label class="item-input-wrapper">
+				<i class="icon ion-location placeholder-icon"></i>
+				<input type="text" placeholder="{{ loading.position ? 'Attente...' : 'Destination' }}" ng-model="destination" ng-disabled="loading.position || loading.direction" required>
+				<i class="icon ion-close placeholder-icon" ng-show="destination" ng-click="destination=''"></i>
+			</label>
+		</form>
+		<button class="button button-small button-icon" ng-show="destination" ng-disabled="loading.position || loading.direction" ng-click="getDirection(destination)">
+			<i class="icon light" ng-class="{'ion-refreshing':loading.direction,'ion-search':!loading.direction}"></i>
+		</button>
 	</h2>
-	<div class="center" ng-show="fileLoading">
+
+	<div class="center" ng-show="loading.direction">
 		<button class="button button-icon">
 			<i class="icon ion-refreshing"></i>
 		</button>
 	</div>
-	<form class="item-input-inset" novalidate ng-submit="getDirection(destination)" name="directionForm">
-		<label class="item item-input-wrapper">
-	   		<i class="icon ion-location placeholder-icon" ng-hide="loading.direction"></i>
-	   		<i class="icon ion-refreshing placeholder-icon" ng-show="loading.direction"></i>
-			<input type="text" placeholder="{{ loading.position ? 'Attente...' : 'Destination' }}" ng-model="destination" ng-disabled="loading.position || loading.direction" required>
-		</label>
-		<a class="button button-clear" ng-show="destination" ng-click="destination=''">
-			<i class="icon ion-close"></i>
-		</a>
-		<a class="button button-clear" ng-show="destination" ng-disabled="loading.position || loading.direction" ng-click="getDirection(destination)">
-			<i class="icon ion-search"></i>
-		</a>
-	</form>
 
-	<div ha-weather class="center"></div>
+	<div ha-weather></div>
 </div>
 
 <div ng-show="_directions">
@@ -36,55 +33,90 @@
 		</span>
 	</h2>
 
-	<div class="center" ng-show="loading.position">
+	<div class="card center" ng-show="loading.position">
 		<button class="button button-icon">
 			<i class="icon ion-refreshing"></i>
 		</button>
 	</div>
 
-	<!-- start -->
-	<button class="button button-balanced button-full icon ion-navigate" ng-click="start()" ng-hide="location">
-		Démarrer
-	</button>
-	<div class="button-bar">
-		<!-- prev -->
-		<button class="button button-dark" ng-click="getStep(step.count - 1)" ng-disabled="step.count < 1 || loading.position || loading.direction || !_directions" ng-show="location">
-			<i class="icon ion-chevron-left"></i>
-		</button>
-		<!-- start -->
-		<button class="button button-dark" ng-show="location" disabled>
-			{{ step.count + 1 }} / {{ _steps.length }}
-		</button>
-		<!-- next -->
-		<button class="button button-dark" ng-click="getStep(step.count + 1)" ng-disabled="step.count + 1 >= _steps.length || loading.position || loading.direction || !_directions" ng-show="location">
-			<i class="icon ion-chevron-right"></i>
-		</button>
-	</div>
-
 	<div class="card">
-		<div class="item item-icon-left">
-			<!-- Départ -->
-			<i class="icon ion-ios7-flag-outline"></i>
-			{{ _directions.routes[0].legs[0].start_address }}
-		</div>
-		<div class="item center">
+
+		<div class="item center" ng-class="{'item-icon-right':step.current && location}">
 			<!-- Distance -->
 			{{ _directions.routes[0].legs[0].distance.text }}
 			<!-- Durée -->
 			<i class="ion-android-clock"></i>
 			{{ _directions.routes[0].legs[0].duration.text }}
+
+			<span class="icon" ng-show="step.current && location" ng-click="viewAllSteps = !viewAllSteps">
+				<i class="icon ion-eye" ng-hide="viewAllSteps"></i>
+				<i class="icon ion-eye-disabled" ng-show="viewAllSteps"></i>
+			</span>
 		</div>
-		<div class="item item-icon-right align-right">
+
+		<div class="item item-dark item-icon-left">
+			<!-- Départ -->
+			<i class="icon ion-ios7-flag-outline"></i>
+			{{ _directions.routes[0].legs[0].start_address }}
+		</div>
+
+		<div class="item center" ng-class="{'item-balanced':!location,'item-assertive':location,'ion-ios7-play':!location,'ion-stop':location}" ng-click="location ? clearLocation() : start()">
+			&nbsp;
+			<span ng-hide="location">Démarrer</span>
+			<span ng-show="location">Arrêter</span>
+		</div>
+
+		<div class="item item-icon-left item-icon-right center" ng-show="step.current && !viewAllSteps && location">
+
+			<!-- Précédent -->
+			<span class="button button-icon icon" ng-click="getStep(step.count - 1)" ng-disabled="step.count < 1 || loading.position || loading.direction">
+				<i class="ion-chevron-left"></i>
+			</span>
+
+			<h3>
+				{{ step.count + 1 }} / {{ _directions.routes[0].legs[0].steps.length }}
+			</h3>
+
+			<div class="row">
+				<div class="col">
+					<span class="sprite {{ step.current.maneuver }}"></span>
+					{{ step.current.distance.text }}
+				</div>
+				<div class="col">
+					<i class="ion-android-clock"></i>
+					{{ step.current.duration.text }}
+				</div>
+			</div>
+
+			<div ng-bind-html="step.current.instructions" style="white-space: normal;"></div>
+
+			<!-- Suivant -->
+			<span class="button button-icon icon" ng-click="getStep(step.count + 1)" ng-disabled="step.count + 1 >= _directions.routes[0].legs[0].steps.length || loading.position || loading.direction">
+				<i class="ion-chevron-right"></i>
+			</span>
+		</div>
+
+		<div class="item item-icon-left center" ng-class="{'item-positive':step.count == k}" ng-show="viewAllSteps && location" ng-repeat="(k,s) in _directions.routes[0].legs[0].steps">
+
+			<span class="icon">
+				{{ k + 1 }}
+			</span>
+
+			<div class="right">
+				<span class="sprite {{ s.maneuver }}"></span> {{ s.distance.text }}
+				<br>
+				<i class="ion-android-clock"></i>
+				{{ s.duration.text }}
+			</div>
+
+			<span ng-bind-html="s.instructions" style="white-space: normal;"></span>
+		</div>
+
+		<div class="item item-dark item-icon-right align-right">
 			<!-- Arrivée -->
 			{{ _directions.routes[0].legs[0].end_address }}
 			<i class="icon ion-ios7-flag"></i>
 		</div>
-		<div class="item center" ng-show="step.current">
-			<p ng-bind-html="step.current.instructions"></p>
-			<span class="sprite {{ step.current.maneuver }}"></span>
-			{{ step.current.distance.text }}
-			<i class="ion-android-clock"></i>
-			{{ step.current.duration.text }}
-		</div>
+
 	</div>
 </div>

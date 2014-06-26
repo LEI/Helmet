@@ -31,22 +31,16 @@
 	<!-- Liste des appareils -->
 	<ion-item ng-repeat="device in bluetooth.deviceList" ng-class="{'stored': device.stored}">
 		<div class="right">
-			<div class="button-bar">
-				<!-- Connexion -->
-				<button class="button button-balanced" ng-click="connect(device.id)" ng-hide="device.id === bluetooth.connected" ng-disabled="loading.bluetooth || device.stored">
-					<i class="ion-power"></i>
-				</button>
+			<!-- Connexion -->
+			<button class="button button-balanced ion-power" ng-click="connect(device.id)" ng-hide="device.id === bluetooth.connected" ng-disabled="loading.bluetooth || device.stored"></button>
+			<div class="button-bar" ng-show="device.id === bluetooth.connected">
 				<!-- Souscrire -->
-				<button class="button button-positive" ng-click="subscribe(device.id)"
-					ng-show="device.id === bluetooth.connected" ng-disabled="loading.bluetooth || device.stored">
+				<button class="button button-positive" ng-click="subscribe(device.id)" ng-disabled="loading.bluetooth || device.stored">
 					<i class="ion-code" ng-show="device.subscribed"></i>
 					<i class="ion-arrow-swap" ng-hide="device.subscribed"></i>
 				</button>
 				<!-- Déxonnexion -->
-				<button class="button button-assertive" ng-click="disconnect(device.id)"
-					ng-show="device.id === bluetooth.connected" ng-disabled="loading.bluetooth || device.stored">
-					<i class="ion-power"></i>
-				</button>
+				<button class="button button-assertive ion-power" ng-click="disconnect(device.id)"ng-disabled="loading.bluetooth || device.stored"></button>
 			</div>
 			<!-- Write data -->
 			<form ng-show="device.id === bluetooth.connected" novalidate ng-submit="write(bluetooth.data)" name="writeForm">
@@ -81,6 +75,8 @@
 			<button class="button button-light" ng-click="readuntil()">
 				ReadUntil
 			</button>
+		</div>
+		<div ng-show="device.id === bluetooth.connected" class="button-bar">
 			<button class="button button-light" ng-click="subscribe()">
 				Subscribe
 			</button>

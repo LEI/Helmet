@@ -81,6 +81,7 @@ function ($rootScope, $q, $notification) {
 		},
 		clearWatch: function() {
 			navigator.geolocation.clearWatch(this.$watchId);
+			watchPromise.notify(null);
 		},
 		calculateDistance: function(prev, next) {
 			var lat1 = prev.coords.latitude,

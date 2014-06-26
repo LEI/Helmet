@@ -29,9 +29,9 @@ function($q) {
 		},
 		getDirectory: function(file) {
 			file.root.getDirectory("helmet", {create:true}, function(dirEntry) {
-		    	console.log("helmet crée");
+		    	//console.log("helmet crée");
 		    }, function(error) {
-		    	console.log('Error with #getDirectory method.',error);
+		    	//console.log('Error with #getDirectory method.',error);
 		    });
 		},
 		getFile: function(file) {
@@ -163,7 +163,7 @@ function($q) {
 							} else {
 								content = {data:[]};
 								fileEntry.remove(function() {
-							      console.log('File removed.');
+							      //console.log('File removed.');
 							    }, function(error) {
 							    	deferred.reject(error);
 							    });
