@@ -17,31 +17,28 @@
 		<!-- Header -->
 		<ion-header-bar class="bar-dark" left-buttons="leftButtons" right-buttons="rightButtons"></ion-header-bar>
 
-
-
 		<!-- Contenu -->
 		<ion-view class="slide-left-right">
 			<ion-content has-header="true">
 				<!-- Message -->
-				<div class="item item-icon-right item-assertive" ng-show="message">
-					{{message}}
+				<div class="item item-icon-right item-energized" ng-show="message">
+					<span ng-bind="message"></span>
 					<i class="icon ion-close" ng-click="message=''"></i>
 				</div>
-
 				<!-- Contenu -->
 				<div ng-view></div>
-
-				<!-- Chargement -->
-				<div class="center" ng-show="loading.route">
-					<button class="button button-icon">
-						<i class="icon ion-refreshing"></i>
-					</button>
-				</div>
 			</ion-content>
 		</ion-view>
 
 		<!-- Footer -->
-		<footer></footer>
+		<footer>
+			<!-- Chargement -->
+			<div class="center" ng-show="loading.route">
+				<button class="button button-icon">
+					<i class="icon ion-refreshing"></i>
+				</button>
+			</div>
+		</footer>
 
 		<!-- browser: AIzaSyBvFpbSPCX7TEnXxQ3ztf8zD_zLVGxiLbg -->
 		<script src="http://maps.googleapis.com/maps/api/js?language=fr-FR&amp;sensor=false&amp;libraries=geometry&amp;key=AIzaSyBeWwtoeeOeLsLI1LqOiwERKcm00fq6Vbg"></script>

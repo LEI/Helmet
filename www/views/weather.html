@@ -1,7 +1,9 @@
-<div class="card">
-	<div ng-show="currentWeather.loading">
+<div class="center" ng-show="currentWeather.loading">
+	<button class="button button-icon">
 		<i class="icon ion-refreshing"></i>
-	</div>
+	</button>
+</div>
+<div class="center">
 	<div ng-show="currentWeather.errorMessage">
 		{{ currentWeather.errorMessage }}
 	</div>

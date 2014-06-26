@@ -87,12 +87,13 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 		}, function(error) {
 			$rootScope.loading.position = false;
 			// reject
+			console.log(error);
 			$rootScope.message = error+'...';
-			if (errorCount > 10) {
+			if (errorCount > 1) {
 				alert(error);
 			} else {
 				errorCount++;
-				$timeout($scope.watchLocation, 1000);
+				$timeout($scope.watchLocation, 3000);
 			}
 		}, function(newPos) {
 			errorCount = 0;
