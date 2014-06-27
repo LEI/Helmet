@@ -29,7 +29,7 @@
 
 	<h2 class="title">
 		<span ng-show="speed" class="left">
-			{{ speed | number:2 }} km/h
+			{{ speed | speed:'km/h' }}
 		</span>
 		{{ destination || 'Destination' | capitalize }}
 		<span ng-show="distance" class="right">

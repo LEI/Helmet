@@ -36,7 +36,7 @@ function($routeProvider, $provide) {
 
 	//$locationProvider.html5Mode(true);
 
-	$provide.decorator('$route', function($delegate) {
+	/*$provide.decorator('$route', function($delegate) {
 
 	    $delegate.getRoute = function(name) {
 	        var result = null;
@@ -49,7 +49,7 @@ function($routeProvider, $provide) {
 	    };
 
 	    return $delegate;
-	});
+	});*/
 
 }])
 
@@ -70,14 +70,21 @@ function($rootScope, $scope, $route, $window, $location, $localStorage) {
 	// 	return $route.getRoute(name) ? ' active' : '';
 	// }
 
+
+	var logo = {
+		type: 'button-clear',
+		content: '<img src="img/logo.png" height="34" alt="Helmet Visio">',
+		tap: function(e) {
+			$scope.go('direction');
+		}
+	};
+	$scope.rightButtons = [logo];
 	$scope.go = function(path) {
-		if ($location.path() !== '/'+path)
-			$scope.rightButtons = [];
-		// !
+		if ($location.path() !== '/'+path) {
+			$scope.rightButtons = [logo];
+		}
 		$location.path( path );
 	};
-
-	$scope.rightButtons = [];
 	$scope.goBack = function(callback) {
 		$scope.rightButtons = [];
 		$scope.rightButtons.push({
@@ -85,7 +92,7 @@ function($rootScope, $scope, $route, $window, $location, $localStorage) {
 			content: '<i class="ion-close"></i>',
 			tap: function(e) {
 				callback();
-				$scope.rightButtons = [];
+				$scope.rightButtons = [logo];
 			}
 		});
 	}
@@ -109,14 +116,8 @@ function($rootScope, $scope, $route, $window, $location, $localStorage) {
 			$scope.go('direction');
 		}
 	}];
-/*
-	<ion-nav-buttons side="right">
-	<ion-nav-buttons side="left">
-		<button ng-click="go('history')" class="button button-icon ion-clock"></button>
-		<button ng-click="go('settings')" class="button button-icon ion-bluetooth"></button>
-	</ion-nav-buttons>
-		<button ng-click="go('direction')" class="button button-icon ion-navigate"></button>
-	</ion-nav-buttons>*/
+
+	// Local Storage
 	$rootScope.$storage = $localStorage;
 
 	// Chargement : route, position, weather, direction

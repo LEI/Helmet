@@ -9,6 +9,15 @@ angular.module('helmetApp')
 	}
 })
 
+.filter('speed', function() {
+	return function(input, unit) {
+		if (input && unit) {
+			return input.toFixed(2) + ' ' + unit;
+		}
+		return input;
+	}
+})
+
 .filter('distance', function() {
 	return function(input) {
 		if (input >= 1000) {
