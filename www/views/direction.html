@@ -3,7 +3,7 @@
 		<form class="item-input-wrapper" novalidate ng-submit="getDirection(destination)" name="directionForm">
 			<label class="item-input-wrapper">
 				<i class="icon ion-location placeholder-icon"></i>
-				<input type="text" placeholder="{{ loading.position ? 'Attente...' : 'Destination' }}" ng-model="destination" ng-disabled="loading.position || loading.direction" required>
+				<input type="text" placeholder="{{ message || 'Destination' }}" ng-model="destination" ng-disabled="loading.position || loading.direction" required>
 				<i class="icon ion-close placeholder-icon" ng-show="destination" ng-click="destination=''"></i>
 			</label>
 		</form>
