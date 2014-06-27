@@ -7,14 +7,16 @@
 	<div ng-show="currentWeather.errorMessage">
 		{{ currentWeather.errorMessage }}
 	</div>
-	<div ng-show="currentWeather.data">
+	<div class="row" ng-show="currentWeather.data">
 		<!--small>
 			{{ currentWeather.city || 'Météo' }}
 		</small-->
-		<h3 class="left card">{{ currentWeather.main.temp || '?' }} °C</h3>
-		<span class="right" ng-repeat="w in currentWeather.data">
+		<div class="col card">
+			<h3>{{ currentWeather.main.temp || '?' }} °C</h3>
+		</div>
+		<div class="col card" ng-repeat="w in currentWeather.data">
 			<!--img ng-src="//openweathermap.org/img/w/{{ w.icon }}.png" alt="{{ w.icon }}"-->
 			{{ w.description | capitalize }}
-		</span>
+		</div>
 	</div>
 </div>

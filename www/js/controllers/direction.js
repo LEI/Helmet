@@ -87,7 +87,6 @@ function($scope, $rootScope, $window, $timeout, $filter, $localStorage, $geoloca
 		}, function(error) {
 			$rootScope.loading.position = false;
 			// reject
-			console.log(error);
 			$rootScope.message = error+'...';
 			if (errorCount > 1) {
 				alert(error);
